@@ -171,7 +171,7 @@ html, body {
 
 .drawToolbar {
 	background-repeat: no-repeat;
-	background-image: url('../lib/Leaflet.draw/dist/images/spritesheet.png');
+	background-image: url('../lib/leaflet-draw/dist/images/spritesheet.png');
 	height: 28px;
 	text-decoration: none;
 	z-index: 1;
