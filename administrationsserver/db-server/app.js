@@ -12,8 +12,8 @@ var geojson = require('./routes/geojson');
 var app = express();
 
 var mongoose = require('mongoose');
-var dbAddress = ip.address();
-console.log(dbAddress);
+var dbAddress = 'localhost:27017';
+console.log('DB address: ' + dbAddress);
 
 mongoose.connect('mongodb://' + dbAddress + '/admin');
 var db = mongoose.connection;
