@@ -1,7 +1,3 @@
-#ignore the folders
-ablage
-
-
 # Logs
 logs
 *.log
@@ -33,3 +29,7 @@ node_modules
 # bower libs
 webgis/public/lib
 administrationsserver/admin-client/public/lib
+
+# don't push Taktischen Zeichen to GitHub, as they are copyrighted (?)
+webgis/public/images/symbols/*.svg
+!webgis/public/images/symbols/_universal.svg
