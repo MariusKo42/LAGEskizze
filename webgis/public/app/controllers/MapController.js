@@ -31,7 +31,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.fields.currentField.topText = "";
 	$scope.fields.currentField.bottomText = "";
 	$scope.fields.currentField.active = false;
-	$scope.fields.currentField.id = 11;
+	$scope.fields.currentField.id = undefined;
 	$scope.fields.currentField.fieldTextTop = "";
 	$scope.fields.currentField.fieldTextBottom = "";
 
@@ -68,6 +68,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	//submit the field
 	$scope.fields.submit = function(){
 		$scope.fields.currentField.active = false;
+		$scope.map.lastClick = null;
 		var _textTop, _textBottom, _image;
 		_textTop = '<div id="fieldTextTop'
 					+ $scope.fields.currentField.id
@@ -143,25 +144,31 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		if ($scope.fields.currentField.active) {
 			$scope.fields.deleteLine();
 			$scope.fields.addLine();
+		} else {
+			$scope.fields.addLine();
 		}
 	}
 
 	$scope.fields.addLine = function(){
-		var anchorPoint = getAnchorOfElement($scope.fields.currentField.id);
-		var anchor = map.containerPointToLatLng(anchorPoint);
-		var latlngs = [$scope.map.lastClick, anchor];
-		if(linesArray[$scope.fields.currentField.id] == null){
-			linesArray[$scope.fields.currentField.id] = [$scope.map.lastClick, anchorPoint];
-			lines.addLayer(L.polyline(latlngs));
+		if ($scope.fields.currentField.id) {
+			var anchorPoint = getAnchorOfElement($scope.fields.currentField.id);
+			var anchor = map.containerPointToLatLng(anchorPoint);
+			var latlngs = [$scope.map.lastClick, anchor];
+			if(linesArray[$scope.fields.currentField.id] == null){
+				linesArray[$scope.fields.currentField.id] = [$scope.map.lastClick, anchorPoint];
+				lines.addLayer(L.polyline(latlngs));
+			}
 		}
 	}
 
 	$scope.fields.deleteLastLine = function(oldId){
-		var _oldField = document.getElementById(oldId).innerHTML;
-		var _oldSplitted = _oldField.split("polygon");
-		if (_oldSplitted.length > 1){
-			linesArray[oldId] = null;
-			fitAllLines(linesArray);
+		if (oldId) {
+			var _oldField = document.getElementById(oldId).innerHTML;
+			var _oldSplitted = _oldField.split("polygon");
+			if (_oldSplitted.length > 1){
+				linesArray[oldId] = null;
+				fitAllLines(linesArray);
+			}
 		}
 	}
 
