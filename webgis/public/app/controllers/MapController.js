@@ -4,7 +4,7 @@ var lines,
 	linesArray = new Array();
 
 app.controller("MapController", function($scope, $http, $sce, $location){
-	
+
 	//url of the db-server:
 	$scope.dbServerAddress = $location.absUrl().split(":")[0] + ":" + $location.absUrl().split(":")[1] + ":3000/";
 
@@ -34,7 +34,6 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.fields.currentField.id = 11;
 	$scope.fields.currentField.fieldTextTop = "";
 	$scope.fields.currentField.fieldTextBottom = "";
-
 
 	//show the field-properies in the side-content
 	$scope.fields.register = function(field){
@@ -75,7 +74,6 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 					+ '" class="fieldText fieldTextTop">'
 					+ $scope.fields.currentField.fieldTextTop
 					+ '</div>';
-						
 
 		_textBottom = '<div id="fieldTextBottom'
 					+ $scope.fields.currentField.id
@@ -406,7 +404,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 		if (_area != null) {
 			if (_area < 1000000){
-				_htmlString = "Fläche: " 
+				_htmlString = "Fläche: "
 								+ (Math.floor(_area))
 								+ "m<sup>2</sup><br>"
 								+ " / "
@@ -423,7 +421,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		};
 		if (_length != null) {
 			if (_length < 10000){
-				_htmlString = "Länge: " 
+				_htmlString = "Länge: "
 								+ (Math.floor(_length))
 								+ "m";
 			} else {
@@ -436,7 +434,6 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.map.objects.type = _type;
 	}
 });
-
 
 function getAnchorOfElement(elementId){
 	var _this = $("#"+elementId);
@@ -481,7 +478,7 @@ function initMap(){
 	lines = L.layerGroup().addTo(map);
 	fachkarten = L.layerGroup().addTo(map);
 	basemap = L.layerGroup().addTo(map);
-	
+
 	drawnItems = new L.FeatureGroup();
 	map.addLayer(drawnItems);
 
@@ -545,9 +542,6 @@ function fitAllLines(linesArray){
 	};
 }
 
-
-
-
 /****************************************
 ************ Drag and Drop **************
 *****************************************/
@@ -607,7 +601,6 @@ function drop(ev){
 		movingElement.setAttribute("id", "image" + targetElement.id);
 		if (movingBackElement != null) {movingBackElement.setAttribute("id", "image" + startId)};
 
-
 		//change the lines:
 		var newTargetLine = linesArray[startId];
 		if (newTargetLine != null) {newTargetLine[1] = getAnchorOfElement(targetElement.id)};
@@ -620,6 +613,3 @@ function drop(ev){
 		fitAllLines(linesArray);
 	}
 }
-
-
-
