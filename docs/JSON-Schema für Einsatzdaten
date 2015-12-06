@@ -15,9 +15,8 @@
 			"type": 'String'
 		},
 		"Objektnummer": {
-			"description": 'Fortlaufende Nummer der Einsätze',
-			"type": 'integer',
-			"minimum": 0
+			"description": 'Id fuer den Einsatz',
+			"type": 'String'
 		},
 		"Datum_Uhrzeitgruppe": {
 			"type": 'Date'
