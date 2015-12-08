@@ -19,7 +19,7 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
  "Zeichen":[
     {
         "id": "id",
-        "titel: "String",
+        "titel: "string",
         "svg": //noch einzufügen
     }
  ]   
