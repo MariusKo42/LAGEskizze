@@ -25,7 +25,7 @@ module.exports = function(mongoose) {
     
     var models = {
         datensaetze = mongoose.model('Datensaetze', datensatz);
-        einsaetze = mongoose.model('Einsatz');
+        einsaetze = mongoose.model('Einsatz', einsatz);
     };
 
     return models;
