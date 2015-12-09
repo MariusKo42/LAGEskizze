@@ -26,9 +26,9 @@ app.get('/api/einsatz', function(req, res) {
 });
 
 app.get('/api/einsatz/new', function(req, res) {
-	var myEinsatz = new models.einsaetze({});
+  var myEinsatz = new models.einsaetze({});
 
-	myEinsatz.save(function(error) {
+  myEinsatz.save(function(error) {
     if (error) {
       res.status(400).json({
         status: "Fail creating paper DB entry for " + req.body.title + ": " + error
@@ -37,20 +37,25 @@ app.get('/api/einsatz/new', function(req, res) {
   });
 });
 
-app.get('/api/einsatz/:EinsatzID/', function(req, res) {
+app.post('/api/einsatz/:EinsatzID/', function(req, res) {
   var einsatzid = req.params.EinsatzID;
 
-	models.einsaetze.findById(einsatzid, function(err, value) {
+  models.einsaetze.findById(einsatzid, function(err, value) {
     if (err) {
       res.status(400).send(err);
     } else {
-      res.json(value);
-      res.end();
+      value = req.body;
+      // POST-Body = Einsatz JSON
+      value.save(function(err) {
+        if (err) return handleError(err);
+        //res.status(200); //Boost Performance if needed
+        res.send(value);
+      });
     }
   });
 });
 
-app.get('/api/einsatz/:EinsatzID/lock', function(req, res) {
+app.post('/api/einsatz/:EinsatzID/lock', function(req, res) {
   var einsatzid = req.params.EinsatzID;
-	//TODO: implememnt
+  //TODO: implememnt
 });
