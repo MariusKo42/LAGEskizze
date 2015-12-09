@@ -1,0 +1,75 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": 'Einsatz',
+	"description": 'Feuerwehreinsatz aus dem Feuerwehr-GIS',
+	"type": 'object',
+	"properties": {
+		"_id": 'ObjectID',
+		"meta": {
+			"description": 'Metadaten des Einsatzes',
+			"type": 'object',
+			"properties": {
+				"einsatzstichwort": {
+					"description": 'Beschreibung des Einsatzes in wenigen Stichworten',
+					"type": 'String'
+				},
+				"einsatzort": {
+					"type": 'String'
+				},
+				"meldender": {
+					"type": 'String'
+				},
+				"objektNr": {
+					"description": 'Id fuer den Einsatz',
+					"type": 'String'
+				},
+				"datumUhrzeitGruppe": {
+					"type": 'String'
+				}
+			}
+		}
+		"drawnObjects": {
+			"description": 'gezeichnete Objekte auf der Karte',
+			"type": 'Array',
+			"items": {
+				"type": 'object'
+			}
+		},
+		"fields": {
+			"type": 'Array',
+			"items": {
+				{
+					"type": 'object',
+					"properties": {
+						"index": 'integer',
+						"captionTop": 'String',
+						"captionBottom": 'String',
+						"targetPosition": {
+							"$ref": 'http://json-schema.org/geo'
+						},
+						"taktischesZeichen": 'String',
+						"forID": 'ObjectID'
+					}
+				}
+			}
+		},
+		map: {
+			"description": 'Metadaten für die Karte',
+			"type": 'object',
+			"properties": {
+				"zoom": {
+					"type": 'integer'
+				}
+				"center": {
+					"type": 'Array',
+					"items": {
+						"$ref": 'http://json-schema.org/geo' 
+					}
+				},
+				"tileServer": {
+					"type": 'String'
+				}
+			}
+		}
+	}
+}
