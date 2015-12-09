@@ -28,7 +28,7 @@ var fieldOrder = {
 		{"id": 44, "top":"calc((566px / 12) * 7 + 75px)", "group": "rightcol"},
 		{"id": 75, "top":"calc((566px / 12) * 9 + 75px)", "group": "rightcol"},
 		{"id": 46, "top":"calc((566px / 12) * 11 + 75px)", "group": "rightcol"}
-	],
-	"size": "90px",
+	],	
+	"size": "88px",
 	"margin-left": "-45px"
 }

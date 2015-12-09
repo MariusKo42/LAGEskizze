@@ -47,7 +47,17 @@ html, body {
 	stroke-width: 1;
 	fill: white;
 }
+.activated{
 
+    border: 1px solid rgba(81, 203, 238, 1); /* some kind of blue border */
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+ 
+    -webkit-box-shadow: 0px 0px 4px #4195fc;
+       -moz-box-shadow: 0px 0px 4px #4195fc;
+            box-shadow: 0px 0px 4px #4195fc; /* some variation of blue for the shadow */
+}
 .toprow{
 	position: absolute;
 	top: 30px;
