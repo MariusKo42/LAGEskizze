@@ -1,6 +1,6 @@
 # init.d scripts
 
-Die init.d scripts setzen `forever` vorraus. Dies muss vorher mit npm global isntalliert werden:
+Die init.d scripts setzen `forever` vorraus. Dies muss vorher mit npm global installiert werden:
 
 ```
 # npm install forever -g 
@@ -19,5 +19,5 @@ Mit folgendem Befehl kann das autmatische Starten aktiviert werden:
 ```
 und wieder deaktivieren:
 ```
-update-rc.de -f feuergis-bob remove
+update-rc.d -f feuergis-bob remove
 ```

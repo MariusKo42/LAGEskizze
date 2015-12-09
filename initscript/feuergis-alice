@@ -6,10 +6,11 @@ export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
 
 case "$i" in
     start)
-    exec forever --sourceDir=/home/feuergis/alice -p /var/run index.js
+    exec forever --sourceDir=/home/feuergis/feuergis/alice -p /var/run index.js
     ;;
     stop)
-    exec forever stop --sourceDir=/home/feuergis/alice index.js
+    exec forever stop --sourceDir=/home/feuergis/feuergis/alice index.js
+    ;;
     *)
     echo "Usage: /etc/init.d/feuergis-alice {start|stop}"
     exit 1
