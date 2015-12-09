@@ -16,12 +16,13 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
 
 ```JSON
 {
- "Zeichen":[
-    {
-        "id": "id",
-        "titel: "string",
-        "svg": //noch einzufügen
-    }
+ "taktZeichens":[
+   {
+     "id": "id",
+     "name": "String",
+     "category": "String",
+     "filename": "String",
+   }
  ]   
 }
 
@@ -35,8 +36,8 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
 {
     "Einsaetze":[
     {
-        "id":id, 
-        "titel":titel
+        "id":"id",
+        "titel":"titel"
     },
     ]
 }
@@ -57,7 +58,7 @@ Beim aufrufen wird der Einsatz mit der ID :id gesperrt. Es ist keine weitere Bea
 {
     "Zeichen":[
     {
-        "id": "id", 
+        "id": "id",
         "titel": "titel"
     },
     ]
@@ -77,5 +78,3 @@ Nimmt ein neues Zeichen entgegen und liefert die zugehörige ZeichenID wie folgt
 ```
 #### DELETE /zeichen/:id/
 Löscht ein taktisches Zeichen mit der ID :id
-
-

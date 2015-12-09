@@ -20,12 +20,18 @@ module.exports = function(mongoose) {
     	Zeichnungen: Object,
     	Kranzposition: int,
     	Kartenposition: Object,
-        Zeichen: Object	
+        Zeichen: Object
     };
-    
+    var taktZeichen = new mongoose.Schema({
+      Name: String,
+      Category: String,
+      Filename: String
+    });
+
     var models = {
         datensaetze = mongoose.model('Datensaetze', datensatz);
-        einsaetze = mongoose.model('Einsatz');
+        einsaetze = mongoose.model('Einsatz', einsatz);
+        taktZeichens = mongoose.model('TaktZeichen', taktZeichen);
     };
 
     return models;
