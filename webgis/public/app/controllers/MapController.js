@@ -452,20 +452,29 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 function getAnchorOfElement(elementId){
 	var _this = $("#"+elementId);
+	var _map = $("#map");
+	var _mapTop = parseInt(_map.css('top'), 10);
+	var _mapLeft = parseInt(_map.css('left'), 10);
+	var _mapWidth = parseInt(_map.css('width'), 10);
+	var _mapHeight = parseInt(_map.css('height'), 10);
 	var offset = _this.offset();
 	var width = _this.width();
 	var height = _this.height();
-	console.log(_this);
-	console.log(offset);
-	console.log(width);
-	console.log(height);
-
+	console.log("maptop: " + _mapTop);
+	console.log("mapleft: " + _mapLeft)
+	
 	var centerX = offset.left + width / 2;
 	var centerY = offset.top + height / 2;
-	if (centerX < 80) {return [2, centerY-120]}
-	else if (centerX > 880) {return [798, centerY-120]}
+	if(centerX < _mapLeft){return [2, centerY - _mapTop]}
+	else if (centerX > _mapLeft + _mapWidth - 1) {return [offset.left - _mapLeft, centerY - _mapTop]}
+	else if (centerY < _mapTop + 1 ) {return [centerX - _mapLeft, 2]}
+	else if (centerY > _mapTop + _mapHeight - 1) {return [centerX - _mapLeft, _mapTop + _mapHeight - 1 ]}
+	/*
+	if (centerX < 80) {return [2, centerY -  _mapLeft]}
+	else if (centerX > 880) {return [_mapLeft + _mapWidth, centerY - _mapHeight]}
 	else if (centerY < 80) {return [centerX-90, 2]}
 	else if (centerY > 680) {return [centerX-90, 564]}
+	*/
 }
 
 /****************************************
