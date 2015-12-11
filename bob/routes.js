@@ -12,6 +12,8 @@ app.get('/api/getBasemaps', function(req, res) {
 });
 
 
+// GET /api/einsatz
+//   Route um alle Einsätze abzurufen.
 app.get('/api/einsatz', function(req, res) {
   models.einsaetze.find({}, function(error, values) {
     if (error) {
@@ -19,24 +21,37 @@ app.get('/api/einsatz', function(req, res) {
       console.log(message);
       res.status(400).send(message);
     } else {
+	    
+	  // Hier wird noch ein ziemlich mächtiges JSON übergeben. Eventuell andere Struktur überlegen, wie in Dokumentation beschrieben? *Nico 
       res.json(values);
       res.end();
     }
   });
 });
 
+
+// GET /api/einsatz/new
+//   Route um einen neuen Einsatz in der Datenbank anzulegen.
+//	 Benötigt (valides) JSON nach Notation in der Dokumentation
 app.get('/api/einsatz/new', function(req, res) {
+  // Einsatz hier validieren?
   var myEinsatz = new models.einsaetze({});
 
+  myEinsatz.locked = false;
+  
   myEinsatz.save(function(error) {
     if (error) {
       res.status(400).json({
-        status: "Fail creating paper DB entry for " + req.body.title + ": " + error
+        status: "Fehler beim Abspeichern des Einsatzes " + req.body.title + ": " + error
       });
     }
   });
 });
 
+
+// POST /api/einsatz/:EinsatzID
+//   Route um einen existierenden Einsatz zu editieren.
+//	 Nimmt einen neuen Einsatz entgegen und überschreibt den Existenten.
 app.post('/api/einsatz/:EinsatzID/', function(req, res) {
   var einsatzid = req.params.EinsatzID;
 
@@ -44,6 +59,13 @@ app.post('/api/einsatz/:EinsatzID/', function(req, res) {
     if (err) {
       res.status(400).send(err);
     } else {
+      
+      if(value.locked){
+	      
+	      res.status(400).send("Einsatz ist abgeschlossen (locked)").
+	      
+      }
+      
       value = req.body;
       // POST-Body = Einsatz JSON
       value.save(function(err) {
@@ -55,7 +77,16 @@ app.post('/api/einsatz/:EinsatzID/', function(req, res) {
   });
 });
 
+
+// POST /api/einsatz/:EinsatzID/lock
+//   Route um einen existierenden Einsatz zu sperren.
+//	 Eine weitere Editierung des Einsatzes ist nicht möglich.
 app.post('/api/einsatz/:EinsatzID/lock', function(req, res) {
-  var einsatzid = req.params.EinsatzID;
-  //TODO: implememnt
+  
+  models.einsaetze.update({ _id: req.params.EinsatzID }, { $set: { locked: 'true' }}, function(){
+	  
+	  res.send("Einsatz mit ID " + req.params.EinsatzID + " wurde gesperrt.");
+	  
+  });
+
 });
