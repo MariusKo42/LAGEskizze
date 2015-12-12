@@ -18,7 +18,6 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
 {
  "taktZeichens":[
    {
-     "id": "id",
      "name": "String",
      "category": "String",
      "filename": "String",
