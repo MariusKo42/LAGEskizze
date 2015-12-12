@@ -50,7 +50,7 @@ Beim aufrufen wird der Einsatz mit der ID :id gesperrt. Es ist keine weitere Bea
 
 ## Taktische Zeichen
 #### GET /zeichen/
-Übermittelt ein JSON Objekt, in dem die Bezeichnungen und Pfade für die Zeichen enthalten sind.
+Übermittelt ein JSON Objekt, in dem die Bezeichnungen und Dateinamen für die Zeichen enthalten sind.
 ```JSON
 {
     "Zeichen":[
