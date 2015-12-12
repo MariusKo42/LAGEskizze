@@ -18,6 +18,7 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
 {
  "taktZeichens":[
    {
+     "id": "id",
      "zeichenJSON": "Object"
    }
  ]   
