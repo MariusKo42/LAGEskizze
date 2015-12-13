@@ -19,9 +19,7 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
  "taktZeichens":[
    {
      "id": "id",
-     "name": "String",
-     "category": "String",
-     "filename": "String",
+     "zeichenJSON": "Object"
    }
  ]   
 }
@@ -53,28 +51,22 @@ Beim aufrufen wird der Einsatz mit der ID :id gesperrt. Es ist keine weitere Bea
 
 ## Taktische Zeichen
 #### GET /zeichen/
-Übermittelt eine Liste mit den IDs der verfügbaren taktischen Zeichen als JSON:
+Übermittelt ein JSON Objekt, in dem die Bezeichnungen und Dateinamen für die Zeichen enthalten sind.
 ```JSON
 {
     "Zeichen":[
     {
-        "id": "id",
-        "titel": "titel"
+        "name": "String",
+        "category": "String",
+        "filename": "String"
     },
     ]
 }
 ```
 
-#### GET /zeichen/:id/
-Liefert das Zeichen mit der ID :id nach dem o.g. Schema.
+#### POST /zeichen/
+Erstellt ein neues Objekt in der Datenbank, in welchem das JSON Objekt für taktische Zeichen gespeichert wird.
+###### Wichtig: Diese Route dient nur zum einmaligen Erstellen des DB-Objekts. Danach nicht mehr verwenden!
+
 #### POST /zeichen/:id/
-Nimmt ein geändertes Zeichen entgegen
-#### PUT /zeichen/
-Nimmt ein neues Zeichen entgegen und liefert die zugehörige ZeichenID wie folgt:
-```JSON
-{
-    "id": "id"
-}
-```
-#### DELETE /zeichen/:id/
-Löscht ein taktisches Zeichen mit der ID :id
+Nimmt ein das geänderte JSON Objekt entgegen und überschreibt das alte Objekt.
