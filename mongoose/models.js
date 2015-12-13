@@ -23,9 +23,7 @@ module.exports = function(mongoose) {
         Zeichen: Object
     };
     var taktZeichen = new mongoose.Schema({
-      Name: String,
-      Category: String,
-      Filename: String
+      zeichenJSON: Object
     });
 
     var models = {

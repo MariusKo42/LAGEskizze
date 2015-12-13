@@ -23,33 +23,37 @@ app.get('/api/getEinsatz/:EinsatzID/', function(req, res){
 
 });
 
-/* liefert liste mit den ids und titeln der taktischen zeichen*/
+/* liefert JSON Objekt mit Metadaten(Name, Category, Filename) zu taktischen Zeichen*/
 app.get('/zeichen/', function(req, res){
-	//'Schema' durch entsprechendes mongoose schema für taktische zeichen ersetzen
-	Schema.find(function(err, result){
+
+	taktZeichens.find(function(err, result){
 		if (err) return console.err(err);
-		res.send(result);
+		res.send(result.zeichenJSON);
 	})
 });
 
-/* liefert das zeichen mit der ID :id */
-app.get('/zeichen/:id/', function(req, res){
-	var zeichenID = req.params.id;
 
-	//'Schema' durch entsprechendes mongoose schema für taktsiche zeichen ersetzen
-	Schema.findOne({_id: zeichenID}, function(err, callback){
-			if (err) return console.log(err);
-			res.send(callback);
-	});
-});
 
-/* nimmt ein geändertes Zeichen entgegen */
+/* nimmt geändertes JSON Objekt entgegen */
 app.post('/zeichen/:id/', function(req, res){
   var zeichenID = req.params.id;
 
-  //'Schema' durch entsprechendes mongoose schema für taktsiche zeichen ersetzen
-  Schema.findByIdAndUpdate(zeichenID, {$set: {/* hier die json elemente einfügen */}}, function(err, schema){
-    if (err) return handelError(err);
-    res.send(schema);
+  
+  taktZeichens.findByIdAndUpdate(zeichenID, {zeichenJSON: req.body.content}, function(err){
+    if (err) return console.err(err);
+    res.send("Updated JSON Object.  Content: \n" + req.body.content);
+   
   });
+});
+
+/* erstellt neues Objekt für Datenbank, in welchem das JSON Objekt für taktische Zeichen gespeichert wird */
+app.post('/zeichen/', function(req, res){
+	var newZeichen = new taktZeichens({
+		zeichenID : req.body.content
+	});
+
+	newZeichen.save(function(err){
+		if (err) return console.err(err);
+	});
+	res.end();
 });
