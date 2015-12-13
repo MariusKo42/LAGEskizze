@@ -11,6 +11,7 @@
 var db = require(../mongoose/db.js);
 var models = require(../mongoose/models.js);
 var express = require('express');
+var fs = require('fs-extra');
 
 app.get('/api/getBasemaps', function (req, res) {
 	// Hier müsste man die Basemaps holen	
@@ -35,12 +36,19 @@ app.get('/api/getEinsatz/:EinsatzID/', function(req, res){
 */
 app.put('/zeichen', function(req, res) {
 
+	// "Zeichen" durch den richtigen Namen für das Schema ersetzen.
 	var zeichen = new models.taktischeZeichen({
-		_id: ....;
-		datei: ...;
-		// Hier müsste gespeichert werden
+		name: /*Hier JSON Elemente einfügen*/;
+		datei: /*Hier JSON Elemente einfügen*/;
 	});
 
+	//im Dateisystem speichern, wenn wir den Pfad wissen.
+	fs.writeFile(/*FILE*/, /*Daten*/, function(err) {
+		if(err) throw err;
+		console.log('File saved');
+	})
+
+	// "Zeichen" durch den richtigen Namen für das Schema ersetzen.
 	zeichen.save(function(error) {
 		var message = error ? 'failed to save TZ:' + error
 							: 'saved TZ:' zeichen._id;
@@ -57,10 +65,14 @@ app.put('/zeichen', function(req, res) {
 app.delete('/zeichen/:id', function(req, res) {
 
 	var id = req.params.id;
+	//durch richtigen Namen für TZ ersetzen
 	models.taktischeZeichen.remove({_id: id}, function(error) {
 		var message = error ? 'failed to remove from DB' + error
 							: 'successfully deleted';
 		console.log(message);
+
+		//aus dem Dateisystem löschen, Pfad ergängen, wenn wir den wissen
+		fs.remove(/*PFAD*/);
 		res.send(message);
 	});
 });
