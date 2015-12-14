@@ -468,13 +468,8 @@ function getAnchorOfElement(elementId){
 	if(centerX < _mapLeft){return [2, centerY - _mapTop]}
 	else if (centerX > _mapLeft + _mapWidth - 1) {return [offset.left - _mapLeft, centerY - _mapTop]}
 	else if (centerY < _mapTop + 1 ) {return [centerX - _mapLeft, 2]}
-	else if (centerY > _mapTop + _mapHeight - 1) {return [centerX - _mapLeft, _mapTop + _mapHeight - 1 ]}
-	/*
-	if (centerX < 80) {return [2, centerY -  _mapLeft]}
-	else if (centerX > 880) {return [_mapLeft + _mapWidth, centerY - _mapHeight]}
-	else if (centerY < 80) {return [centerX-90, 2]}
-	else if (centerY > 680) {return [centerX-90, 564]}
-	*/
+	else if (centerY > _mapTop + _mapHeight - 1) {return [centerX - _mapLeft, offset.top - _mapTop]}
+	
 }
 
 /****************************************
