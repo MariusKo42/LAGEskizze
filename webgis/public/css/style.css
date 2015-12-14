@@ -49,7 +49,7 @@ html, body {
 }
 .activated{
 
-    border: 1px solid rgba(194, 14, 238, 1); /* some kind of red border */
+    border: 1px solid rgb(238, 46, 49); /* some kind of red border */
     -webkit-border-radius: 4px;
        -moz-border-radius: 4px;
             border-radius: 4px;
