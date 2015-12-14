@@ -11,7 +11,7 @@
 	}
 </style>
 
-<div style="margin: 10px;">
+<div>
 	<h1>Bitte ausw&auml;hlen:</h1>
 	<div>Taktische Symbole
 	</div>
@@ -30,14 +30,22 @@
 	Zum setzen des Ortes in die Karte klicken
 	<button ng-click="fields.deleteLine()">Ort l&ouml;schen</button>
 	<br>
-	<ul>
-		<li>
-			<input ng-model="fields.currentField.fieldTextTop" class="fieldText" type="text" placeholder="Text eingeben">
-			<input ng-model="fields.currentField.fieldTextBottom" class="fieldText" style="margin-top: 121px;" type="text" placeholder="Text eingeben">
-			<img ng-src="{{fields.currentField.image}}" style="height:150px; background-color: white; text-align: center;" />
+	<ul style="left:30%; top: 70%; height: 20%; width: 40%; position:absolute;">
+		<!-- svg will not be distorted, therefore a not fitting representation in 4:3 screens. TODO: Avoid inline styling--> 
+		<li style="width: 50%; height: 85%; left:25%; position:absolute;">		
+			
+			<div style="width: 99%; height: 15%; position:absolute;">
+				<input ng-model="fields.currentField.fieldTextTop"  style="display: block; position:relative; width: 97%; height:100%;" type="text" placeholder="Text eingeben">
+			</div>
+			<div style="width: 99%; height: 15%; top: 80%; position:absolute;">
+				<input ng-model="fields.currentField.fieldTextBottom" style="height:100%; display: block; position:relative; width: 97%;" type="text" placeholder="Text eingeben">
+			</div>
+			<img ng-src="{{fields.currentField.image}}" style="width: 100%; height:100%; top:0%; left:0%; background-color: white; text-align: center;" />			
+				
+			
+		</li>		
+		<li style="top:80%; left:0%; position:absolute; width:100%;">		
 			<br>
-		</li>
-		<li>
 			<button ng-click="fields.submit()">Bestätigen</button>
 			<button ng-click="fields.cancel()">Abbrechen</button>
 			<button ng-click="fields.delete()">Löschen</button>
