@@ -17,7 +17,7 @@
 		background-color: #333333;
 		color: white;
 		overflow: scroll;		
-	}
+	}	
 
 	#map{
 		top: 12%;
@@ -33,7 +33,7 @@
 		height: 2.5%;
 		width: calc(100% - 14px);
 		border: 2px solid #7F7F7F;
-	}
+	}	
 
 	.titleRowInput {
 		width: 5%;
@@ -83,12 +83,12 @@
 
 	.fieldText{
 		position: absolute;
-		height: 23px;
-		width: 143px;
+		height: 26.7%;
+		width: 100%;
 	}
 
 	.fieldTextBottom{
-		 margin-top: 72px;
+		 margin-top: 76%;
 	}
 	
 	
