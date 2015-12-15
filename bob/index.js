@@ -1,6 +1,7 @@
 /**
 * @desc Initial file for Bob-Server
 */
+'use strict';
 
 var express = require('express');
 var app = express();

@@ -7,6 +7,7 @@
 /**
 * @desc Routes provided for the API
 */
+'use strict';
 
 var db = require(../mongoose/db.js);
 var models = require(../mongoose/models.js);
