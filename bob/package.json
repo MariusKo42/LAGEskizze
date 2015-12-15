@@ -20,8 +20,6 @@
     "body-parser": "^1.14.1",
     "express": "^4.13.3",
     "mongoose": "^4.2.8",
-    "fs-extra": "^0.26.2"
+    "shortid": "^2.2.4"
   }
 }
-
-        
