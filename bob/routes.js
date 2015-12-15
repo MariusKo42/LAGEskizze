@@ -1,59 +1,48 @@
-/*
+"use strict";
 
-	Here comes the API.
-
-*/
-
-
-app.get('/api/getBasemaps', function (req, res) {
-	// Hier müsste man die Basemaps holen
-
-  res.send('Hello World!');
-});
+var db = require(../mongoose/db.js);
+var models = require(../mongoose/models.js);
+var express = require('express');
+var bodyParser = require('body-parser');
+var app = express();
 
 
-
-app.get('/api/getEinsatz/:EinsatzID/', function(req, res){
-
-	// Beispiel wie das mit den Parametern läuft ;-)
-
-	var einsatzid = req.params.EinsatzID;
-
-
-
-});
-
-/* liefert JSON Objekt mit Metadaten(Name, Category, Filename) zu taktischen Zeichen*/
+/* liefert alle taktischen zeichen inkl. Attribute */
 app.get('/zeichen/', function(req, res){
 
-	taktZeichens.find(function(err, result){
-		if (err) return console.err(err);
-		res.send(result.zeichenJSON);
-	})
+	db.models.taktZeichens.find(function(err, result){
+		if (err) {
+			return console.err(err);
+			res.status(500).send('Keine taktischen Zeichen gefunden.');
+		}
+
+		res.send(result);
+	});
 });
 
+/* liefert das Zeichen mit der ID :id als JSON */
+app.get('/zeichen/:id/' function(req, res){
+	var id = req.params.id;
 
-
-/* nimmt geändertes JSON Objekt entgegen */
-app.post('/zeichen/:id/', function(req, res){
-  var zeichenID = req.params.id;
-
-  
-  taktZeichens.findByIdAndUpdate(zeichenID, {zeichenJSON: req.body.content}, function(err){
-    if (err) return console.err(err);
-    res.send("Updated JSON Object.  Content: \n" + req.body.content);
-   
-  });
+	db.models.taktZeichens.findOne({'id': id, function(err, result){
+		if (err) {
+			return console.err(err);
+			res.status(500).send('Konnte taktisches Zeichen mit der ID: '+ id +' nicht finden.');
+		}
+		res.send(result);
+	});
 });
 
-/* erstellt neues Objekt für Datenbank, in welchem das JSON Objekt für taktische Zeichen gespeichert wird */
-app.post('/zeichen/', function(req, res){
-	var newZeichen = new taktZeichens({
-		zeichenID : req.body.content
-	});
+/* liefert den String des Attributs Svg zurück */
+app.get('/zeichen/:id/svg/', function(req, res){
+	var id = req.params.id;
 
-	newZeichen.save(function(err){
-		if (err) return console.err(err);
+	db.models.taktZeichens.findOne({'id': id}, 'Svg', function(err, result){
+		if (err) {
+			return console.err(err);
+			res.status(500).send('Konnte Svg des taktischen Zeichens mit der ID: ' + id + 'nicht finden.');
+		}
+		//res.send(result);
+		res.send(result.Svg);
 	});
-	res.end();
 });
