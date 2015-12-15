@@ -21,8 +21,8 @@ app.get('/api/einsatz', function(req, res) {
       console.log(message);
       res.status(400).send(message);
     } else {
-	    
-	  // Hier wird noch ein ziemlich mächtiges JSON übergeben. Eventuell andere Struktur überlegen, wie in Dokumentation beschrieben? *Nico 
+
+	  // Hier wird noch ein ziemlich mächtiges JSON übergeben. Eventuell andere Struktur überlegen, wie in Dokumentation beschrieben? *Nico
       res.json(values);
       res.end();
     }
@@ -38,12 +38,15 @@ app.get('/api/einsatz/new', function(req, res) {
   var myEinsatz = new models.einsaetze({});
 
   myEinsatz.locked = false;
-  
+
   myEinsatz.save(function(error) {
     if (error) {
       res.status(400).json({
         status: "Fehler beim Abspeichern des Einsatzes " + req.body.title + ": " + error
       });
+    } else {
+      res.json(myEinsatz);
+      res.end();
     }
   });
 });
@@ -59,13 +62,13 @@ app.post('/api/einsatz/:EinsatzID/', function(req, res) {
     if (err) {
       res.status(400).send(err);
     } else {
-      
+
       if(value.locked){
-	      
+
 	      res.status(400).send("Einsatz ist abgeschlossen (locked)").
-	      
+
       }
-      
+
       value = req.body;
       // POST-Body = Einsatz JSON
       value.save(function(err) {
@@ -82,11 +85,11 @@ app.post('/api/einsatz/:EinsatzID/', function(req, res) {
 //   Route um einen existierenden Einsatz zu sperren.
 //	 Eine weitere Editierung des Einsatzes ist nicht möglich.
 app.post('/api/einsatz/:EinsatzID/lock', function(req, res) {
-  
+
   models.einsaetze.update({ _id: req.params.EinsatzID }, { $set: { locked: 'true' }}, function(){
-	  
+
 	  res.send("Einsatz mit ID " + req.params.EinsatzID + " wurde gesperrt.");
-	  
+
   });
 
 });
