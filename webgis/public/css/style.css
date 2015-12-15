@@ -37,9 +37,9 @@
 	}	
 
 	.titleRowInput {
-		width: 5%;
+		width: 10%;
 		height: 65%;
-		font-size: 0.80vw;
+		font-size: 1.6vh;
 	}
 
 	.fields {
@@ -92,7 +92,7 @@
 	}
 
 	.fieldTextBottom{
-		 top: 76%;
+		 top: 80%;
 	}
 	
 	
