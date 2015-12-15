@@ -13,6 +13,7 @@ var models = require(../mongoose/models.js);
 var express = require('express');
 var body-parser = require('body-parser');
 var shortid = require('shortid');
+var app = express();
 
 app.get('/api/getBasemaps', function (req, res) {
 	// Hier müsste man die Basemaps holen	
