@@ -37,15 +37,22 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 	//show the field-properies in the side-content
 	$scope.fields.register = function(field){
-		$('#' + $scope.fields.currentField.id).removeClass("activated"); 
+		$('#' + $scope.fields.currentField.id).removeClass("activated");
 		$scope.fields.deleteLastLine($scope.fields.currentField.id);
+
+		// when the clicked field is already the active/current one: deselect it
+		if ($scope.fields.currentField.id == field) {
+			$scope.fields.currentField.id = undefined;
+			return;
+		}
+
 		var _template = "/app/templates/fgis/_fieldContent.html";
 		try{$scope.map.editCancel();}catch(e){}
 		var thisImage = document.getElementById(field).getElementsByTagName('img');
 		$scope.fields.currentField.id = field;
 		$scope.fields.currentField.active = true;
 		$('#' + $scope.fields.currentField.id).addClass("activated");
-		if(thisImage.length == 0){ 
+		if(thisImage.length == 0){
 			if ($scope.map.lastClick !=null){
 				$scope.fields.addLine();
 			}
@@ -71,8 +78,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.fields.currentField.active = false;
 		$scope.map.lastClick = null;
 		if(linesArray[$scope.fields.currentField.id] != null){
-			$('#' + $scope.fields.currentField.id).removeClass("activated");			
-		}		
+			$('#' + $scope.fields.currentField.id).removeClass("activated");
+		}
 		var _textTop, _textBottom, _image;
 		_textTop = '<div id="fieldTextTop'
 					+ $scope.fields.currentField.id
@@ -156,7 +163,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	}
 
 	$scope.fields.addLine = function(){
-		if ($scope.fields.currentField.id) {			
+		if ($scope.fields.currentField.id) {
 			var anchorPoint = getAnchorOfElement($scope.fields.currentField.id);
 			var anchor = map.containerPointToLatLng(anchorPoint);
 			var latlngs = [$scope.map.lastClick, anchor];
