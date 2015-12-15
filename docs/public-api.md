@@ -18,9 +18,10 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
 {
  "Zeichen":[
     {
-        "id": "id",
-        "titel: "string",
-        "svg": //noch einzufügen
+        "id": String,
+        "kategorie": String
+        "titel: String,
+        "svg": String
     }
  ]   
 }
@@ -52,30 +53,35 @@ Beim aufrufen wird der Einsatz mit der ID :id gesperrt. Es ist keine weitere Bea
 
 ## Taktische Zeichen
 #### GET /zeichen/
-Übermittelt eine Liste mit den IDs der verfügbaren taktischen Zeichen als JSON:
+Übermittelt ein Array mit allen verfügbaren taktischen Zeichen:
 ```JSON
 {
     "Zeichen":[
-    {
-        "id": "id", 
-        "titel": "titel"
-    },
+        ...
     ]
 }
 ```
 
 #### GET /zeichen/:id/
-Liefert das Zeichen mit der ID :id nach dem o.g. Schema.
-#### POST /zeichen/:id/
-Nimmt ein geändertes Zeichen entgegen
+Liefert das Zeichen mit der ID :id als JSON
+
+### GET /zeichen/:id/svg/
+Liefert den String des Attribut ```svg``` zurück, sodass das Zeichen als <img> eingebunden werden kann. Beispiel: 
+```HTML
+<img src="http://bob/zeichen/n4l2ia/svg/">
+```
+
+#### POST /zeichen/
+Nimmt ein Zeichen als JSON entgegen, und ersetzt das Zeichen in der Datenbank mit der selben id.
+
 #### PUT /zeichen/
-Nimmt ein neues Zeichen entgegen und liefert die zugehörige ZeichenID wie folgt:
+Nimmt ein neues Zeichen entgegen, und speichert es in die Datenbank. Dabei wird die mitgelieferte ID ignoriert, und die vom Server zugewiesene ID als Rückmeldung ausgegeben:
 ```JSON
 {
-    "id": "id"
+    "id": String
 }
 ```
 #### DELETE /zeichen/:id/
-Löscht ein taktisches Zeichen mit der ID :id
+Löscht ein taktisches Zeichen mit der ID :id aus der Datenbank.
 
 
