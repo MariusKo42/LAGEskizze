@@ -51,7 +51,7 @@ app.put('/zeichen/', function(req, res) {
 	//speichere das Zeichen in der DB
 	zeichen.save(function(error) {
 		var message = error ? 'failed to save TZ:' + error
-							: 'saved TZ:' zeichen.id;
+							: 'saved TZ:' + zeichen.id;
 		console.log(message);
 		//und gib die ID an den Client zurück
 		res.send('{"id": "' + zeichen.id + '"}'); 
