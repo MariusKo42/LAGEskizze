@@ -39,7 +39,7 @@ app.get('/zeichen/', function(req, res){
 app.get('/zeichen/:id/', function(req, res){
 	var zeichenId = req.params.id;
 
-	db.models.taktZeichens.findOne({_id: zeichenId}, function(err, result){
+	db.models.taktZeichens.findOne({id: zeichenId}, function(err, result){
 		if (err) {
 			return console.err(err);
 			res.status(500).send('Konnte taktisches Zeichen mit der ID: '+ zeichenId +' nicht finden.');
@@ -52,7 +52,7 @@ app.get('/zeichen/:id/', function(req, res){
 app.get('/zeichen/:id/svg/', function(req, res){
 	var zeichenId = req.params.id;
 
-	db.models.taktZeichens.findOne({_id: zeichenId}, {Svg: 1}, function(err, result){
+	db.models.taktZeichens.findOne({id: zeichenId}, {Svg: 1}, function(err, result){
 		if (err) {
 			return console.err(err);
 			res.status(500).send('Konnte Svg des taktischen Zeichens mit der ID: ' + zeichenId + 'nicht finden.');
