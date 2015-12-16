@@ -4,8 +4,8 @@
 
 'use strict';
 
-var db = require(../mongoose/db.js);
-var models = require(../mongoose/models.js);
+var db = require('../mongoose/db.js');
+var models = require('../mongoose/models.js');
 var body-parser = require('body-parser');
 var shortid = require('shortid');
 var express = require('express');
