@@ -3,10 +3,8 @@
 var bodyParser = require('body-parser');
 var express = require('express');
 var app = express();
-var mongoose = require('mongoose');
 
-require(./mongoose/db.js);
-require(./mongoose/models.js);
+var db = require('./mongoose/db.js');
 
 app.get('/', function (req, res) {
   console.log('Got Request!');	
@@ -27,10 +25,10 @@ app.get('/zeichen/', function(req, res){
 });
 
 /* liefert das Zeichen mit der ID :id als JSON */
-app.get('/zeichen/:id/' function(req, res){
+app.get('/zeichen/:id/', function(req, res){
 	var zeichenId = req.params.id;
 
-	db.models.taktZeichens.findOne({id: zeichenId, function(err, result){
+	db.models.taktZeichens.findOne({id: zeichenId}, function(err, result){
 		if (err) {
 			return console.err(err);
 			res.status(500).send('Konnte taktisches Zeichen mit der ID: '+ zeichenId +' nicht finden.');
@@ -52,13 +50,6 @@ app.get('/zeichen/:id/svg/', function(req, res){
 		res.send(result.Svg);
 	});
 });
-
-// mongoose connection
-var options = {};
-mongoose.connect('mongodb://localhost:8080/fireDB', options);
-mongoose.connection.on('error', function(){callback('database connection error'); });
-mongoose.connection.once('open', function(){callback(null); });
-
 
 
 

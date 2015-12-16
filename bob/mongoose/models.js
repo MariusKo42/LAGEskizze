@@ -14,14 +14,14 @@ module.exports = function(mongoose) {
  	    Einsatzstichwort: String,
     	Einsatzort: String,
     	Meldender: String,
-    	Objektnummer: int,
+    	Objektnummer: Number,
     	Datum_Uhrzeitgruppe: Date,
     	Datensaetze: Object,
     	Zeichnungen: Object,
-    	Kranzposition: int,
+    	Kranzposition: Number,
     	Kartenposition: Object,
         Zeichen: Object
-    };
+    });
     var taktZeichen = new mongoose.Schema({
         // id wird von Lasse gemacht
         Kategorie : String,
@@ -30,9 +30,9 @@ module.exports = function(mongoose) {
     });
 
     var models = {
-        datensaetze = mongoose.model('Datensaetze', datensatz);
-        einsaetze = mongoose.model('Einsatz', einsatz);
-        taktZeichens = mongoose.model('TaktZeichen', taktZeichen);
+        datensaetze : mongoose.model('Datensaetze', datensatz),
+        einsaetze : mongoose.model('Einsatz', einsatz),
+        taktZeichens : mongoose.model('TaktZeichen', taktZeichen)
     };
 
     return models;
