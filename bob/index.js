@@ -6,6 +6,17 @@ var app = express();
 
 var db = require('./mongoose/db.js');
 
+app.use(bodyParser());
+app.use(function(req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+	next();
+});
+
+app.use("/", express.static(__dirname));
+
+
 app.get('/', function (req, res) {
   console.log('Got Request!');	
   res.send('Hello World!');
@@ -28,7 +39,7 @@ app.get('/zeichen/', function(req, res){
 app.get('/zeichen/:id/', function(req, res){
 	var zeichenId = req.params.id;
 
-	db.models.taktZeichens.findOne({id: zeichenId}, function(err, result){
+	db.models.taktZeichens.findOne({_id: zeichenId}, function(err, result){
 		if (err) {
 			return console.err(err);
 			res.status(500).send('Konnte taktisches Zeichen mit der ID: '+ zeichenId +' nicht finden.');
@@ -41,7 +52,7 @@ app.get('/zeichen/:id/', function(req, res){
 app.get('/zeichen/:id/svg/', function(req, res){
 	var zeichenId = req.params.id;
 
-	db.models.taktZeichens.findOne({id: zeichenId}, {Svg: 1}, function(err, result){
+	db.models.taktZeichens.findOne({_id: zeichenId}, {Svg: 1}, function(err, result){
 		if (err) {
 			return console.err(err);
 			res.status(500).send('Konnte Svg des taktischen Zeichens mit der ID: ' + zeichenId + 'nicht finden.');
@@ -50,6 +61,8 @@ app.get('/zeichen/:id/svg/', function(req, res){
 		res.send(result.Svg);
 	});
 });
+
+
 
 
 
