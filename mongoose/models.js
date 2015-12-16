@@ -20,7 +20,8 @@ module.exports = function(mongoose) {
     	Zeichnungen: Object,
     	Kranzposition: int,
     	Kartenposition: Object,
-        Zeichen: Object	
+        Zeichen: Object,
+        locked: Boolean	
     };
     var taktZeichen = new mongoose.Schema({
         id: {
