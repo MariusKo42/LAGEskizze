@@ -23,10 +23,20 @@ module.exports = function(mongoose) {
         Zeichen: Object,
         locked: Boolean	
     };
-    
+    var taktZeichen = new mongoose.Schema({
+        id: {
+            type: String,
+            unique: true,
+            default: shortid.generate
+        },
+        Kategorie: String,
+        Titel: String,
+        Svg: String
+    });
     var models = {
         datensaetze = mongoose.model('Datensaetze', datensatz);
-        einsaetze = mongoose.model('Einsatz');
+        einsaetze = mongoose.model('Einsatz', einsatz);
+        taktZeichens = mongoose.model('TaktZeichen', taktZeichen);
     };
 
     return models;
