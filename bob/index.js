@@ -1,20 +1,25 @@
 /**
-* @desc Initial file for Bob-Server
+* @desc Initial script for Bob-Server with routing information
 */
 
 'use strict';
 
-var db = require('../mongoose/db.js');
-var models = require('../mongoose/models.js');
-var body-parser = require('body-parser');
-var shortid = require('shortid');
+var db = require('./mongoose/db.js');
+var models = require('./mongoose/models.js');
+var bodyParser = require('body-parser');
 var express = require('express');
 var app = express();
+
+app.use('/', express.static(__dirname));
+
+//use the extended request body
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 
 app.get('/', function (req, res) {
   console.log('Got Request!');	
-  res.send('Hello World!');
 });
 
 
@@ -26,12 +31,12 @@ app.post('/zeichen/:id/', function(req, res) {
 
 	var id = req.params.id;
 	var query = {id: req.params.id};
-	var taktZeichens.update(query, {id: req.params.id; Kategorie: req.body.Kategorie; Titel: req.body.Titel; Svg: req.body.Svg}, function(err) {
+	db.models.taktZeichens.update(query, {$set: {Kategorie: req.body.Kategorie, Titel: req.body.Titel, Svg: req.body.Svg}}, function(err) {
 		if(err) {
 			console.log('Error updating the file: ' + err);
 			res.status(500).send('Fehler beim update des Zeichens.');
 		};
-		res.send(req.params.id);
+		res.send(id);
 	});
 });
 
@@ -43,8 +48,8 @@ app.put('/zeichen/', function(req, res) {
 	//erzeuge neues Zeichen, das in der DB abgelegt werden soll.
 	var zeichen = new db.models.taktZeichens({
 		//id: shortid.generate(); Muss das angegeben werden (wegen default im model?)
-		Kategorie: req.body.Kategorie;
-		Titel: req.body.Titel;
+		Kategorie: req.body.Kategorie,
+		Titel: req.body.Titel,
 		Svg: req.body.Svg
 	});
 
@@ -80,6 +85,5 @@ app.delete('/zeichen/:id/', function(req, res) {
 var server = app.listen(8080, function () {
   var host = server.address().address;
   var port = server.address().port;
-  
   console.log('Example app listening at http://%s:%s', host, port);
 });
