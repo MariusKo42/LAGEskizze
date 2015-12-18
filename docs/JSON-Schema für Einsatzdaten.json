@@ -34,7 +34,7 @@
 					"type": "Array",
 					"items": {
 						"index": {
-							"type": "int"
+							"type": "integer"
 						},
 						"captionTop": {
 							"type": "String"
@@ -55,13 +55,14 @@
 					}
 				}
 			}
-		}
+		},
 		"map": {
 			"description": "Zustand der Karte",
+			"type": "Object",
 			"properties": {
 				"zoom" {
 					"description": "Zoomstufe der Karte",
-					"type": "int"
+					"type": "integer"
 				},
 				"center": {
 					"description": 'Koordinaten der Karte.',
@@ -70,6 +71,25 @@
 				"tileServer": {
 					"description": "Quelle des Karte",
 					"type": "String"
+				}
+			}
+		},
+		"taktZeichen": {
+			"description": "Taktische Zeichen in der Kranzdarstellung",
+			"type": "Object"
+			properties: {
+				"kranzposition": {
+					"description": "Position des TZ im Kranz",
+					"type": "integer",
+					"minimum": 1
+				},
+				"kartenposition": {
+					"description": 'Koordinaten des Markers auf der Karte.',
+					"$ref": 'http://json-schema.org/geo'
+				},
+				Zeichen": {
+					"description": 'Das Zeichen, das an der gegebenen Position gespeichert ist.',
+					"$ref": 'taktische_Zeichen_Schema' // Das entwirft Jan
 				}
 			}
 		}
