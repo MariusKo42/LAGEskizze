@@ -611,60 +611,68 @@ function allowDrop(ev) {
 }
 
 function drop(ev){
-	ev.preventDefault();
+	if(ev.preventDefault)  ev.preventDefault();
+	if(ev.stopPropagation) ev.stopPropagation();
+
 	var startId = ev.dataTransfer.getData("text");
 	var movingElement = document.getElementById("image" + startId);
 	var startElement = document.getElementById(startId);
-	var targetElement = null;
-	for (var i = ev.path.length - 1; i >= 0; i--) {
-		try {
-			if(ev.path[i].classList.contains("fields")){
-				targetElement = ev.path[i];
-			}
-		}catch(e){};
-	};
-	if (targetElement != null){
-		//save the texts:
-		console.log(startId + " -> " + targetElement.id)
-		var _textTopTarget = document.getElementById('fieldTextTop'+targetElement.id).innerHTML;
-		var _textBottomTarget = document.getElementById('fieldTextBottom'+targetElement.id).innerHTML;
-		var _textTopStart = document.getElementById('fieldTextTop'+startId).innerHTML;
-		var _textBottomStart = document.getElementById('fieldTextBottom'+startId).innerHTML;
 
-		//change the images and texts:
-		var movingBackElement = document.getElementById("image" + targetElement.id);
-		startElement.innerHTML = '<div id="fieldTextTop'
-			+ startId
-			+ '" class="fieldText fieldTextTop">'
-			+ _textTopTarget
-			+ '</div><div id="fieldTextBottom'
-			+ startId
-			+ '" class="fieldText fieldTextBottom">'
-			+ _textBottomTarget
-			+ '</div>';
-		startElement.appendChild(movingBackElement);
-		targetElement.innerHTML = '<div id="fieldTextTop'
-			+ targetElement.id
-			+ '" class="fieldText fieldTextTop">'
-			+ _textTopStart
-			+ '</div><div id="fieldTextBottom'
-			+ targetElement.id
-			+ '" class="fieldText fieldTextBottom">'
-			+ _textBottomStart
-			+ '</div>';
-		targetElement.appendChild(movingElement);
-		movingElement.setAttribute("id", "image" + targetElement.id);
-		if (movingBackElement != null) {movingBackElement.setAttribute("id", "image" + startId)};
+	// we drop onto the fieldText or svg, so we need to access the parent field-div
+	var targetElement = ev.target.parentNode;
+	// if we drop onto the svg polygon element, we need to go one level higher
+	if (!$(targetElement).hasClass('fields'))
+		targetElement = targetElement.parentNode;
+	var targetId = targetElement.id;
 
-		//change the lines:
-		var newTargetLine = linesArray[startId];
-		if (newTargetLine != null) {newTargetLine[1] = getAnchorOfElement(targetElement.id)};
+	//save the texts:
+	console.log('element dropped: ' + startId + " -> " + targetElement.id)
+	var _textTopTarget = document.getElementById('fieldTextTop'+targetId).innerHTML;
+	var _textBottomTarget = document.getElementById('fieldTextBottom'+targetId).innerHTML;
+	var _textTopStart = document.getElementById('fieldTextTop'+startId).innerHTML;
+	var _textBottomStart = document.getElementById('fieldTextBottom'+startId).innerHTML;
 
-		var newStartLine = linesArray[targetElement.id];
-		if (newStartLine != null) {newStartLine[1] = getAnchorOfElement(startId)};
+	//change the images and texts:
+	var movingBackElement = document.getElementById("image" + targetId);
+	startElement.innerHTML = '<div id="fieldTextTop'
+		+ startId
+		+ '" class="fieldText fieldTextTop">'
+		+ _textTopTarget
+		+ '</div><div id="fieldTextBottom'
+		+ startId
+		+ '" class="fieldText fieldTextBottom">'
+		+ _textBottomTarget
+		+ '</div>';
+	startElement.appendChild(movingBackElement);
+	targetElement.innerHTML = '<div id="fieldTextTop'
+		+ targetId
+		+ '" class="fieldText fieldTextTop">'
+		+ _textTopStart
+		+ '</div><div id="fieldTextBottom'
+		+ targetId
+		+ '" class="fieldText fieldTextBottom">'
+		+ _textBottomStart
+		+ '</div>';
+	targetElement.appendChild(movingElement);
+	movingElement.setAttribute("id", "image" + targetId);
+	if (movingBackElement != null) {movingBackElement.setAttribute("id", "image" + startId)};
 
-		linesArray[startId] = newStartLine;
-		linesArray[targetElement.id] = newTargetLine;
-		fitAllLines(linesArray);
-	}
+	//change the lines:
+	var newTargetLine = linesArray[startId];
+	if (newTargetLine != null) {newTargetLine[1] = getAnchorOfElement(targetId)};
+
+	var newStartLine = linesArray[targetId];
+	if (newStartLine != null) {newStartLine[1] = getAnchorOfElement(startId)};
+
+	linesArray[startId] = newStartLine;
+	linesArray[targetId] = newTargetLine;
+	fitAllLines(linesArray);
+
+	// update the active highlight, if the dragged field was active
+	// TODO: update $scope.fields.currentField.id somehow
+	//       or: call submit before dropping!
+	/*if ($('#' + startId).hasClass("activated")) {
+		$('#' + startId).removeClass("activated");
+		$('#' + targetId).addClass("activated");
+	}*/
 }
