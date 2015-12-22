@@ -34,6 +34,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.fields.currentField.id = undefined;
 	$scope.fields.currentField.fieldTextTop = "";
 	$scope.fields.currentField.fieldTextBottom = "";
+	$scope.fields.currentField.fieldComment = "";
 
 	//show the field-properies in the side-content
 	$scope.fields.register = function(field){
@@ -59,16 +60,20 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 			$scope.fields.currentField.image = "images/symbols/_universal.svg";
 			$scope.fields.currentField.topText = "";
 			$scope.fields.currentField.bottomText = "";
+			$scope.fields.currentField.comment = "";
 			$scope.fields.currentField.fieldTextTop = "";
-			$scope.fields.currentField.fieldTextBottom = ""
+			$scope.fields.currentField.fieldTextBottom = "";
+			$scope.fields.currentField.fieldComment = "";
 		}
 		else {
 			$scope.fields.currentField.image = thisImage[0].src;
 			console.log(thisImage);
 			$scope.fields.currentField.topText = "";
 			$scope.fields.currentField.bottomText = "";
+			$scope.fields.currentField.comment = "";
 			$scope.fields.currentField.fieldTextTop = document.getElementById('fieldTextTop'+field).innerHTML;
 			$scope.fields.currentField.fieldTextBottom = document.getElementById('fieldTextBottom'+field).innerHTML;
+			$scope.fields.currentField.fieldComment = document.getElementById('fieldComment'+field).innerHTML;
 		}
 		$scope.sideContent.change(_template);
 	}
@@ -80,7 +85,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		if(linesArray[$scope.fields.currentField.id] != null){
 			$('#' + $scope.fields.currentField.id).removeClass("activated");
 		}
-		var _textTop, _textBottom, _image;
+		var _textTop, _textBottom, _comment, _image;
 		_textTop = '<div id="fieldTextTop'
 					+ $scope.fields.currentField.id
 					+ '" class="fieldText fieldTextTop">'
@@ -92,6 +97,11 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 					+ '" class="fieldText fieldTextBottom">'
 					+ $scope.fields.currentField.fieldTextBottom
 					+ '</div>';
+		_comment= '<div id="fieldComment'
+			+ $scope.fields.currentField.id
+			+ '" class="fieldComment">'
+			+ $scope.fields.currentField.fieldComment
+			+ '</div>';
 
 		//insert the image:
 		_image = '<img id="image'
@@ -103,7 +113,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 					+ '; width:'
 					+ fieldOrder.size
 					+ '; background-color: white; text-align: center;" />';
-		var _htmlString = _textTop + _textBottom + _image;
+		var _htmlString = _textTop + _textBottom + _comment + _image;
 		document.getElementById($scope.fields.currentField.id).innerHTML = _htmlString;
 		$scope.sideContent.close();
 	}
@@ -123,6 +133,9 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 						+ '<div id="fieldTextBottom'
 						+ $scope.fields.currentField.id
 						+ '" class="fieldText fieldTextBottom"></div>'
+						+ '<div id="fieldComment'
+						+ $scope.fields.currentField.id
+						+ '" class="fieldComment"></div>'
 						+ '<svg id="image'
 						+ $scope.fields.currentField.id
 						+ '" style="height:'

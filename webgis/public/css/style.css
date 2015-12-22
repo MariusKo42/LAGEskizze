@@ -6,6 +6,11 @@ html, body {
 	background-color: #eaeaea;
 }
 
+textarea {
+	font-family: inherit;
+	font-size: inherit;
+}
+
 #sideContent {
 	position: absolute;
 	height: calc(100% - 30px);
@@ -83,6 +88,10 @@ html, body {
 
 .fieldTextBottom{
 	 margin-top: 72px;
+}
+
+.fieldComment{
+	display: none;
 }
 
 /**Map stuff:
