@@ -30,6 +30,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.fields.currentField.image = "images/symbols/_universal.svg";
 	$scope.fields.currentField.topText = "";
 	$scope.fields.currentField.bottomText = "";
+	$scope.fields.currentField.commentField = "";
 	$scope.fields.currentField.active = false;
 	$scope.fields.currentField.id = undefined;
 	$scope.fields.currentField.fieldTextTop = "";
@@ -60,7 +61,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 			$scope.fields.currentField.image = "images/symbols/_universal.svg";
 			$scope.fields.currentField.topText = "";
 			$scope.fields.currentField.bottomText = "";
-			$scope.fields.currentField.comment = "";
+			$scope.fields.currentField.commentField = "";
 			$scope.fields.currentField.fieldTextTop = "";
 			$scope.fields.currentField.fieldTextBottom = "";
 			$scope.fields.currentField.fieldComment = "";
@@ -70,7 +71,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 			console.log(thisImage);
 			$scope.fields.currentField.topText = "";
 			$scope.fields.currentField.bottomText = "";
-			$scope.fields.currentField.comment = "";
+			$scope.fields.currentField.commentField = "";
 			$scope.fields.currentField.fieldTextTop = document.getElementById('fieldTextTop'+field).innerHTML;
 			$scope.fields.currentField.fieldTextBottom = document.getElementById('fieldTextBottom'+field).innerHTML;
 			$scope.fields.currentField.fieldComment = document.getElementById('fieldComment'+field).innerHTML;
@@ -97,11 +98,11 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 					+ '" class="fieldText fieldTextBottom">'
 					+ $scope.fields.currentField.fieldTextBottom
 					+ '</div>';
-		_comment= '<div id="fieldComment'
-			+ $scope.fields.currentField.id
-			+ '" class="fieldComment">'
-			+ $scope.fields.currentField.fieldComment
-			+ '</div>';
+		_comment = '<div id="fieldComment'
+					+ $scope.fields.currentField.id
+					+ '" class="fieldComment">'
+					+ $scope.fields.currentField.fieldComment
+					+ '</div>';
 
 		//insert the image:
 		_image = '<img id="image'
