@@ -629,8 +629,10 @@ function drop(ev){
 	console.log('element dropped: ' + startId + " -> " + targetElement.id)
 	var _textTopTarget = document.getElementById('fieldTextTop'+targetId).innerHTML;
 	var _textBottomTarget = document.getElementById('fieldTextBottom'+targetId).innerHTML;
+	var _commentTarget = document.getElementById('fieldComment'+targetId).innerHTML;
 	var _textTopStart = document.getElementById('fieldTextTop'+startId).innerHTML;
 	var _textBottomStart = document.getElementById('fieldTextBottom'+startId).innerHTML;
+	var _commentStart = document.getElementById('fieldComment'+startId).innerHTML;
 
 	//change the images and texts:
 	var movingBackElement = document.getElementById("image" + targetId);
@@ -642,6 +644,10 @@ function drop(ev){
 		+ startId
 		+ '" class="fieldText fieldTextBottom">'
 		+ _textBottomTarget
+		+ '</div><div id="fieldComment'
+		+ startId
+		+ '" class="fieldComment">'
+		+ _commentTarget
 		+ '</div>';
 	startElement.appendChild(movingBackElement);
 	targetElement.innerHTML = '<div id="fieldTextTop'
@@ -652,6 +658,10 @@ function drop(ev){
 		+ targetId
 		+ '" class="fieldText fieldTextBottom">'
 		+ _textBottomStart
+		+ '</div><div id="fieldComment'
+		+ targetId
+		+ '" class="fieldComment">'
+		+ _commentStart
 		+ '</div>';
 	targetElement.appendChild(movingElement);
 	movingElement.setAttribute("id", "image" + targetId);
