@@ -34,16 +34,16 @@
 		height: 2.5%;
 		/*width: calc(100% - 14px);*/
 		width: 100%; 
-		border-bottom: 0.1vh solid #7F7F7F;
+		border-bottom: 0.3vh solid #7F7F7F;
 		font-size: 0.80vw;
 	}	
-	.wrapper {
+	.mapArea {
 		top: 2.5%;
 		width: 100%;
 		display: inline-block;
 		position: relative;
 	}
-	.wrapper:after {
+	.mapArea:after {
 		padding-top: 49.1%;
 		/* padding-top: 53.4375%;*/
 		/* 16:9 ratio (56.25%) minus titleRow height*/
