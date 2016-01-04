@@ -20,10 +20,10 @@
 	}	
 
 	#map{
-		top: 12%;
-		left: 5%;
-		height: 72%; 
-		width: 48.6%; 
+		top: 11.7%;
+		left: 5.9%;
+		height: 76.2%; 
+		width: 48.4%; 
 		position: absolute;
 	}
 
@@ -32,8 +32,9 @@
 		top: 0;
 		left: 0;
 		height: 2.5%;
-		width: calc(100% - 14px);
-		border: 2px solid #7F7F7F;
+		/*width: calc(100% - 14px);*/
+		width: 100%; 
+		border-bottom: 0.1vh solid #7F7F7F;
 		font-size: 0.80vw;
 	}	
 	.wrapper {
@@ -43,7 +44,7 @@
 		position: relative;
 	}
 	.wrapper:after {
-		padding-top: 49.4375%;
+		padding-top: 49.1%;
 		/* padding-top: 53.4375%;*/
 		/* 16:9 ratio (56.25%) minus titleRow height*/
 		display: block;
@@ -79,14 +80,14 @@
 	}
 	.toprow{
 		position: absolute;
-		top: 2.8%;
+		top: 0.5%;
 		
 	}
 	
 	
 	.bottomrow{
 		position: absolute;
-		top: 84%;
+		top: 88%;
 	}
 	.leftcol{
 		position: absolute;
@@ -94,7 +95,7 @@
 	}
 	.rightcol{
 		position: absolute;
-		left: 53.6%;
+		left: 54.37%;
 	}
 
 	.fieldText{
@@ -127,10 +128,10 @@
 	}
 
 	.customZoomControl-pane {
-		width: 1%;
-		height: 2.5%;
+		width: 1.8%;
+		height: 3.5%;
 		position: absolute;
-		top: 3%;
+		top: 1%;
 		left: 1%;
 		box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 		line-height: 26px;
@@ -154,7 +155,7 @@
 	}
 
 	.customZoomControl-out{
-		left: 150%;
+		left: 100%;
 	}
 	.customZoomControl-in{
 		left: 0px;
@@ -164,10 +165,10 @@
 		top: 6%;
 		left: 0.5%;
 		text-decoration: none;
-		font-size: 0.75vw;
+		font-size: 0.8vw;
 		color: black;
 		line-height: 100%;
-		width: 3%;
+		width: 4%;
 		height: 3%;
 		text-align: center;				
 	}
@@ -181,15 +182,16 @@
 	}
 
 	#datasets{
-		top: 5%;
-		left: 53%;
+		
+		top: 3.5%;
+		left: 54%;
 		text-decoration: none;
-		font-size: 1vw;
+		font-size: 0.8vw;
 		color: black;
-		width: 6%;
-		height: 2%;
+		width: 4.9%;
+		height: 3%;
 		text-align: center;
-		padding: 10px 5px 10px 5px;
+		/*padding: 10px 5px 10px 5px;*/
 	}
 
 	#drawTest{
