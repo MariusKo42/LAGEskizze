@@ -22,8 +22,9 @@
 	#map{
 		top: 12%;
 		left: 5%;
-		height: 72%;
-		width: 48.6%;
+		height: 72%; 
+		width: 48.6%; 
+		position: absolute;
 	}
 
 	#titleRow{
@@ -35,6 +36,19 @@
 		border: 2px solid #7F7F7F;
 		font-size: 0.80vw;
 	}	
+	.wrapper {
+		top: 2.5%;
+		width: 100%;
+		display: inline-block;
+		position: relative;
+	}
+	.wrapper:after {
+		padding-top: 49.4375%;
+		/* padding-top: 53.4375%;*/
+		/* 16:9 ratio (56.25%) minus titleRow height*/
+		display: block;
+		content: '';
+	}
 
 	.titleRowInput {
 		width: 10%;
@@ -87,8 +101,9 @@
 		position: absolute;
 		height: 20%;
 		width: 100%;
-		font-size: 1.6vh;
+		font-size: 1.6vmin;
 		text-align: center; 
+		line-height: 100%;
 	}
 
 	.fieldTextBottom{

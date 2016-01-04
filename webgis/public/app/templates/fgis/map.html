@@ -1,61 +1,67 @@
 <!-- Map Elements: -->
-<div id="map"></div>
-<div class="customZoomControl-pane">
-  <a href= "#map" ng-click="map.zoomIn()" class="customZoomControl customZoomControl-in">+</a>
-  <a href= "#map" ng-click="map.zoomOut()" class="customZoomControl customZoomControl-out">-</a>
+
+<!-- map area will not be distortet, fitting representation for 16:9, space for smaller width-ratio, scrolling for smaller height ratio--> 
+<div class="wrapper">
+	<div id="map"></div>
+
+	<div class="customZoomControl-pane">
+	  <a href= "#map" ng-click="map.zoomIn()" class="customZoomControl customZoomControl-in">+</a>
+	  <a href= "#map" ng-click="map.zoomOut()" class="customZoomControl customZoomControl-out">-</a>
+	</div>
+	<a id="freezeMap" ng-click="map.freeze()" class="map-element" href="#map">Karte
+	  <img id="freezeMapLock" src="images/lock.png">
+	  <br>
+	  einfrieren</a>
+
+		<table class="drawToolbarDiv">
+		  <tbody>
+			<tr>
+			  <td colspan="6">
+				<div id="drawTitle" class="drawToolbar">Zeichnen</div>
+			  </td>
+			</tr>
+			<tr>
+			  <td colspan="2">
+				<a id="drawRectangle" ng-click="map.draw('rectangle')" class="drawToolbar" href="#map"></a>
+			  </td>
+			  <td colspan="2">
+				<a id="drawPolygon" ng-click="map.draw('polygon')" class="drawToolbar" href="#map"></a>
+			  </td>
+			  <td colspan="2">
+				<a id="drawLine" ng-click="map.draw('polyline')" class="drawToolbar" href="#map"></a>
+			  </td>
+			</tr>
+			<tr>
+			  <td colspan="3">
+				<a id="drawCircle" ng-click="map.draw('circle')" class="drawToolbar" href="#map"></a>
+			  </td>
+			  <td colspan="3">
+				<a id="drawPoint" ng-click="map.draw('marker')" class="drawToolbar" href="#map"></a>
+			  </td>
+			</tr>
+		  </tbody>
+		</table>
+
+
+		<a id="datasets" ng-click="map.showDatasets()" class="map-element" href="#map">Datensätze</a>
+
+		
+
+		<div ng-repeat="field in fields.fieldOrder.properties">
+		  <div ng-attr-id="{{field.id}}" class="fields" ng-class="field.group" ng-style="{'top': field.top, 'left': field.left, 'width': fields.fieldOrder.width,'height': fields.fieldOrder.height}" ng-click="fields.register(field.id)" ondrop="drop(event)" ondragover="allowDrop(event)">
+			  <div ng-attr-id="fieldTextTop{{field.id}}" class="fieldText fieldTextTop"></div>
+			  <div ng-attr-id="fieldTextBottom{{field.id}}" class="fieldText fieldTextBottom"></div>
+			  <svg ng-attr-id="image{{field.id}}" viewBox="0 0 90 90" preserveAspectRatio="none"  ng-style="{'width': fields.fieldOrder.size,'height': fields.fieldOrder.size} "><polygon points="2,2 88,2 88,88 2,88 2,2 2,22.5 88,22.5 88,67.5 2,67.5"/></svg>
+		  </div>
+		</div>
 </div>
-<a id="freezeMap" ng-click="map.freeze()" class="map-element" href="#map">Karte
-  <img id="freezeMapLock" src="images/lock.png">
-  <br>
-  einfrieren</a>
 
-<!--<div id="mapContentDiv" class="container" style= "width: 71% !important; display: inline-block">-->
-	<table class="drawToolbarDiv">
-	  <tbody>
-		<tr>
-		  <td colspan="6">
-			<div id="drawTitle" class="drawToolbar">Zeichnen</div>
-		  </td>
-		</tr>
-		<tr>
-		  <td colspan="2">
-			<a id="drawRectangle" ng-click="map.draw('rectangle')" class="drawToolbar" href="#map"></a>
-		  </td>
-		  <td colspan="2">
-			<a id="drawPolygon" ng-click="map.draw('polygon')" class="drawToolbar" href="#map"></a>
-		  </td>
-		  <td colspan="2">
-			<a id="drawLine" ng-click="map.draw('polyline')" class="drawToolbar" href="#map"></a>
-		  </td>
-		</tr>
-		<tr>
-		  <td colspan="3">
-			<a id="drawCircle" ng-click="map.draw('circle')" class="drawToolbar" href="#map"></a>
-		  </td>
-		  <td colspan="3">
-			<a id="drawPoint" ng-click="map.draw('marker')" class="drawToolbar" href="#map"></a>
-		  </td>
-		</tr>
-	  </tbody>
-	</table>
+<div id="titleRow">
+Einsatzstichwort: <input type="text" class="titleRowInput"> Einsatzort: <input type="text" class="titleRowInput"> Meldender: <input type="text" class="titleRowInput"> Objektnr.: <input type="text" class="titleRowInput" style="width: 50px;"> Datum-Uhrzeitgruppe: <input type="text" class="titleRowInput">
+</div>
 
+<!--black area on the left -->
+<div id="sideContent">
+<div ng-include="sideContent.template" style="height: 100%"></div>
+</div>
 
-	<a id="datasets" ng-click="map.showDatasets()" class="map-element" href="#map">Datensätze</a>
-
-	<!-- add the elements of the "takische Arbeitstafel" -->
-	<div id="titleRow">
-	  Einsatzstichwort: <input type="text" class="titleRowInput"> Einsatzort: <input type="text" class="titleRowInput"> Meldender: <input type="text" class="titleRowInput"> Objektnr.: <input type="text" class="titleRowInput" style="width: 50px;"> Datum-Uhrzeitgruppe: <input type="text" class="titleRowInput">
-	</div>
-
-	<div ng-repeat="field in fields.fieldOrder.properties">
-	  <div ng-attr-id="{{field.id}}" class="fields" ng-class="field.group" ng-style="{'top': field.top, 'left': field.left, 'width': fields.fieldOrder.width,'height': fields.fieldOrder.height}" ng-click="fields.register(field.id)" ondrop="drop(event)" ondragover="allowDrop(event)">
-		  <div ng-attr-id="fieldTextTop{{field.id}}" class="fieldText fieldTextTop"></div>
-		  <div ng-attr-id="fieldTextBottom{{field.id}}" class="fieldText fieldTextBottom"></div>
-		  <svg ng-attr-id="image{{field.id}}"  ng-style="{'width': fields.fieldOrder.size,'height': fields.fieldOrder.size}"><polygon points="2,2 88,2 88,88 2,88 2,2 2,22.5 88,22.5 88,67.5 2,67.5"/></svg>
-	  </div>
-	</div>
-
-	<div id="sideContent">
-	  <div ng-include="sideContent.template" style="height: 100%"></div>
-	</div>
-<!--</div>-->
