@@ -43,6 +43,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		// when the clicked field is already the active/current one: deselect it
 		if ($scope.fields.currentField.id == field) {
 			$scope.fields.currentField.id = undefined;
+			$scope.fields.cancel();
 			return;
 		}
 
