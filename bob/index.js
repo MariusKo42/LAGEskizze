@@ -75,7 +75,7 @@ app.post('/api/einsatz/:EinsatzID/', function(req, res) {
 
       if(value.locked){
 
-	      res.status(400).send("Einsatz ist abgeschlossen (locked)").
+	      res.status(400).send("Einsatz ist abgeschlossen (locked)");
 
       }
 
