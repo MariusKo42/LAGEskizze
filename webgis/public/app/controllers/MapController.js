@@ -84,13 +84,13 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		var _textTop, _textBottom, _image;
 		_textTop = '<div id="fieldTextTop'
 					+ $scope.fields.currentField.id
-					+ '" class="fieldText fieldTextTop">'
+					+ '" class="fieldText fieldTextTop" style="overflow:hidden" title="' +$scope.fields.currentField.fieldTextTop + '" data-toggle="tooltip">'
 					+ $scope.fields.currentField.fieldTextTop
-					+ '</div>';
+					+ 'dddd</div>';
 
 		_textBottom = '<div id="fieldTextBottom'
 					+ $scope.fields.currentField.id
-					+ '" class="fieldText fieldTextBottom">'
+					+ '" class="fieldText fieldTextBottom" style="overflow:hidden" title="' +$scope.fields.currentField.fieldTextBottom + '" data-toggle="tooltip">'
 					+ $scope.fields.currentField.fieldTextBottom
 					+ '</div>';
 
