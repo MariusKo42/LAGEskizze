@@ -505,6 +505,7 @@ function initMap(){
 	drawnItems = new L.FeatureGroup();
 	map.addLayer(drawnItems);
 
+<<<<<<< HEAD
 		var options = {
 		    position: 'topright',
 		    draw: {
@@ -546,6 +547,48 @@ function initMap(){
 		    }
 		  };
 
+=======
+var options = {
+    position: 'topright',
+    draw: {
+      polyline: {
+        shapeOptions: {
+          color: '#ff0000',
+          clickable: false
+        }
+      },
+      polygon: {
+        allowIntersection: true,
+        shapeOptions: {
+          color: '#ff0000',
+          clickable: false
+        },
+        showArea: true,
+      },
+      rectangle: {
+        shapeOptions: {
+          clickable: false,
+          color: '#ff0000'
+        }
+      },
+      marker: {
+        shapeOptions: {
+	clickable: false //doesn´t work, why?!
+				}
+      },
+      circle: {
+        shapeOptions: {
+          color: '#ff0000',
+          clickable: false
+        }
+      }
+    },
+    edit: {
+      featureGroup: drawnItems, //REQUIRED!!
+      remove: true
+    }
+  };
+>>>>>>> d671272064d27f9e4f369aa1426305124254860c
 
 	var drawControl = new L.Control.Draw(options);
 	map.addControl(drawControl);
