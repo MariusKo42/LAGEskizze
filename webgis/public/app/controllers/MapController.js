@@ -505,7 +505,7 @@ function initMap(){
 	drawnItems = new L.FeatureGroup();
 	map.addLayer(drawnItems);
 
-<<<<<<< HEAD
+
 		var options = {
 		    position: 'topright',
 		    draw: {
@@ -547,7 +547,7 @@ function initMap(){
 		    }
 		  };
 
-=======
+
 var options = {
     position: 'topright',
     draw: {
@@ -588,7 +588,7 @@ var options = {
       remove: true
     }
   };
->>>>>>> d671272064d27f9e4f369aa1426305124254860c
+
 
 	var drawControl = new L.Control.Draw(options);
 	map.addControl(drawControl);
