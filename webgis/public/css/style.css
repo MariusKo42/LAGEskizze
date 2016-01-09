@@ -284,13 +284,11 @@
 		display: none;
 	}
 	
-}	
+
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-   .drawToolbar {
-   
+   .drawToolbar {   
 			
-		display: inline-block;
-	
+		display: inline-block;	
    }
    .drawToolbarDiv{
    
