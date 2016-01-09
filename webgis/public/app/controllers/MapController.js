@@ -2,6 +2,7 @@ var app = angular.module("fgis");
 var map, drawnItems, drawControl, fachkarten, basemap;
 var lines,
 	linesArray = new Array();
+var commentsMap = new Map();
 
 app.controller("MapController", function($scope, $http, $sce, $location){
 
@@ -221,21 +222,23 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	map.on('draw:created', function (e) {
 	    var type = e.layerType,
 	        layer = e.layer;
-
-	    layer.on('click', function(e){$scope.map.objectClicked(type, layer)});
-
+		var id = drawnItems.getLayerId(e);
+	    layer.on('click', function(e){$scope.map.objectClicked(type, layer, id)});
 	    drawnItems.addLayer(layer);
 	});
 
 	$scope.map = {};
 	$scope.map.frozen = false;
 	$scope.map.lastClick = null;
+	$scope.map.objectId = null;
 
-	$scope.map.objectClicked = function(type, layer){
+	$scope.map.objectClicked = function(type, layer, id){
 		if (!$scope.map.editActive){
 			$scope.sideContent.change("/app/templates/fgis/_drawnObject.html");
 			$scope.$apply(function() {});
 			$scope.map.objects.getMeasurement(type, layer);
+			$scope.map.objectId = id;
+			$scope.map.showComment();
 		}
 	}
 
@@ -381,12 +384,32 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		_element[0].click();
 		$scope.sideContent.textvar = "Objekte bearbeiten";
 		$scope.sideContent.change("/app/templates/fgis/_editObjects.html");
+		$scope.map.objectId = "";
+	}
+
+
+	$scope.map.objects = {};
+	$scope.map.objects.measureString = "";
+	$scope.map.objects.type = "";
+	$scope.map.objects.comment = "";
+	// todo kommentar wird geändert -- alten eintrag erst löschen oder wird in der map überschrieben?
+
+	// save a comment for a drawn object using a map (first value: ObjectId from leafletDraw, second value: commentText)
+	$scope.map.saveComment = function(){
+		commentsMap.set($scope.map.objectId, $scope.map.objects.comment);
+	}
+
+	$scope.map.showComment = function(){
+		var _template = "/app/templates/fgis/_drawnObject.html";
+		$scope.map.objects.comment = commentsMap.get($scope.map.objectId);
+		$scope.sideContent.change(_template);
 	}
 
 	$scope.map.editCancel = function(){
 		$scope.map.editActive = false;
 		var _element = document.getElementsByClassName($scope.map.currentEdit);
 		_element[0].children[1].children[0].click();
+		$scope.map.objectId = "";
 		$scope.sideContent.close();
 	}
 
@@ -394,12 +417,10 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.map.editActive = false;
 		var _element = document.getElementsByClassName($scope.map.currentEdit);
 		_element[0].children[0].children[0].click();
+		$scope.map.objectId = "";
+		commentsMap.delete($scope.map.objectId);
 		$scope.sideContent.close();
 	}
-
-	$scope.map.objects = {};
-	$scope.map.objects.measureString = "";
-	$scope.map.objects.type = "";
 
 	$scope.map.objects.getMeasurement = function(type, layer){
 		var _htmlString = "";
@@ -524,7 +545,7 @@ function initMap(){
 		      polyline: {
 		        shapeOptions: {
 		          color: '#ff0000',
-		          clickable: false
+		          clickable: true
 		        }
 		      },
 		      polygon: {
