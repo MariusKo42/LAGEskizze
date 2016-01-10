@@ -16,6 +16,7 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
 
 ```JSON
 {
+
  "Zeichen":[
     {
         "id": String,
@@ -36,8 +37,8 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
 {
     "Einsaetze":[
     {
-        "id":id, 
-        "titel":titel
+        "id":"id",
+        "titel":"titel"
     },
     ]
 }
@@ -53,14 +54,20 @@ Beim aufrufen wird der Einsatz mit der ID :id gesperrt. Es ist keine weitere Bea
 
 ## Taktische Zeichen
 #### GET /zeichen/
-Übermittelt ein Array mit allen verfügbaren taktischen Zeichen:
+
+Übermittelt ein JSON Objekt, in dem die Bezeichnungen und Dateinamen für die Zeichen enthalten sind.
 ```JSON
 {
     "Zeichen":[
-        ...
+    {
+        "name": "String",
+        "category": "String",
+        "filename": "String"
+    }
     ]
 }
 ```
+
 
 #### GET /zeichen/:id/
 Liefert das Zeichen mit der ID :id als JSON
@@ -85,3 +92,6 @@ Nimmt ein neues Zeichen entgegen, und speichert es in die Datenbank. Dabei wird 
 Löscht ein taktisches Zeichen mit der ID :id aus der Datenbank.
 
 
+
+#### POST /zeichen/:id/
+Nimmt ein das geänderte JSON Objekt entgegen und überschreibt das alte Objekt.

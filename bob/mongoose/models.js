@@ -3,7 +3,6 @@
 /**
  *  @desc definition mongodb schemata
  */
- var shortid = require('shortid');
 
 module.exports = function(mongoose) {
     var datensatz = new mongoose.Schema({
@@ -22,22 +21,23 @@ module.exports = function(mongoose) {
     	Kranzposition: Number,
     	Kartenposition: Object,
         Zeichen: Object,
-        locked: Boolean	
+        locked: Boolean
     });
     var taktZeichen = new mongoose.Schema({
         id: {
             type: String,
             unique: true,
-            default: shortid.generate
+            default: shortid:generate
         },
         Kategorie: String,
         Titel: String,
         Svg: String
     });
+
     var models = {
-        datensaetze: mongoose.model('Datensaetze', datensatz),
-        einsaetze: mongoose.model('Einsatz', einsatz),
-        taktZeichens: mongoose.model('TaktZeichen', taktZeichen)
+        datensaetze : mongoose.model('Datensaetze', datensatz),
+        einsaetze : mongoose.model('Einsatz', einsatz),
+        taktZeichens : mongoose.model('TaktZeichen', taktZeichen)
     };
 
     return models;
