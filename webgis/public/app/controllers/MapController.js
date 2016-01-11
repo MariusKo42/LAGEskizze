@@ -458,22 +458,34 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	}
 });
 
+/**
+ * @desc calculates coordinates for the anchor point (centered to the TZ slot) of the lines to be drawn correctly on map
+ * @param elementID: ID of html element for which anchor point will get calculated.
+ * @return calculated coordinates  
+ */
 function getAnchorOfElement(elementId){
 	var _this = $("#"+elementId);
+	var _map = $("#map");
+	var _titleRow = $("#titleRow");
+	var _mapTop = parseInt(_map.css('top'), 10) + parseInt(_titleRow.css('height'), 10);	
+	var _mapLeft = parseInt(_map.css('left'), 10);
+	var _mapWidth = parseInt(_map.css('width'), 10);
+	var _mapHeight = parseInt(_map.css('height'), 10);
 	var offset = _this.offset();
 	var width = _this.width();
 	var height = _this.height();
-	console.log(_this);
-	console.log(offset);
-	console.log(width);
-	console.log(height);
-
 	var centerX = offset.left + width / 2;
 	var centerY = offset.top + height / 2;
-	if (centerX < 80) {return [2, centerY-120]}
-	else if (centerX > 880) {return [798, centerY-120]}
-	else if (centerY < 80) {return [centerX-90, 2]}
-	else if (centerY > 680) {return [centerX-90, 564]}
+	
+	//left column:
+	if(centerX < _mapLeft){return [2, centerY - _mapTop]}
+	//right column:
+	else if (centerX > _mapLeft + _mapWidth - 1) {return [offset.left - _mapLeft, centerY - _mapTop]}
+	//top row:
+	else if (centerY < _mapTop + 1 ) {return [centerX - _mapLeft, 2]}
+	// bottom row:
+	else if (centerY > _mapTop + _mapHeight - 1) {return [centerX - _mapLeft, offset.top - _mapTop]}
+	
 }
 
 /****************************************
