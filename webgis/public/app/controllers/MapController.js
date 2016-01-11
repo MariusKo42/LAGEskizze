@@ -235,10 +235,10 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.map.objectClicked = function(type, layer, id){
 		if (!$scope.map.editActive){
 			$scope.sideContent.change("/app/templates/fgis/_drawnObject.html");
-			$scope.$apply(function() {});
 			$scope.map.objects.getMeasurement(type, layer);
 			$scope.map.objectId = id;
 			$scope.map.showComment();
+			$scope.$apply(function() {});
 		}
 	}
 
@@ -552,7 +552,7 @@ function initMap(){
 		        allowIntersection: true,
 		        shapeOptions: {
 		          color: '#ff0000',
-		          clickable: false
+		          clickable: true
 		        },
 		        showArea: true,
 		      },
