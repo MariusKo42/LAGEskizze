@@ -84,13 +84,13 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		var _textTop, _textBottom, _image;
 		_textTop = '<div id="fieldTextTop'
 					+ $scope.fields.currentField.id
-					+ '" class="fieldText fieldTextTop">'
+					+ '" class="fieldText fieldTextTop" style="overflow:hidden" title="' +$scope.fields.currentField.fieldTextTop + '" data-toggle="tooltip">'
 					+ $scope.fields.currentField.fieldTextTop
-					+ '</div>';
+					+ 'dddd</div>';
 
 		_textBottom = '<div id="fieldTextBottom'
 					+ $scope.fields.currentField.id
-					+ '" class="fieldText fieldTextBottom">'
+					+ '" class="fieldText fieldTextBottom" style="overflow:hidden" title="' +$scope.fields.currentField.fieldTextBottom + '" data-toggle="tooltip">'
 					+ $scope.fields.currentField.fieldTextBottom
 					+ '</div>';
 
@@ -517,6 +517,7 @@ function initMap(){
 	drawnItems = new L.FeatureGroup();
 	map.addLayer(drawnItems);
 
+
 		var options = {
 		    position: 'topright',
 		    draw: {
@@ -557,6 +558,48 @@ function initMap(){
 		      remove: true
 		    }
 		  };
+
+
+var options = {
+    position: 'topright',
+    draw: {
+      polyline: {
+        shapeOptions: {
+          color: '#ff0000',
+          clickable: false
+        }
+      },
+      polygon: {
+        allowIntersection: true,
+        shapeOptions: {
+          color: '#ff0000',
+          clickable: false
+        },
+        showArea: true,
+      },
+      rectangle: {
+        shapeOptions: {
+          clickable: false,
+          color: '#ff0000'
+        }
+      },
+      marker: {
+        shapeOptions: {
+	clickable: false //doesn´t work, why?!
+				}
+      },
+      circle: {
+        shapeOptions: {
+          color: '#ff0000',
+          clickable: false
+        }
+      }
+    },
+    edit: {
+      featureGroup: drawnItems, //REQUIRED!!
+      remove: true
+    }
+  };
 
 
 	var drawControl = new L.Control.Draw(options);
