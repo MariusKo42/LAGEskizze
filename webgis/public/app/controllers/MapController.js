@@ -63,14 +63,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		var thisImage = document.getElementById(field).getElementsByTagName('img');
 		$scope.fields.currentField.id = field;
 		$scope.fields.currentField.active = true;		
-		$('#' + $scope.fields.currentField.id).addClass("activated"); //highlight
-		
-		/*drawnItems.eachLayer(function(layer) {
-				
-				layer.setStyle({color: "#colorcode"});
-			
-		});*/		
-		
+		$('#' + $scope.fields.currentField.id).addClass("activated"); //highlight		
 		drawnItems.eachLayer(function(layer) {				
 			setClickable(layer, false);			
 		});
