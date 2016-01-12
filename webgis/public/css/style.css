@@ -50,7 +50,7 @@
 		display: block;
 		content: '';
 	}
-
+	
 	.titleRowInput {
 		width: 10%;
 		height: 65%;
@@ -166,7 +166,6 @@
 		position: absolute;
 		top: 1%;
 		left: 1%;
-		box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 		line-height: 26px;
 
 	}
@@ -330,6 +329,7 @@
    }
    
 }
+
 
 
 
