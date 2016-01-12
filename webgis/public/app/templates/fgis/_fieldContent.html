@@ -29,25 +29,25 @@
 			<img ng-click="fields.addSymbol(symbol.name)" style="height:80px; background-color: white;" ng-src="images/symbols/{{symbol.name}}.svg" ng-title="{{symbol.name}}" alt="Description" />
 		</li>
 	</ul>
-	<div style="top:65%; height: 5%; position:absolute;">
+	<div style="top:65%; height: 5%; position:absolute; font-size:1vw;">
 	Zum setzen des Ortes in die Karte klicken
 	<button ng-click="fields.deleteLine()">Ort l&ouml;schen</button>
 	</div>
 	<br>
-	<ul style="left:30%; top: 70%; height: 20%; width: 40%; position:absolute;">
+	<ul class="tzAuswahl">
 		<!-- svg will not be distorted, therefore a not fitting representation in 4:3 screens.--> 
 		<li style="width: 50%; height: 85%; left:25%; position:absolute;">		
 			
-			<div style="width: 99%; height: 15%; position:absolute;">
+			<div style="width: 100%; height: 17%; position:absolute;">
 				<input ng-model="fields.currentField.fieldTextTop"  style="display: block; position:relative; width: 97%; height:100%;" type="text" placeholder="Text eingeben">
 			</div>
-			<div style="width: 99%; height: 15%; top: 80%; position:absolute;">
+			<div style="width: 100%; height: 17%; top: 80%; position:absolute;">
 				<input ng-model="fields.currentField.fieldTextBottom" style="height:100%; display: block; position:relative; width: 97%;" type="text" placeholder="Text eingeben">
 			</div>
 			<img ng-src="{{fields.currentField.image}}" style="width: 100%; height:100%; top:0%; left:0%; background-color: white; text-align: center;" />			
 				
 			
-		</li>		
+		</li>			
 		<li style="top:80%; left:0%; position:absolute; width:100%;">		
 			<br>
 			<button ng-click="fields.submit()">Bestätigen</button>
@@ -55,11 +55,10 @@
 			<button ng-click="fields.delete()">Löschen</button>
 		</li>
 	</ul>
-	<br>
-	Kommentar zu diesem Taktischen Symbol hinzufügen:
-	<div>
-		<textarea rows="10" cols="50" ng-model="fields.currentField.fieldComment" type="text" placeholder="Kommentar hinzufügen" ></textarea>
-	</div>
-	<!-- todo: Reiter oben mit Link-->
+	<br>	
+	<div class="tzCommentDiv">
+		Kommentar zu diesem Taktischen Symbol hinzufügen:
+		<textarea rows="10" cols="50" class="tzComment" ng-model="fields.currentField.fieldComment" type="text" placeholder="Kommentar hinzufügen" ></textarea>
+	</div>		
 
 </div>
