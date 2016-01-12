@@ -51,10 +51,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		// when the clicked field is already the active/current one: deselect it
 		if ($scope.fields.currentField.id == field) {
 			$scope.fields.currentField.id = undefined;
-			$scope.fields.cancel();
-			drawnItems.eachLayer(function(layer) {				
-				setClickable(layer, true);			
-			});
+			$scope.fields.cancel();			
 			return;
 		}
 
@@ -64,10 +61,10 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.fields.currentField.id = field;
 		$scope.fields.currentField.active = true;		
 		$('#' + $scope.fields.currentField.id).addClass("activated"); //highlight		
+		
 		drawnItems.eachLayer(function(layer) {				
 			setClickable(layer, false);			
-		});
-		
+		});		
 		
 		if(thisImage.length == 0){
 			if ($scope.map.lastClick !=null){
@@ -97,10 +94,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	//submit the field ('bestaetigen')
 	$scope.fields.submit = function(){
 		$scope.fields.currentField.active = false;		
-		$scope.map.lastClick = null;
-		drawnItems.eachLayer(function(layer) {				
-			setClickable(layer, true);			
-		});		
+		$scope.map.lastClick = null;		
 		if(linesArray[$scope.fields.currentField.id] != null){
 			$('#' + $scope.fields.currentField.id).removeClass("activated");
 		}
@@ -253,9 +247,12 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 	$scope.map.objectClicked = function(type, layer, id){
 		if (!$scope.map.editActive){
+			drawnItems.eachLayer(function(layer) {				
+				setClickable(layer, false);			
+			});		
 			$scope.sideContent.change("/app/templates/fgis/_drawnObject.html");
 			$scope.map.objects.getMeasurement(type, layer);
-			$scope.map.objectId = id;
+			$scope.map.objectId = id;			
 			$scope.map.showComment();
 			$scope.$apply(function() {});
 		}
@@ -396,7 +393,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.sideContent.change("/app/templates/fgis/_editObjects.html");
 	}
 
-	$scope.map.editObjects = function(){
+	$scope.map.editObjects = function(){		
 		$scope.map.editActive = true;
 		$scope.map.currentEdit = "leaflet-draw-actions leaflet-draw-actions-top";
 		var _element = document.getElementsByClassName("leaflet-draw-edit-edit");
@@ -405,8 +402,13 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.sideContent.change("/app/templates/fgis/_editObjects.html");
 		$scope.map.objectId = "";
 	}
-
-
+	
+	$scope.map.activateDrawInformation = function(){
+		drawnItems.eachLayer(function(layer) {				
+			setClickable(layer, true);			
+		});		
+	}
+	
 	$scope.map.objects = {};
 	$scope.map.objects.measureString = "";
 	$scope.map.objects.type = "";
@@ -576,32 +578,32 @@ function initMap(){
 		      polyline: {
 		        shapeOptions: {
 		          color: '#ff0000',
-		          clickable: true
+		          clickable: false
 		        }
 		      },
 		      polygon: {
 		        allowIntersection: true,
 		        shapeOptions: {
 		          color: '#ff0000',
-		          clickable: true
+		          clickable: false
 		        },
 		        showArea: true,
 		      },
 		      rectangle: {
 		        shapeOptions: {
-		          clickable: true,
+		          clickable: false,
 		          color: '#ff0000'
 		        }
 		      },
 		      marker: {
 		        shapeOptions: {
-							clickable: true //doesn´t work, why?!
-						}
+					clickable: false //doesn´t work, why?!
+				}
 		      },
 		      circle: {
 		        shapeOptions: {
 		          color: '#ff0000',
-		          clickable: true
+		          clickable: false
 		        }
 		      }
 		    },
@@ -618,7 +620,7 @@ function initMap(){
 }
 
 /**
-* @desc sets option 'clickable' for a leaflet element to value
+* @desc sets option 'clickable' for a leaflet layer to value
 */
 function setClickable(target, value) {
 	if(value && !target.options.clickable) {
@@ -635,6 +637,14 @@ function setClickable(target, value) {
 		});
 			target._path.setAttribute('pointer-events', target.options.pointerEvents || 'none');
 	}	
+	
+	//change cursor icon to 'help' if clickable is true
+	if(value){			
+		$("#map").css('cursor', 'help');
+	}
+	else{
+		$("#map").css('cursor', 'auto');
+	}
 }	
 
 function redrawFachkarten(karten){
