@@ -2,6 +2,7 @@ var app = angular.module("fgis");
 var map, drawnItems, drawControl, fachkarten, basemap;
 var lines,
 	linesArray = new Array();
+var commentsMap = new Map();
 
 app.controller("MapController", function($scope, $http, $sce, $location){
 
@@ -30,38 +31,52 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.fields.currentField.image = "images/symbols/_universal.svg";
 	$scope.fields.currentField.topText = "";
 	$scope.fields.currentField.bottomText = "";
+	$scope.fields.currentField.commentField = "";
 	$scope.fields.currentField.active = false;
 	$scope.fields.currentField.id = undefined;
 	$scope.fields.currentField.fieldTextTop = "";
 	$scope.fields.currentField.fieldTextBottom = "";
+	$scope.fields.currentField.fieldComment = "";
 
 	//show the field-properies in the side-content
 	$scope.fields.register = function(field){
-		$('#' + $scope.fields.currentField.id).removeClass("activated"); 
+		$('#' + $scope.fields.currentField.id).removeClass("activated");
 		$scope.fields.deleteLastLine($scope.fields.currentField.id);
+
+		// when the clicked field is already the active/current one: deselect it
+		if ($scope.fields.currentField.id == field) {
+			$scope.fields.currentField.id = undefined;
+			$scope.fields.cancel();
+			return;
+		}
+
 		var _template = "/app/templates/fgis/_fieldContent.html";
 		try{$scope.map.editCancel();}catch(e){}
 		var thisImage = document.getElementById(field).getElementsByTagName('img');
 		$scope.fields.currentField.id = field;
 		$scope.fields.currentField.active = true;
 		$('#' + $scope.fields.currentField.id).addClass("activated");
-		if(thisImage.length == 0){ 
+		if(thisImage.length == 0){
 			if ($scope.map.lastClick !=null){
 				$scope.fields.addLine();
 			}
 			$scope.fields.currentField.image = "images/symbols/_universal.svg";
 			$scope.fields.currentField.topText = "";
 			$scope.fields.currentField.bottomText = "";
+			$scope.fields.currentField.commentField = "";
 			$scope.fields.currentField.fieldTextTop = "";
-			$scope.fields.currentField.fieldTextBottom = ""
+			$scope.fields.currentField.fieldTextBottom = "";
+			$scope.fields.currentField.fieldComment = "";
 		}
 		else {
 			$scope.fields.currentField.image = thisImage[0].src;
 			console.log(thisImage);
 			$scope.fields.currentField.topText = "";
 			$scope.fields.currentField.bottomText = "";
+			$scope.fields.currentField.commentField = "";
 			$scope.fields.currentField.fieldTextTop = document.getElementById('fieldTextTop'+field).innerHTML;
 			$scope.fields.currentField.fieldTextBottom = document.getElementById('fieldTextBottom'+field).innerHTML;
+			$scope.fields.currentField.fieldComment = document.getElementById('fieldComment'+field).innerHTML;
 		}
 		$scope.sideContent.change(_template);
 	}
@@ -71,19 +86,24 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.fields.currentField.active = false;
 		$scope.map.lastClick = null;
 		if(linesArray[$scope.fields.currentField.id] != null){
-			$('#' + $scope.fields.currentField.id).removeClass("activated");			
-		}		
-		var _textTop, _textBottom, _image;
+			$('#' + $scope.fields.currentField.id).removeClass("activated");
+		}
+		var _textTop, _textBottom, _comment, _image;
 		_textTop = '<div id="fieldTextTop'
 					+ $scope.fields.currentField.id
-					+ '" class="fieldText fieldTextTop">'
+					+ '" class="fieldText fieldTextTop" style="overflow:hidden" title="' +$scope.fields.currentField.fieldTextTop + '" data-toggle="tooltip">'
 					+ $scope.fields.currentField.fieldTextTop
 					+ '</div>';
 
 		_textBottom = '<div id="fieldTextBottom'
 					+ $scope.fields.currentField.id
-					+ '" class="fieldText fieldTextBottom">'
+					+ '" class="fieldText fieldTextBottom" style="overflow:hidden" title="' +$scope.fields.currentField.fieldTextBottom + '" data-toggle="tooltip">'
 					+ $scope.fields.currentField.fieldTextBottom
+					+ '</div>';
+		_comment = '<div id="fieldComment'
+					+ $scope.fields.currentField.id
+					+ '" class="fieldComment">'
+					+ $scope.fields.currentField.fieldComment
 					+ '</div>';
 
 		//insert the image:
@@ -96,7 +116,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 					+ '; width:'
 					+ fieldOrder.size
 					+ '; background-color: white; text-align: center;" />';
-		var _htmlString = _textTop + _textBottom + _image;
+		var _htmlString = _textTop + _textBottom + _comment + _image;
 		document.getElementById($scope.fields.currentField.id).innerHTML = _htmlString;
 		$scope.sideContent.close();
 	}
@@ -116,6 +136,9 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 						+ '<div id="fieldTextBottom'
 						+ $scope.fields.currentField.id
 						+ '" class="fieldText fieldTextBottom"></div>'
+						+ '<div id="fieldComment'
+						+ $scope.fields.currentField.id
+						+ '" class="fieldComment"></div>'
 						+ '<svg id="image'
 						+ $scope.fields.currentField.id
 						+ '" style="height:'
@@ -156,7 +179,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	}
 
 	$scope.fields.addLine = function(){
-		if ($scope.fields.currentField.id) {			
+		if ($scope.fields.currentField.id) {
 			var anchorPoint = getAnchorOfElement($scope.fields.currentField.id);
 			var anchor = map.containerPointToLatLng(anchorPoint);
 			var latlngs = [$scope.map.lastClick, anchor];
@@ -200,21 +223,23 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	map.on('draw:created', function (e) {
 	    var type = e.layerType,
 	        layer = e.layer;
-
-	    layer.on('click', function(e){$scope.map.objectClicked(type, layer)});
-
+		var id = drawnItems.getLayerId(e);
+	    layer.on('click', function(e){$scope.map.objectClicked(type, layer, id)});
 	    drawnItems.addLayer(layer);
 	});
 
 	$scope.map = {};
 	$scope.map.frozen = false;
 	$scope.map.lastClick = null;
+	$scope.map.objectId = null;
 
-	$scope.map.objectClicked = function(type, layer){
+	$scope.map.objectClicked = function(type, layer, id){
 		if (!$scope.map.editActive){
 			$scope.sideContent.change("/app/templates/fgis/_drawnObject.html");
-			$scope.$apply(function() {});
 			$scope.map.objects.getMeasurement(type, layer);
+			$scope.map.objectId = id;
+			$scope.map.showComment();
+			$scope.$apply(function() {});
 		}
 	}
 
@@ -360,12 +385,32 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		_element[0].click();
 		$scope.sideContent.textvar = "Objekte bearbeiten";
 		$scope.sideContent.change("/app/templates/fgis/_editObjects.html");
+		$scope.map.objectId = "";
+	}
+
+
+	$scope.map.objects = {};
+	$scope.map.objects.measureString = "";
+	$scope.map.objects.type = "";
+	$scope.map.objects.comment = "";
+	// todo kommentar wird geändert -- alten eintrag erst löschen oder wird in der map überschrieben?
+
+	// save a comment for a drawn object using a map (first value: ObjectId from leafletDraw, second value: commentText)
+	$scope.map.saveComment = function(){
+		commentsMap.set($scope.map.objectId, $scope.map.objects.comment);
+	}
+
+	$scope.map.showComment = function(){
+		var _template = "/app/templates/fgis/_drawnObject.html";
+		$scope.map.objects.comment = commentsMap.get($scope.map.objectId);
+		$scope.sideContent.change(_template);
 	}
 
 	$scope.map.editCancel = function(){
 		$scope.map.editActive = false;
 		var _element = document.getElementsByClassName($scope.map.currentEdit);
 		_element[0].children[1].children[0].click();
+		$scope.map.objectId = "";
 		$scope.sideContent.close();
 	}
 
@@ -373,12 +418,10 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.map.editActive = false;
 		var _element = document.getElementsByClassName($scope.map.currentEdit);
 		_element[0].children[0].children[0].click();
+		$scope.map.objectId = "";
+		commentsMap.delete($scope.map.objectId);
 		$scope.sideContent.close();
 	}
-
-	$scope.map.objects = {};
-	$scope.map.objects.measureString = "";
-	$scope.map.objects.type = "";
 
 	$scope.map.objects.getMeasurement = function(type, layer){
 		var _htmlString = "";
@@ -453,13 +496,13 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 /**
  * @desc calculates coordinates for the anchor point (centered to the TZ slot) of the lines to be drawn correctly on map
  * @param elementID: ID of html element for which anchor point will get calculated.
- * @return calculated coordinates  
+ * @return calculated coordinates
  */
 function getAnchorOfElement(elementId){
 	var _this = $("#"+elementId);
 	var _map = $("#map");
 	var _titleRow = $("#titleRow");
-	var _mapTop = parseInt(_map.css('top'), 10) + parseInt(_titleRow.css('height'), 10);	
+	var _mapTop = parseInt(_map.css('top'), 10) + parseInt(_titleRow.css('height'), 10);
 	var _mapLeft = parseInt(_map.css('left'), 10);
 	var _mapWidth = parseInt(_map.css('width'), 10);
 	var _mapHeight = parseInt(_map.css('height'), 10);
@@ -468,7 +511,7 @@ function getAnchorOfElement(elementId){
 	var height = _this.height();
 	var centerX = offset.left + width / 2;
 	var centerY = offset.top + height / 2;
-	
+
 	//left column:
 	if(centerX < _mapLeft){return [2, centerY - _mapTop]}
 	//right column:
@@ -477,7 +520,7 @@ function getAnchorOfElement(elementId){
 	else if (centerY < _mapTop + 1 ) {return [centerX - _mapLeft, 2]}
 	// bottom row:
 	else if (centerY > _mapTop + _mapHeight - 1) {return [centerX - _mapLeft, offset.top - _mapTop]}
-	
+
 }
 
 /****************************************
@@ -509,27 +552,90 @@ function initMap(){
 	drawnItems = new L.FeatureGroup();
 	map.addLayer(drawnItems);
 
-	var options = {
-	    position: 'topright',
-	    draw: {
-	        polyline: {shapeOptions: {color: '#ff0000'}},
-	        polygon: {
-	            allowIntersection: true,
-	            shapeOptions: {color: '#ff0000'},
-	            showArea: true
-	        },
-	        rectangle: {shapeOptions: {
-	        	clickable: true,
-	        	color: '#ff0000'
-	        }},
-	        marker: {},
-	        circle: {shapeOptions: {color: '#ff0000'}}
-	    },
-	    edit: {
-	        featureGroup: drawnItems, //REQUIRED!!
-	        remove: true
-	    }
-	};
+
+		var options = {
+		    position: 'topright',
+		    draw: {
+		      polyline: {
+		        shapeOptions: {
+		          color: '#ff0000',
+		          clickable: true
+		        }
+		      },
+		      polygon: {
+		        allowIntersection: true,
+		        shapeOptions: {
+		          color: '#ff0000',
+		          clickable: true
+		        },
+		        showArea: true,
+		      },
+		      rectangle: {
+		        shapeOptions: {
+		          clickable: false,
+		          color: '#ff0000'
+		        }
+		      },
+		      marker: {
+		        shapeOptions: {
+							clickable: false //doesn´t work, why?!
+						}
+		      },
+		      circle: {
+		        shapeOptions: {
+		          color: '#ff0000',
+		          clickable: false
+		        }
+		      }
+		    },
+		    edit: {
+		      featureGroup: drawnItems, //REQUIRED!!
+		      remove: true
+		    }
+		  };
+
+
+var options = {
+    position: 'topright',
+    draw: {
+      polyline: {
+        shapeOptions: {
+          color: '#ff0000',
+          clickable: false
+        }
+      },
+      polygon: {
+        allowIntersection: true,
+        shapeOptions: {
+          color: '#ff0000',
+          clickable: false
+        },
+        showArea: true,
+      },
+      rectangle: {
+        shapeOptions: {
+          clickable: false,
+          color: '#ff0000'
+        }
+      },
+      marker: {
+        shapeOptions: {
+	clickable: false //doesn´t work, why?!
+				}
+      },
+      circle: {
+        shapeOptions: {
+          color: '#ff0000',
+          clickable: false
+        }
+      }
+    },
+    edit: {
+      featureGroup: drawnItems, //REQUIRED!!
+      remove: true
+    }
+  };
+
 
 	var drawControl = new L.Control.Draw(options);
 	map.addControl(drawControl);
@@ -583,60 +689,82 @@ function allowDrop(ev) {
 }
 
 function drop(ev){
-	ev.preventDefault();
+	if(ev.preventDefault)  ev.preventDefault();
+	if(ev.stopPropagation) ev.stopPropagation();
+
 	var startId = ev.dataTransfer.getData("text");
 	var movingElement = document.getElementById("image" + startId);
 	var startElement = document.getElementById(startId);
-	var targetElement = null;
-	for (var i = ev.path.length - 1; i >= 0; i--) {
-		try {
-			if(ev.path[i].classList.contains("fields")){
-				targetElement = ev.path[i];
-			}
-		}catch(e){};
-	};
-	if (targetElement != null){
-		//save the texts:
-		console.log(startId + " -> " + targetElement.id)
-		var _textTopTarget = document.getElementById('fieldTextTop'+targetElement.id).innerHTML;
-		var _textBottomTarget = document.getElementById('fieldTextBottom'+targetElement.id).innerHTML;
-		var _textTopStart = document.getElementById('fieldTextTop'+startId).innerHTML;
-		var _textBottomStart = document.getElementById('fieldTextBottom'+startId).innerHTML;
 
-		//change the images and texts:
-		var movingBackElement = document.getElementById("image" + targetElement.id);
-		startElement.innerHTML = '<div id="fieldTextTop'
-			+ startId
-			+ '" class="fieldText fieldTextTop">'
-			+ _textTopTarget
-			+ '</div><div id="fieldTextBottom'
-			+ startId
-			+ '" class="fieldText fieldTextBottom">'
-			+ _textBottomTarget
-			+ '</div>';
-		startElement.appendChild(movingBackElement);
-		targetElement.innerHTML = '<div id="fieldTextTop'
-			+ targetElement.id
-			+ '" class="fieldText fieldTextTop">'
-			+ _textTopStart
-			+ '</div><div id="fieldTextBottom'
-			+ targetElement.id
-			+ '" class="fieldText fieldTextBottom">'
-			+ _textBottomStart
-			+ '</div>';
-		targetElement.appendChild(movingElement);
-		movingElement.setAttribute("id", "image" + targetElement.id);
-		if (movingBackElement != null) {movingBackElement.setAttribute("id", "image" + startId)};
+	// we drop onto the fieldText or svg, so we need to access the parent field-div
+	var targetElement = ev.target.parentNode;
+	// if we drop onto the svg polygon element, we need to go one level higher
+	if (!$(targetElement).hasClass('fields'))
+		targetElement = targetElement.parentNode;
+	var targetId = targetElement.id;
 
-		//change the lines:
-		var newTargetLine = linesArray[startId];
-		if (newTargetLine != null) {newTargetLine[1] = getAnchorOfElement(targetElement.id)};
+	//save the texts:
+	console.log('element dropped: ' + startId + " -> " + targetElement.id)
+	var _textTopTarget = document.getElementById('fieldTextTop'+targetId).innerHTML;
+	var _textBottomTarget = document.getElementById('fieldTextBottom'+targetId).innerHTML;
+	var _commentTarget = document.getElementById('fieldComment'+targetId).innerHTML;
+	var _textTopStart = document.getElementById('fieldTextTop'+startId).innerHTML;
+	var _textBottomStart = document.getElementById('fieldTextBottom'+startId).innerHTML;
+	var _commentStart = document.getElementById('fieldComment'+startId).innerHTML;
 
-		var newStartLine = linesArray[targetElement.id];
-		if (newStartLine != null) {newStartLine[1] = getAnchorOfElement(startId)};
+	//change the images and texts:
+	var movingBackElement = document.getElementById("image" + targetId);
+	startElement.innerHTML = '<div id="fieldTextTop'
+		+ startId
+		+ '" class="fieldText fieldTextTop" style="overflow:hidden" title="'
+		+ _textTopTarget + '" data-toggle="tooltip">'
+		+ _textTopTarget
+		+ '</div><div id="fieldTextBottom'
+		+ startId
+		+ '" class="fieldText fieldTextBottom" style="overflow:hidden" title="'
+		+ _textBottomTarget + '" data-toggle="tooltip">'
+		+ _textBottomTarget
+		+ '</div><div id="fieldComment'
+		+ startId
+		+ '" class="fieldComment">'
+		+ _commentTarget
+		+ '</div>';
+	startElement.appendChild(movingBackElement);
+	targetElement.innerHTML = '<div id="fieldTextTop'
+		+ targetId
+		+ '" class="fieldText fieldTextTop" style="overflow:hidden" title="'
+		+ _textTopStart + '" data-toggle="tooltip">'
+		+ _textTopStart
+		+ '</div><div id="fieldTextBottom'
+		+ targetId
+		+ '" class="fieldText fieldTextBottom" style="overflow:hidden" title="'
+		+ _textBottomStart + '" data-toggle="tooltip">'
+		+ _textBottomStart
+		+ '</div><div id="fieldComment'
+		+ targetId
+		+ '" class="fieldComment">'
+		+ _commentStart
+		+ '</div>';
+	targetElement.appendChild(movingElement);
+	movingElement.setAttribute("id", "image" + targetId);
+	if (movingBackElement != null) {movingBackElement.setAttribute("id", "image" + startId)};
 
-		linesArray[startId] = newStartLine;
-		linesArray[targetElement.id] = newTargetLine;
-		fitAllLines(linesArray);
-	}
+	//change the lines:
+	var newTargetLine = linesArray[startId];
+	if (newTargetLine != null) {newTargetLine[1] = getAnchorOfElement(targetId)};
+
+	var newStartLine = linesArray[targetId];
+	if (newStartLine != null) {newStartLine[1] = getAnchorOfElement(startId)};
+
+	linesArray[startId] = newStartLine;
+	linesArray[targetId] = newTargetLine;
+	fitAllLines(linesArray);
+
+	// update the active highlight, if the dragged field was active
+	// TODO: update $scope.fields.currentField.id somehow
+	//       or: call submit before dropping!
+	/*if ($('#' + startId).hasClass("activated")) {
+		$('#' + startId).removeClass("activated");
+		$('#' + targetId).addClass("activated");
+	}*/
 }

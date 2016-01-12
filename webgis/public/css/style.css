@@ -111,7 +111,9 @@
 		 top: 80%;
 	}
 	
-	
+	.fieldComment{
+		display: none;
+	}
 
 	/**Map stuff:
 	*/
