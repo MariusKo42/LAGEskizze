@@ -25,6 +25,7 @@
 		height: 76.2%; 
 		width: 48.4%; 
 		position: absolute;
+		cursor:auto; 
 	}
 
 	#titleRow{
@@ -41,7 +42,7 @@
 		top: 2.5%;
 		width: 100%;
 		display: inline-block;
-		position: relative;
+		position: relative;		
 	}
 	.mapArea:after {
 		padding-top: 49.1%;
@@ -50,7 +51,7 @@
 		display: block;
 		content: '';
 	}
-
+	
 	.titleRowInput {
 		width: 10%;
 		height: 65%;
@@ -128,6 +129,7 @@
 		left:2%; 
 		width:25%;
 		height:20%; 
+		font-size: 1.6vmin;
 		
 	}
 	.tzAuswahl{
@@ -166,7 +168,6 @@
 		position: absolute;
 		top: 1%;
 		left: 1%;
-		box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 		line-height: 26px;
 
 	}
@@ -257,7 +258,8 @@
 		text-align: center;
 		font-size: 1vw;
 		display: block;
-		margin: auto;
+		margin: auto;		
+		
 	}
 
 	.drawToolbar table, td, th {
@@ -299,7 +301,6 @@
 	#drawCircle{
 		width: 100%;
 		height: 100%;
-		margin-left: 20%;
 		background-image: url('../images/draw_symbols/circle.png');		
 		
 	}
@@ -307,10 +308,14 @@
 	#drawPoint{
 		width: 100%;
 		height: 100%;
-		margin-left: 20%;
-		background-image: url('../images/draw_symbols/point.png');
-		
-		
+		background-image: url('../images/draw_symbols/point.png');		
+	}
+	
+	#questionMark{
+		width: 100%;
+		height: 100%;	
+		color: black;		
+	
 	}
 
 	.leaflet-draw.leaflet-control{
@@ -330,6 +335,7 @@
    }
    
 }
+
 
 
 

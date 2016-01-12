@@ -3,6 +3,8 @@ var map, drawnItems, drawControl, fachkarten, basemap;
 var lines,
 	linesArray = new Array();
 var commentsMap = new Map();
+var options; 
+var drawControl;
 
 app.controller("MapController", function($scope, $http, $sce, $location){
 
@@ -37,8 +39,11 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.fields.currentField.fieldTextTop = "";
 	$scope.fields.currentField.fieldTextBottom = "";
 	$scope.fields.currentField.fieldComment = "";
-
-	//show the field-properies in the side-content
+	
+	
+	/**
+	* @desc activates a tz slot, shows the field-properties in the side-content
+	*/
 	$scope.fields.register = function(field){
 		$('#' + $scope.fields.currentField.id).removeClass("activated");
 		$scope.fields.deleteLastLine($scope.fields.currentField.id);
@@ -46,7 +51,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		// when the clicked field is already the active/current one: deselect it
 		if ($scope.fields.currentField.id == field) {
 			$scope.fields.currentField.id = undefined;
-			$scope.fields.cancel();
+			$scope.fields.cancel();			
 			return;
 		}
 
@@ -54,8 +59,13 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		try{$scope.map.editCancel();}catch(e){}
 		var thisImage = document.getElementById(field).getElementsByTagName('img');
 		$scope.fields.currentField.id = field;
-		$scope.fields.currentField.active = true;
-		$('#' + $scope.fields.currentField.id).addClass("activated");
+		$scope.fields.currentField.active = true;		
+		$('#' + $scope.fields.currentField.id).addClass("activated"); //highlight		
+		
+		drawnItems.eachLayer(function(layer) {				
+			setClickable(layer, false);			
+		});		
+		
 		if(thisImage.length == 0){
 			if ($scope.map.lastClick !=null){
 				$scope.fields.addLine();
@@ -81,10 +91,10 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.sideContent.change(_template);
 	}
 
-	//submit the field
+	//submit the field ('bestaetigen')
 	$scope.fields.submit = function(){
-		$scope.fields.currentField.active = false;
-		$scope.map.lastClick = null;
+		$scope.fields.currentField.active = false;		
+		$scope.map.lastClick = null;		
 		if(linesArray[$scope.fields.currentField.id] != null){
 			$('#' + $scope.fields.currentField.id).removeClass("activated");
 		}
@@ -202,6 +212,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 			}
 		}
 	}
+	
+
 
 	/********************************
 	************** Map **************
@@ -235,9 +247,12 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 	$scope.map.objectClicked = function(type, layer, id){
 		if (!$scope.map.editActive){
+			drawnItems.eachLayer(function(layer) {				
+				setClickable(layer, false);			
+			});		
 			$scope.sideContent.change("/app/templates/fgis/_drawnObject.html");
 			$scope.map.objects.getMeasurement(type, layer);
-			$scope.map.objectId = id;
+			$scope.map.objectId = id;			
 			$scope.map.showComment();
 			$scope.$apply(function() {});
 		}
@@ -378,7 +393,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.sideContent.change("/app/templates/fgis/_editObjects.html");
 	}
 
-	$scope.map.editObjects = function(){
+	$scope.map.editObjects = function(){		
 		$scope.map.editActive = true;
 		$scope.map.currentEdit = "leaflet-draw-actions leaflet-draw-actions-top";
 		var _element = document.getElementsByClassName("leaflet-draw-edit-edit");
@@ -387,8 +402,13 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.sideContent.change("/app/templates/fgis/_editObjects.html");
 		$scope.map.objectId = "";
 	}
-
-
+	
+	$scope.map.activateDrawInformation = function(){
+		drawnItems.eachLayer(function(layer) {				
+			setClickable(layer, true);			
+		});		
+	}
+	
 	$scope.map.objects = {};
 	$scope.map.objects.measureString = "";
 	$scope.map.objects.type = "";
@@ -552,20 +572,20 @@ function initMap(){
 	map.addLayer(drawnItems);
 
 
-		var options = {
+		options = {
 		    position: 'topright',
 		    draw: {
 		      polyline: {
 		        shapeOptions: {
 		          color: '#ff0000',
-		          clickable: true
+		          clickable: false
 		        }
 		      },
 		      polygon: {
 		        allowIntersection: true,
 		        shapeOptions: {
 		          color: '#ff0000',
-		          clickable: true
+		          clickable: false
 		        },
 		        showArea: true,
 		      },
@@ -577,8 +597,8 @@ function initMap(){
 		      },
 		      marker: {
 		        shapeOptions: {
-							clickable: false //doesn´t work, why?!
-						}
+					clickable: false //doesn´t work, why?!
+				}
 		      },
 		      circle: {
 		        shapeOptions: {
@@ -594,10 +614,38 @@ function initMap(){
 		  };
 
 
-	var drawControl = new L.Control.Draw(options);
+	drawControl = new L.Control.Draw(options);
 	map.addControl(drawControl);
 
 }
+
+/**
+* @desc sets option 'clickable' for a leaflet layer to value
+*/
+function setClickable(target, value) {
+	if(value && !target.options.clickable) {
+		target.options.clickable = true;
+		L.Path.prototype._initEvents.call(target);
+		target._path.removeAttribute('pointer-events');
+	} else if(!value && target.options.clickable) {
+		target.options.clickable = false;
+		// undoing actions done in L.Path.prototype._initEvents
+		L.DomUtil.removeClass(target._path, 'leaflet-clickable');
+		L.DomEvent.off(target._container, 'click', target._onMouseClick);
+    	['dblclick', 'mousedown', 'mouseover', 'mouseout', 'mousemove', 'contextmenu'].forEach(function(evt) {
+		L.DomEvent.off(target._container, evt, target._fireMouseEvent);
+		});
+			target._path.setAttribute('pointer-events', target.options.pointerEvents || 'none');
+	}	
+	
+	//change cursor icon to 'help' if clickable is true
+	if(value){			
+		$("#map").css('cursor', 'help');
+	}
+	else{
+		$("#map").css('cursor', 'auto');
+	}
+}	
 
 function redrawFachkarten(karten){
 	var _alle = karten.alleFachkarten;
