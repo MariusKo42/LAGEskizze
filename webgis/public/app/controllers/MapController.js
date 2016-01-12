@@ -393,7 +393,6 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.map.objects.measureString = "";
 	$scope.map.objects.type = "";
 	$scope.map.objects.comment = "";
-	// todo kommentar wird geändert -- alten eintrag erst löschen oder wird in der map überschrieben?
 
 	// save a comment for a drawn object using a map (first value: ObjectId from leafletDraw, second value: commentText)
 	$scope.map.saveComment = function(){
