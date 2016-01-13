@@ -167,9 +167,13 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		console.log("filter: " + string);
 		$scope.fields.symbolsFilter = string;
 	}
-
+	/**
+	* @desc changes symbol in tz 
+	* @param string: string for new symbol location 
+	**/
 	$scope.fields.addSymbol = function(string){
 		$scope.fields.currentField.image = "images/symbols/" + string + ".svg";
+		document.getElementById('image'+ $scope.fields.currentField.id).src = $scope.fields.currentField.image;
 	}
 
 	/********** Lines ********/
