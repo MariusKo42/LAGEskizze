@@ -220,10 +220,16 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	********************************/
 
 	initMap();
-
+	var itemDrawed = false; //ignore setting last click for tz line if last click was for drawing
 	map.on('click', function(e){
-		$scope.map.lastClick = e.latlng;
-		$scope.fields.updateLine();
+		if(!itemDrawed){
+			$scope.map.lastClick = e.latlng;
+			$scope.fields.updateLine();
+		}
+		else{
+			$scope.map.lastClick = null; 
+			itemDrawed = false;
+		}
 	});
 	map.on('move', function(e){
 		fitAllLines(linesArray);
@@ -237,7 +243,9 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	        layer = e.layer;
 		var id = drawnItems.getLayerId(e);
 	    layer.on('click', function(e){$scope.map.objectClicked(type, layer, id)});
-	    drawnItems.addLayer(layer);
+		$scope.map.lastClick = null; 		
+		itemDrawed = true; 
+		drawnItems.addLayer(layer);
 	});
 
 	$scope.map = {};
@@ -379,6 +387,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 	$scope.map.draw = function(type){
 		$scope.fields.cancel();
+		$scope.fields.currentField.id = undefined;		
 		var _className = 'leaflet-draw-draw-' + type;
 		var _element = document.getElementsByClassName(_className);
 		_element[0].click();
