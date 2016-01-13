@@ -8,6 +8,7 @@ var db = require('./mongoose/db.js');
 var models = require('./mongoose/models.js');
 var bodyParser = require('body-parser');
 var express = require('express');
+var request = require('request');
 var app = express();
 
 app.use('/', express.static(__dirname));
@@ -68,7 +69,7 @@ app.get('/api/einsatz/new', function(req, res) {
 app.post('/api/einsatz/:EinsatzID/', function(req, res) {
   var einsatzid = req.params.EinsatzID;
 
-  db.models.einsaetze.findById(einsatzid, function(err, value) {
+  db.models.einsaetze.findOne({einsatzid}, function(err, value) {
     if (err) {
       res.status(400).send(err);
     } else {
@@ -96,7 +97,7 @@ app.post('/api/einsatz/:EinsatzID/', function(req, res) {
 //	 Eine weitere Editierung des Einsatzes ist nicht möglich.
 app.post('/api/einsatz/:EinsatzID/lock', function(req, res) {
 
-  db.models.einsaetze.update({ _id: req.params.EinsatzID }, { $set: { locked: 'true' }}, function(){
+  db.models.einsaetze.update({ id: req.params.EinsatzID }, { $set: { locked: 'true' }}, function(){
 
 	  res.send("Einsatz mit ID " + req.params.EinsatzID + " wurde gesperrt.");
 
@@ -128,7 +129,6 @@ app.put('/zeichen/', function(req, res) {
 
 	//erzeuge neues Zeichen, das in der DB abgelegt werden soll.
 	var zeichen = new db.models.taktZeichens({
-		//id: shortid.generate(); Muss das angegeben werden (wegen default im model?)
 		Kategorie: req.body.Kategorie,
 		Titel: req.body.Titel,
 		Svg: req.body.Svg
@@ -160,6 +160,43 @@ app.delete('/zeichen/:id/', function(req, res) {
 		res.send(message);
 	});
 });
+
+
+var formData = {
+  einsaetze: Array
+};
+syncAlice();
+
+/**
+* @desc Sendet die Eintraege aus der DB an Alice via post request.
+*/
+function syncAlice() {
+
+    //finde Einsaetze in der DB
+    db.models.einsaetze.find(function(err, docs) {
+      if(err) {
+        console.error(err);
+      }
+      else {
+        formData.einsaetze = JSON.stringify(docs);
+        console.log(docs);
+        console.log(formData);
+
+        /**
+        * @desc Sendet einen Einsatz an den stationaeren Server (Alice) in der Wache.
+        */
+        request.post({url: 'http://localhost:3000/private/einsatz', form: formData}, function (error, response, body) {
+            
+            if (error) {
+              return console.error('Synchronisation fehlgeschlagen:', error);
+            }
+            console.log('Synchronisation erfolgreich!  Server antwortet mit:', body);
+        });
+      }
+  });
+};
+
+
 
 
 //start the server on Port 8080

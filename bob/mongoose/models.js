@@ -3,7 +3,7 @@
 /**
  *  @desc definition mongodb schemata
  */
- var shortid = require('shortid');
+var shortid = require('shortid');
 
 module.exports = function(mongoose) {
     var datensatz = new mongoose.Schema({
@@ -12,23 +12,45 @@ module.exports = function(mongoose) {
         Daten_ohne_Raumbezug: [Object]
     });
     var einsatz = new mongoose.Schema({
- 	    Einsatzstichwort: String,
-    	Einsatzort: String,
-    	Meldender: String,
-    	Objektnummer: Number,
-    	Datum_Uhrzeitgruppe: Date,
-    	Datensaetze: Object,
-    	Zeichnungen: Object,
-    	Kranzposition: Number,
-    	Kartenposition: Object,
-        Zeichen: Object,
+        id: {
+            type: String,
+            unique: true,
+            default: shortid.generate
+        },
+        meta: {
+            einsatzstichwort: String,
+            einsatzort: String,
+            meldender: String,
+            objektNr: String,
+            datumUhrzeitGruppe: Date
+        },
+        drawnObjects: {
+            fields: {
+                index: Number,
+                captionTop: String,
+                captionBottom: String,
+                targetPosition: Object,
+                taktischesZeichen: String,
+                fotoID: String
+            }
+        },
+        map: {
+            zoom: Number,
+            center: Object,
+            tileServer: String
+        },
+        taktZeichen: {
+            kranzposition: Number,
+            kartenposition: Object,
+            zeichen: Object
+        },
         locked: Boolean	
     });
     var taktZeichen = new mongoose.Schema({
         id: {
             type: String,
             unique: true,
-            default: shortid.generate
+            default: shortid.generate()
         },
         Kategorie: String,
         Titel: String,

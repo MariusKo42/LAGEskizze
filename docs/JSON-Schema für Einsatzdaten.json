@@ -87,7 +87,7 @@
 					"description": 'Koordinaten des Markers auf der Karte.',
 					"$ref": 'http://json-schema.org/geo'
 				},
-				Zeichen": {
+				zeichen": {
 					"description": 'Das Zeichen, das an der gegebenen Position gespeichert ist.',
 					"$ref": 'taktische_Zeichen_Schema' // Das entwirft Jan
 				}
