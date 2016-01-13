@@ -21,6 +21,15 @@
 	</li>
 
 	<br>
+	<p>
+		Wählen Sie eine Farbe im Color-Picker aus, um die Farbe des Objektes zu ändern.
+	</p>
+	<!-- colorPicker-->
+	<input type='text' id='colorPicker' />
+	<button ng-click="map.changeObjectsColor()">Farbe speichern</button>
+
+
+	<br>
 	<br>
 	Kommentar zu diesem Objekt:
 	<div>
@@ -29,3 +38,5 @@
 	<button ng-click="map.saveComment()">Kommentar speichern</button>
 
 </div>
+
+<script src="../../../js/initializeColorpicker.js"></script>

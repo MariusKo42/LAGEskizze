@@ -235,7 +235,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	map.on('draw:created', function (e) {
 	    var type = e.layerType,
 	        layer = e.layer;
-		var id = drawnItems.getLayerId(e);
+		var id = drawnItems.getLayerId(layer);
 	    layer.on('click', function(e){$scope.map.objectClicked(type, layer, id)});
 	    drawnItems.addLayer(layer);
 	});
@@ -442,7 +442,12 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.sideContent.close();
 	}
 
-	$scope.map.objects.getMeasurement = function(type, layer){
+	// change the color of the choosen object
+	$scope.map.changeObjectsColor = function() {
+		drawnItems.getLayer($scope.map.objectId).setStyle({color: newColor});
+	}
+
+		$scope.map.objects.getMeasurement = function(type, layer){
 		var _htmlString = "";
 		var _area = null;
 		var _length = null;
