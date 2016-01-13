@@ -132,10 +132,10 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	}
 
 	$scope.fields.cancel = function(){
-		$scope.sideContent.close();
+		$scope.sideContent.close();		
 		$scope.fields.currentField.active = false;
-		$('#' + $scope.fields.currentField.id).removeClass("activated");
-		$scope.fields.deleteLastLine($scope.fields.currentField.id);
+		$('#' + $scope.fields.currentField.id).removeClass("activated");		
+		$scope.fields.deleteLastLine($scope.fields.currentField.id);	
 	}
 
 	$scope.fields.delete = function(){
@@ -623,6 +623,11 @@ function initMap(){
 * @desc sets option 'clickable' for a leaflet layer to value
 */
 function setClickable(target, value) {
+	// ignore if marker 
+	if (target instanceof L.Marker){
+        return; 
+    }
+	
 	if(value && !target.options.clickable) {
 		target.options.clickable = true;
 		L.Path.prototype._initEvents.call(target);
