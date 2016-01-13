@@ -12,8 +12,6 @@ var models = require('./models.js')(mongoose);
 // Mongoose Verbindung einrichten
 mongoose.connect('mongodb://localhost/fireDB');
 
-// Mongoose Verbindung einrichten
-mongoose.connect('mongodb://localhost/fireDB');
 
 // Mongoose und Modelle exportieren, damit Hauptprogramm diese verwenden kann.
 exports.mongoose = mongoose;
