@@ -151,7 +151,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 						+ '" class="fieldComment"></div>'
 						+ '<svg id="image'
 						+ $scope.fields.currentField.id
-						+ '" style="height:'
+						+ '" viewBox="0 0 89 89" preserveAspectRatio="none" style="height:'
 						+ fieldOrder.size
 						+ '; width:'
 						+ fieldOrder.size
@@ -160,6 +160,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.sideContent.close();
 		$scope.fields.currentField.active = false;
 		$('#' + $scope.fields.currentField.id).removeClass("activated");
+		$scope.fields.currentField.id = null;
 	}
 
 	//filter the list of fields
