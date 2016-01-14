@@ -132,10 +132,10 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	}
 
 	$scope.fields.cancel = function(){
-		$scope.sideContent.close();
+		$scope.sideContent.close();		
 		$scope.fields.currentField.active = false;
-		$('#' + $scope.fields.currentField.id).removeClass("activated");
-		$scope.fields.deleteLastLine($scope.fields.currentField.id);
+		$('#' + $scope.fields.currentField.id).removeClass("activated");		
+		$scope.fields.deleteLastLine($scope.fields.currentField.id);	
 	}
 
 	$scope.fields.delete = function(){
@@ -151,7 +151,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 						+ '" class="fieldComment"></div>'
 						+ '<svg id="image'
 						+ $scope.fields.currentField.id
-						+ '" style="height:'
+						+ '" viewBox="0 0 89 89" preserveAspectRatio="none" style="height:'
 						+ fieldOrder.size
 						+ '; width:'
 						+ fieldOrder.size
@@ -160,6 +160,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.sideContent.close();
 		$scope.fields.currentField.active = false;
 		$('#' + $scope.fields.currentField.id).removeClass("activated");
+		$scope.fields.currentField.id = null;
 	}
 
 	//filter the list of fields
@@ -167,9 +168,13 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		console.log("filter: " + string);
 		$scope.fields.symbolsFilter = string;
 	}
-
+	/**
+	* @desc changes symbol in tz 
+	* @param string: string for new symbol location 
+	**/
 	$scope.fields.addSymbol = function(string){
 		$scope.fields.currentField.image = "images/symbols/" + string + ".svg";
+		document.getElementById('image'+ $scope.fields.currentField.id).src = $scope.fields.currentField.image;
 	}
 
 	/********** Lines ********/
@@ -220,10 +225,16 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	********************************/
 
 	initMap();
-
+	var itemDrawed = false; //ignore setting last click for tz line if last click was for drawing
 	map.on('click', function(e){
-		$scope.map.lastClick = e.latlng;
-		$scope.fields.updateLine();
+		if(!itemDrawed){
+			$scope.map.lastClick = e.latlng;
+			$scope.fields.updateLine();
+		}
+		else{
+			$scope.map.lastClick = null; 
+			itemDrawed = false;
+		}
 	});
 	map.on('move', function(e){
 		fitAllLines(linesArray);
@@ -237,7 +248,9 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	        layer = e.layer;
 		var id = drawnItems.getLayerId(layer);
 	    layer.on('click', function(e){$scope.map.objectClicked(type, layer, id)});
-	    drawnItems.addLayer(layer);
+		$scope.map.lastClick = null; 		
+		itemDrawed = true; 
+		drawnItems.addLayer(layer);
 	});
 
 	$scope.map = {};
@@ -379,6 +392,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 	$scope.map.draw = function(type){
 		$scope.fields.cancel();
+		$scope.fields.currentField.id = undefined;		
 		var _className = 'leaflet-draw-draw-' + type;
 		var _element = document.getElementsByClassName(_className);
 		_element[0].click();
@@ -628,6 +642,11 @@ function initMap(){
 * @desc sets option 'clickable' for a leaflet layer to value
 */
 function setClickable(target, value) {
+	// ignore if marker 
+	if (target instanceof L.Marker){
+        return; 
+    }
+	
 	if(value && !target.options.clickable) {
 		target.options.clickable = true;
 		L.Path.prototype._initEvents.call(target);
