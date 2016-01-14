@@ -5,6 +5,7 @@ var lines,
 var commentsMap = new Map();
 var options; 
 var drawControl;
+var objectColor = "#f00";
 
 app.controller("MapController", function($scope, $http, $sce, $location){
 
@@ -264,14 +265,27 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 			drawnItems.eachLayer(function(layer) {				
 				setClickable(layer, false);			
 			});
+
+			// hide colorPicker if the selected object is a marker
 			if(type == "marker"){
 				$scope.hideColorPicker = true;
 			} else {
 				$scope.hideColorPicker = false;
 			}
-			$scope.sideContent.change("/app/templates/fgis/_drawnObject.html");
+
 			$scope.map.objects.getMeasurement(type, layer);
-			$scope.map.objectId = id;			
+			$scope.map.objectId = id;
+
+			// show the current color of the selected object in the colorPicker
+			objectColor = drawnItems.getLayer($scope.map.objectId).options.color;
+			$("#colorPicker").spectrum({
+				color: objectColor,
+				change: function(color) {
+					newColor = color.toHexString();
+				}
+			});
+
+			$scope.sideContent.change("/app/templates/fgis/_drawnObject.html");
 			$scope.map.showComment();
 			$scope.$apply(function() {});
 		}
