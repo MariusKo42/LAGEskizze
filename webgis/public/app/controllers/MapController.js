@@ -257,12 +257,18 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.map.frozen = false;
 	$scope.map.lastClick = null;
 	$scope.map.objectId = null;
+	$scope.hideColorPicker = false;
 
 	$scope.map.objectClicked = function(type, layer, id){
 		if (!$scope.map.editActive){
 			drawnItems.eachLayer(function(layer) {				
 				setClickable(layer, false);			
-			});		
+			});
+			if(type == "marker"){
+				$scope.hideColorPicker = true;
+			} else {
+				$scope.hideColorPicker = false;
+			}
 			$scope.sideContent.change("/app/templates/fgis/_drawnObject.html");
 			$scope.map.objects.getMeasurement(type, layer);
 			$scope.map.objectId = id;			
