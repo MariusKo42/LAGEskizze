@@ -5,6 +5,7 @@ var lines,
 var commentsMap = new Map();
 var options; 
 var drawControl;
+var objectColor = "#f00";
 
 app.controller("MapController", function($scope, $http, $sce, $location){
 
@@ -246,7 +247,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	map.on('draw:created', function (e) {
 	    var type = e.layerType,
 	        layer = e.layer;
-		var id = drawnItems.getLayerId(e);
+		var id = drawnItems.getLayerId(layer);
 	    layer.on('click', function(e){$scope.map.objectClicked(type, layer, id)});
 		$scope.map.lastClick = null; 		
 		itemDrawed = true; 
@@ -257,15 +258,34 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.map.frozen = false;
 	$scope.map.lastClick = null;
 	$scope.map.objectId = null;
+	$scope.hideColorPicker = false;
 
 	$scope.map.objectClicked = function(type, layer, id){
 		if (!$scope.map.editActive){
 			drawnItems.eachLayer(function(layer) {				
 				setClickable(layer, false);			
-			});		
-			$scope.sideContent.change("/app/templates/fgis/_drawnObject.html");
+			});
+
+			// hide colorPicker if the selected object is a marker
+			if(type == "marker"){
+				$scope.hideColorPicker = true;
+			} else {
+				$scope.hideColorPicker = false;
+			}
+
 			$scope.map.objects.getMeasurement(type, layer);
-			$scope.map.objectId = id;			
+			$scope.map.objectId = id;
+
+			// show the current color of the selected object in the colorPicker
+			objectColor = drawnItems.getLayer($scope.map.objectId).options.color;
+			$("#colorPicker").spectrum({
+				color: objectColor,
+				change: function(color) {
+					newColor = color.toHexString();
+				}
+			});
+
+			$scope.sideContent.change("/app/templates/fgis/_drawnObject.html");
 			$scope.map.showComment();
 			$scope.$apply(function() {});
 		}
@@ -456,7 +476,12 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.sideContent.close();
 	}
 
-	$scope.map.objects.getMeasurement = function(type, layer){
+	// change the color of the choosen object
+	$scope.map.changeObjectsColor = function() {
+		drawnItems.getLayer($scope.map.objectId).setStyle({color: newColor});
+	}
+
+		$scope.map.objects.getMeasurement = function(type, layer){
 		var _htmlString = "";
 		var _area = null;
 		var _length = null;
