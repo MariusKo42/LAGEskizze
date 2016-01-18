@@ -7,11 +7,6 @@ var options;
 var drawControl;
 var objectColor = "#f00";
 
-
-var JSONTz = {}; // array for TZ-JSONs
-var TZ = [];
-JSONTz.TZ = TZ;
-
 app.controller("MapController", function($scope, $http, $sce, $location){
 
 	//url of the db-server:
@@ -106,17 +101,6 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		}
 		var _textTop, _textBottom, _comment, _image;
 
-		// jan insert stuff
-		var id = $scope.fields.currentField.id;
-		var TZ = {
-    "id": id,
-    "titel": "was fürn titel?",
-		"svg": "waiting 4 API"
-		}
-		JSONTz.TZ.push(TZ);
-		console.log(JSONTz);
-		console.log($scope.fields.currentField.id)
-		// end jan insert stuff
 		_textTop = '<div id="fieldTextTop'
 					+ $scope.fields.currentField.id
 					+ '" class="fieldText fieldTextTop" style="overflow:hidden" title="' +$scope.fields.currentField.fieldTextTop + '" data-toggle="tooltip">'
