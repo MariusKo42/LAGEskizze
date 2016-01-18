@@ -21,7 +21,42 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.sideContent.change = function(template){
 		$scope.sideContent.template = template;
 	}
+    
+    /********************************
+	********  loading/saving ********
+	********************************/
+    $scope.einsatz = {
+        _id: '', // recieved from DB server
+        meta: { // filled via ng-model
+            einsatzstichwort: '',
+            einsatzort: '',
+            meldender: '',
+            objektNr: '',
+            datumUhrzeitGruppe: '',
+        },
+        // will be filled on save()
+        drawnObjects: [],
+        fields: [],
+        map: {
+            zoom: 12,
+            center: [],
+            tileserver: ''
+        }
+    };
+    
+    $scope.loadEinsatz = function(id) {
+        
+    };
 
+    $scope.saveEinsatz = function() {
+        // TODO: copy field data into $scope.einsatz.fields
+        
+        // TODO: copy drawn object data into $scope.einsatz.drawnObjects
+        
+        // TODO: submit einsatz object to server
+        
+    };
+   
 	/********************************
 	************ Fields *************
 	********************************/
