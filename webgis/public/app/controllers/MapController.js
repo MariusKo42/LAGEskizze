@@ -25,8 +25,11 @@ app.controller("MapController", function($scope, $http, $sce, $location){
     /********************************
 	********  loading/saving ********
 	********************************/
+    
+    // object that will contain the current state on save
+    // https://github.com/jansule/feuerGISBackend/blob/develop/docs/JSON-Schema%20f%C3%BCr%20Einsatzdaten.json#
     $scope.einsatz = {
-        _id: '', // recieved from DB server
+        _id: '',
         meta: { // filled via ng-model
             einsatzstichwort: '',
             einsatzort: '',
@@ -36,7 +39,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         },
         // will be filled on save()
         drawnObjects: [],
-        fields: [],
+        taktZeichen: [],
         map: {
             zoom: 12,
             center: [],
@@ -48,13 +51,22 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         
     };
 
-    $scope.saveEinsatz = function() {
+    $scope.saveEinsatz = function() {        
         // TODO: copy field data into $scope.einsatz.fields
+                
+        // copy drawn object data into $scope.einsatz.drawnObjects
+        // TODO: save comment & color of features. IDEA: when editing store in "properties" attribute
+        // IDEA: don't wrap in array, as we store a FeatureCollection anyway
+        $scope.einsatz.drawnObjects = [drawnItems.toGeoJSON()];
         
-        // TODO: copy drawn object data into $scope.einsatz.drawnObjects
+        // TODO: save map state
+        $scope.einsatz.map.zoom = map.getZoom();
+        $scope.einsatz.map.center = map.getCenter(); // should be an array instead of object literal?
+        $scope.einsatz.map.tileserver = '' // TODO: basemap functionality needs to be reworked first
+        $scope.einsatz.map.fachkarten = '' // TODO: fachkarten functionality needs to be reworked first
         
         // TODO: submit einsatz object to server
-        
+        console.log(JSON.stringify($scope.einsatz, null, 2));
     };
    
 	/********************************
