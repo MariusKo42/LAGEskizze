@@ -179,8 +179,6 @@ function syncAlice() {
       }
       else {
         formData.einsaetze = JSON.stringify(docs);
-        console.log(docs);
-        console.log(formData);
 
         /**
         * @desc Sendet einen Einsatz an den stationaeren Server (Alice) in der Wache.
