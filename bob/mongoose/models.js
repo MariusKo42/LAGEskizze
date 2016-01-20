@@ -22,18 +22,9 @@ module.exports = function(mongoose) {
             einsatzort: String,
             meldender: String,
             objektNr: String,
-            datumUhrzeitGruppe: Date
+            datumUhrzeitGruppe: String
         },
-        drawnObjects: {
-            fields: {
-                index: Number,
-                captionTop: String,
-                captionBottom: String,
-                targetPosition: Object,
-                taktischesZeichen: String,
-                fotoID: String
-            }
-        },
+        drawnObjects: Array,
         map: {
             zoom: Number,
             center: Object,
