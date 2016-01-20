@@ -29,12 +29,7 @@
 		},
 		"drawnobjects": {
 			"description": "Feature Collection mit gezeichneten Geometrien auf der Karte",
-			"type": "object",
-			"$ref": "http://json-schema.org/geo"
-		},
-        "fachkarten": {
-			"description": "Feature Collection mit Fachkarten Datensätzen auf der Karte",
-			"type": "object",
+			"type": "array",
 			"$ref": "http://json-schema.org/geo"
 		},
 		"map": {

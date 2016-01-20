@@ -55,9 +55,14 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         // TODO: copy field data into $scope.einsatz.fields
                 
         // copy drawn object data into $scope.einsatz.drawnObjects
-        // TODO: save comment & color of features. IDEA: when editing store in "properties" attribute
-        // IDEA: don't wrap in array, as we store a FeatureCollection anyway
-        $scope.einsatz.drawnObjects = [drawnItems.toGeoJSON()];
+        drawnItems.eachLayer(function(layer) {
+            var geojson = layer.toGeoJSON();
+            geojson.properties.comment = commentsMap.get(drawnItems.getLayerId(layer)) || '';
+            geojson.properties.color = layer.options.color;
+            // as leaflet draw serializes a circle as a point, we need to store the radius manually.
+            if (layer._mRadius) geojson.properties.circleRadius = layer._mRadius;
+            $scope.einsatz.drawnObjects.push(geojson); 
+        });
         
         // TODO: save map state
         $scope.einsatz.map.zoom = map.getZoom();
@@ -499,6 +504,13 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	// save a comment for a drawn object using a map (first value: ObjectId from leafletDraw, second value: commentText)
 	$scope.map.saveComment = function(){
 		commentsMap.set($scope.map.objectId, $scope.map.objects.comment);
+        
+        console.log(drawnItems.getLayer($scope.map.objectId));
+        var geojson = drawnItems.getLayer($scope.map.objectId).toGeoJSON();
+        geojson.properties.comment = $scope.map.objects.comment;
+        
+        
+        console.log(L.geoJson(geojson));
 	}
 
 	$scope.map.showComment = function(){
