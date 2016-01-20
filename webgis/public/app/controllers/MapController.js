@@ -27,7 +27,6 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	********************************/
     
     // object that will contain the current state on save
-    // https://github.com/jansule/feuerGISBackend/blob/develop/docs/JSON-Schema%20f%C3%BCr%20Einsatzdaten.json#
     $scope.einsatz = {
         _id: '',
         meta: { // filled via ng-model
@@ -42,19 +41,19 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         taktZeichen: [],
         map: {
             zoom: 12,
-            center: [],
+            center: {},
             tileserver: ''
         }
     };
     
     $scope.loadEinsatz = function(id) {
-        
+        console.log(id);
     };
 
     $scope.saveEinsatz = function() {        
         // TODO: copy field data into $scope.einsatz.fields
                 
-        // copy drawn object data into $scope.einsatz.drawnObjects
+        // push drawn object data into $scope.einsatz.drawnObjects
         drawnItems.eachLayer(function(layer) {
             var geojson = layer.toGeoJSON();
             geojson.properties.comment = commentsMap.get(drawnItems.getLayerId(layer)) || '';
@@ -64,13 +63,21 @@ app.controller("MapController", function($scope, $http, $sce, $location){
             $scope.einsatz.drawnObjects.push(geojson); 
         });
         
-        // TODO: save map state
+        // save map state
         $scope.einsatz.map.zoom = map.getZoom();
         $scope.einsatz.map.center = map.getCenter(); // should be an array instead of object literal?
         $scope.einsatz.map.tileserver = '' // TODO: basemap functionality needs to be reworked first
         $scope.einsatz.map.fachkarten = '' // TODO: fachkarten functionality needs to be reworked first
         
-        // TODO: submit einsatz object to server
+        // submit einsatz object to server
+        $http.post($scope.dbServerAddress + '/einsatz/' + $scope.einsatz._id, $scope.einsatz)
+            .then(function success(res) {
+                console.log('einsatz was saved in database!');
+            }, function error(res) {
+                console.error('einsatz could not be stored in database: ' + res);
+            });
+            
+        // DEBUG
         console.log(JSON.stringify($scope.einsatz, null, 2));
     };
    
@@ -504,13 +511,6 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	// save a comment for a drawn object using a map (first value: ObjectId from leafletDraw, second value: commentText)
 	$scope.map.saveComment = function(){
 		commentsMap.set($scope.map.objectId, $scope.map.objects.comment);
-        
-        console.log(drawnItems.getLayer($scope.map.objectId));
-        var geojson = drawnItems.getLayer($scope.map.objectId).toGeoJSON();
-        geojson.properties.comment = $scope.map.objects.comment;
-        
-        
-        console.log(L.geoJson(geojson));
 	}
 
 	$scope.map.showComment = function(){
@@ -609,6 +609,9 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.map.objects.measureString = $sce.trustAsHtml(_htmlString);
 		$scope.map.objects.type = _type;
 	}
+    
+    // load einsatz, whose ID is given in the URL hash
+    $scope.loadEinsatz(window.location.hash.split('/').pop());
 });
 
 /**
