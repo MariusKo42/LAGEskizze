@@ -62,6 +62,25 @@ app.get('/api/einsatz/new', function(req, res) {
   });
 });
 
+/**
+* @desc Liefere einen Einsatz, der mittles ID identifieziert wird.
+*/
+app.get('/einsatz/:id', function(req, res) {
+
+  //speichere die ID des Einsatzes
+  var id = req.params.id;
+
+  //suche den Einsatz in der Datenbank
+  db.models.einsaetze.findOne({id: id}, function(err, doc) {
+    if(err) {
+      res.status(400).send(err);
+    }
+    else {
+      //sende den in der DB gefundenen Einsatz an den Client
+      res.send(doc);
+    }
+  })
+});
 
 // POST /api/einsatz/:EinsatzID
 //   Route um einen existierenden Einsatz zu editieren.
@@ -69,7 +88,7 @@ app.get('/api/einsatz/new', function(req, res) {
 app.post('/api/einsatz/:EinsatzID/', function(req, res) {
   var einsatzid = req.params.EinsatzID;
 
-  db.models.einsaetze.findOne({einsatzid}, function(err, value) {
+  db.models.einsaetze.findOne({id: einsatzid}, function(err, value) {
     if (err) {
       res.status(400).send(err);
     } else {
