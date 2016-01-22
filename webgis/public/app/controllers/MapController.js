@@ -52,7 +52,21 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
     $scope.saveEinsatz = function() {        
         // TODO: copy field data into $scope.einsatz.fields
-                
+	var fields = {}
+	for(var i=0; i<$scope.fields.fieldOrder.properties.length; i++) {
+		var svgPath = $('img[id="image' + $scope.fields.fieldOrder.properties[i].id +'"]').attr('src');  //vermutung das pfad des svg gemeint ist?
+		if(typeof svgPath!='undefined'){ // macht das sinn hier auf undefinded zu prüfen? denk mal nen null-wert ist besser als undefined wenn man es in  DB packt
+			svgPath = svgPath;
+		} else {
+			svgPath = null;
+		};
+		fields[i]= {
+		kranzpostion: $scope.fields.fieldOrder.properties[i].id,
+		kartenposition: "norwin hier musst du mal ran :P",  // nicht so wirklich plan wie ich die hierhin bekommen soll
+		zeichen: svgPath
+		}
+	};
+	$scope.einsatz.taktZeichen = fields;
         // push drawn object data into $scope.einsatz.drawnObjects
         drawnItems.eachLayer(function(layer) {
             var geojson = layer.toGeoJSON();
