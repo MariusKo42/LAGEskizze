@@ -26,10 +26,10 @@ var fieldOrder = {
 		{"id": 42, "top":"25%", "group": "rightcol"},
 		{"id": 43, "top":"38%", "group": "rightcol"},
 		{"id": 44, "top":"51%", "group": "rightcol"},
-		{"id": 75, "top":"64%", "group": "rightcol"},
+		{"id": 45, "top":"64%", "group": "rightcol"},
 		{"id": 46, "top":"77%", "group": "rightcol"}
-	],	
-	"width": "5.52%", 
+	],
+	"width": "5.52%",
 	"height": "11.04%", 
 	"size": "100%",
 }
