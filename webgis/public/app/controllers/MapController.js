@@ -42,7 +42,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         map: {
             zoom: 12,
             center: {},
-            tileserver: ''
+            tileServer: ''
         }
     };
     
@@ -50,24 +50,25 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         console.log(id);
     };
 
-    $scope.saveEinsatz = function() {        
-        // TODO: copy field data into $scope.einsatz.fields
-	var fields = {}
-	for(var i=0; i<$scope.fields.fieldOrder.properties.length; i++) {
-		var svgPath = $('img[id="image' + $scope.fields.fieldOrder.properties[i].id +'"]').attr('src');  //vermutung das pfad des svg gemeint ist?
-		if(typeof svgPath!='undefined'){ // macht das sinn hier auf undefinded zu prüfen? denk mal nen null-wert ist besser als undefined wenn man es in  DB packt
-			svgPath = svgPath;
-		} else {
-			svgPath = null;
-		};
-		fields[i]= {
-		kranzpostion: $scope.fields.fieldOrder.properties[i].id,
-		kartenposition: "norwin hier musst du mal ran :P",  // nicht so wirklich plan wie ich die hierhin bekommen soll
-		zeichen: svgPath
-		}
-	};
-	$scope.einsatz.taktZeichen = fields;
+    $scope.saveEinsatz = function() {
+        // copy field data into $scope.einsatz.fields
+        $scope.einsatz.taktZeichen = [];
+        for (var i = 0; i < $scope.fields.fieldOrder.properties.length; i++) {
+            var kranzPos = $scope.fields.fieldOrder.properties[i].id;
+            var line = linesArray[kranzPos];
+            
+            $scope.einsatz.taktZeichen.push({
+                kranzpostion: kranzPos,
+                kartenposition: line ? line[0] : {},
+                zeichen:    $('#image' + kranzPos).attr('src') || '', // TODO: use zeichenID from DB instead of filename? 
+                comment:    $('#fieldComment' + kranzPos).text() || '',
+                textTop:    $('#fieldTextTop' + kranzPos).text() || '',
+                textBottom: $('#fieldTextBottom' + kranzPos).text() || ''
+            });
+        }
+        
         // push drawn object data into $scope.einsatz.drawnObjects
+        $scope.einsatz.drawnObjects = [];
         drawnItems.eachLayer(function(layer) {
             var geojson = layer.toGeoJSON();
             geojson.properties.comment = commentsMap.get(drawnItems.getLayerId(layer)) || '';
@@ -79,9 +80,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         
         // save map state
         $scope.einsatz.map.zoom = map.getZoom();
-        $scope.einsatz.map.center = map.getCenter(); // should be an array instead of object literal?
-        $scope.einsatz.map.tileserver = '' // TODO: basemap functionality needs to be reworked first
-        $scope.einsatz.map.fachkarten = '' // TODO: fachkarten functionality needs to be reworked first
+        $scope.einsatz.map.center = map.getCenter();
+        $scope.einsatz.map.tileServer = ''; // TODO: basemap functionality needs to be reworked first
         
         // submit einsatz object to server
         $http.post($scope.dbServerAddress + '/einsatz/' + $scope.einsatz._id, $scope.einsatz)
