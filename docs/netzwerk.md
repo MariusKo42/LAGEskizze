@@ -48,6 +48,7 @@ Dazu wird in der Datei `bob/config.json` der folgende Eintrag bearbeitet:
         "alice":  {
             "ip": "192.168.1.2",
             "port": "8080"
+        }
     }
 }
 ```
