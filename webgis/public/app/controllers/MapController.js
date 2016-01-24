@@ -6,11 +6,12 @@ var commentsMap = new Map();
 var options;
 var drawControl;
 var objectColor = "#f00";
+var einsatzID = null; 
 
 app.controller("MapController", function($scope, $http, $sce, $location){
 
 	//url of the db-server:
-	$scope.dbServerAddress = $location.absUrl().split(":")[0] + ":" + $location.absUrl().split(":")[1] + ":3000/";
+	$scope.dbServerAddress = $location.absUrl().split(":")[0] + ":" + $location.absUrl().split(":")[1] + ":8080/";
 
 	$scope.sideContent = {};
 	$scope.sideContent.template = "";
@@ -83,17 +84,71 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         $scope.einsatz.map.center = map.getCenter();
         $scope.einsatz.map.tileServer = ''; // TODO: basemap functionality needs to be reworked first
         
-        // submit einsatz object to server
-        $http.post($scope.dbServerAddress + '/einsatz/' + $scope.einsatz._id, $scope.einsatz)
+		// create new einsatz in database
+		if(einsatzID == null){
+			$http({
+			method: 'GET',
+			url: 'http://localhost:8080/api/einsatz/new',		
+			//data: $scope.einsatz
+			}).then(function successCallback(response) {			
+			    einsatzID = response.data.id; 
+				console.log("Einsatz angelegt mit der ID: " + einsatzID);
+				
+				//TODO: put submit into function to avoid double-code
+				//submit einsatz object to server
+				$http.post($scope.dbServerAddress + 'api/einsatz/' + einsatzID, $scope.einsatz)
+				.then(function success(res) {
+					console.log('einsatz was saved in database!');
+				}, function error(res) {
+					console.error('einsatz could not be stored in database: ' + res);
+				});
+			}, function errorCallback(response) {
+			   console.log("FEHLER: Neuer Einsatz konnte nicht angelegt werden");
+			});	   
+		}
+		else{
+			//submit einsatz object to server
+			$http.post($scope.dbServerAddress + 'api/einsatz/' + einsatzID, $scope.einsatz)
             .then(function success(res) {
                 console.log('einsatz was saved in database!');
             }, function error(res) {
                 console.error('einsatz could not be stored in database: ' + res);
             });
+		}				      
             
         // DEBUG
-        console.log(JSON.stringify($scope.einsatz, null, 2));
+        //console.log(JSON.stringify($scope.einsatz, null, 2));
     };
+	
+	$scope.showLoadMenu = function(){
+		
+		if ($scope.sideContent.template == "/app/templates/fgis/loadMenu.html"){
+			$scope.sideContent.change("");
+		}
+		else {
+			$scope.sideContent.change("/app/templates/fgis/loadMenu.html");
+		}
+		try{$scope.map.editCancel();}catch(e){}
+		$scope.loadTable();
+	}
+	
+	$scope.loadTable = function(){
+	   $http({
+		method: 'GET',
+		url: 'http://localhost:8080/api/einsatz'	   
+	    }).then(function successCallback(response) {
+			console.log("erfolg: " + JSON.stringify(response));
+			/*
+			
+			$('#einsatzTable tr').remove();
+			for (var i = 0; i < response.length; i++) {
+				
+			}
+		    $("#einsatzTable").trigger("update");		*/
+	    }, function errorCallback(response) {
+			console.log("misserfolg: " + response);
+		});	   
+	}
    
 	/********************************
 	************ Fields *************
@@ -624,8 +679,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.map.objects.type = _type;
 	}
     
-    // load einsatz, whose ID is given in the URL hash
-    $scope.loadEinsatz(window.location.hash.split('/').pop());
+    
 });
 
 /**
