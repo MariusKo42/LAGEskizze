@@ -66,6 +66,15 @@
 					"description": "ID des Zeichens, das an der gegebenen Position gespeichert ist.",
 					"$ref": "taktische_Zeichen_Schema"
 				},
+				"textTop": {
+					"type": "String"
+				},
+				"textBottom": {
+					"type": "String"
+				},
+				"comment": {
+					"String"
+				}
 			}
 		}
 	}
