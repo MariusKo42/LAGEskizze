@@ -51,3 +51,16 @@ Dazu wird in der Datei `bob/config.json` der folgende Eintrag bearbeitet:
     }
 }
 ```
+
+### Synchronisation des GeoServer
+
+Für die Synchronisation des GeoServer muss der Bob Server Schlüsselbasierten
+SSH-Zugriff auf den Alice Server haben. Dazu muss vorab der SSH Schlüssel von 
+Bob auf Alice kopiert werden: 
+
+```
+bob@bob-server: ssh-copy-id bob@alice-server
+```
+
+Bob führt nun periodisch rsync aus und synchronisiert die GeoServer Daten über 
+SSH.
