@@ -20,6 +20,10 @@ app.use(bodyParser.urlencoded({
 }));
 
 
+app.get('/ping', function(req, res) {
+    res.send('pong');
+});
+
 // GET /api/einsatz
 //   Route um alle Einsätze abzurufen.
 app.get('/api/einsatz', function(req, res) {
