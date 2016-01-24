@@ -9,7 +9,17 @@ var models = require('./mongoose/models.js');
 var bodyParser = require('body-parser');
 var express = require('express');
 var request = require('request');
+var exec = require('child_process').exec;
 var app = express();
+
+var config = require('./config.json');
+
+var mutex = {
+    rsyncto : false,
+    rsyncfrom : false,
+};
+
+
 
 app.use('/', express.static(__dirname));
 
@@ -191,12 +201,55 @@ app.delete('/zeichen/:id/', function(req, res) {
 var formData = {
   einsaetze: Array
 };
-syncAlice();
+
+
+/**
+* @desc Versucht jede Minute eine Verbindung zu Alice herzustellen
+*/
+setInterval(function () {
+    request({url: 'http://' + config.network.alice.ip + ':' + config.network.alice.port + '/ping', timeout: 5000}, function (error, response, body) {
+        if (!error) {
+            console.log('Alice ist erreichbar! Starte Synchronisation.');
+            
+            //Starte Synchronisation der Einsätze
+            syncEinsaetze(config.network.alice);
+
+            //Starte rsync Synchronisation der GeoServer Daten
+            syncGeoTo(config.network.alice);
+            syncGeoFrom(config.network.alice);
+        }
+    });
+
+}, 60000);
+
+
+
+var syncGeoTo = function(alice) {
+    if(!mutex.rsyncto) {
+        mutex.rsyncto = true;
+        exec('rsync -aAXzve ssh /var/lib/tomcat7/webapps/geoserver/data/workspaces bob@' + alice.ip + ':/var/lib/tomcat7/webapps/geoserver/data/workspaces', function(error, stdout, stderr) {
+            console.log(stderr);
+            mutex.rsyncto = false;
+        });
+    }
+}
+
+var syncGeoFrom = function(alice) {
+    if(!mutex.rsyncfrom) {
+        mutex.rsyncfrom = true;
+        exec('rsync -aAXzve ssh bob@' + alice.ip + ':/var/lib/tomcat7/webapps/geoserver/data/workspaces /var/lib/tomcat7/webapps/geoserver/data/workspaces', function(error, stdout, stderr) {
+            console.log(stderr);
+            mutex.rsyncfrom = false;
+        });
+    }
+}
+
+
 
 /**
 * @desc Sendet die Eintraege aus der DB an Alice via post request.
 */
-function syncAlice() {
+var syncEinsaetze = function (alice) {
 
     //finde Einsaetze in der DB
     db.models.einsaetze.find(function(err, docs) {
@@ -209,7 +262,7 @@ function syncAlice() {
         /**
         * @desc Sendet einen Einsatz an den stationaeren Server (Alice) in der Wache.
         */
-        request.post({url: 'http://localhost:3000/private/einsatz', form: formData}, function (error, response, body) {
+        request.post({url: 'http://' + alice.ip + ':' + alice.port + '/private/einsatz', form: formData}, function (error, response, body) {
             
             if (error) {
               return console.error('Synchronisation fehlgeschlagen:', error);
