@@ -16,11 +16,13 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
 
 ```JSON
 {
+
  "Zeichen":[
     {
-        "id": "id",
-        "titel: "string",
-        "svg": //noch einzufügen
+        "id": String,
+        "kategorie": String
+        "titel: String,
+        "svg": String
     }
  ]   
 }
@@ -32,14 +34,19 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
 Übermittelt eine Liste mit verfügbaren Einsatz-IDs als JSON:
 
 ```JSON
-{
-    "Einsaetze":[
-    {
-        "id":id, 
-        "titel":titel
-    },
-    ]
-}
+[
+  {
+    "id": "String",
+    "locked": "Bool",
+    "meta": {
+      "datumUhrzeitGruppe": "String",
+      "einsatzort": "String",
+      "einsatzstichwort": "String",
+      "meldender": "String",
+      "objektNr": "String"
+    }
+  }, ...
+]
 ```
 #### GET /einsatz/new
 Liefert ein JSON-Objekt mit leeren Einsatzdaten und einer neuen, eindeutigen EinsatzID.
@@ -52,30 +59,48 @@ Beim aufrufen wird der Einsatz mit der ID :id gesperrt. Es ist keine weitere Bea
 
 ## Taktische Zeichen
 #### GET /zeichen/
-Übermittelt eine Liste mit den IDs der verfügbaren taktischen Zeichen als JSON:
+
+Übermittelt ein JSON Objekt, in dem die Bezeichnungen und Dateinamen für die Zeichen enthalten sind.
 ```JSON
 {
     "Zeichen":[
     {
-        "id": "id", 
-        "titel": "titel"
-    },
+	"id": "String"
+        "Name": "String",
+        "Kategorie": "String",
+        "Svg": "String"
+    }
     ]
 }
 ```
 
+
 #### GET /zeichen/:id/
-Liefert das Zeichen mit der ID :id nach dem o.g. Schema.
-#### POST /zeichen/:id/
-Nimmt ein geändertes Zeichen entgegen
+Liefert das Zeichen mit der ID :id als JSON
+
+### GET /zeichen/:id/svg/
+Liefert den String des Attribut ```svg``` zurück, sodass das Zeichen als <img> eingebunden werden kann. Beispiel: 
+```HTML
+<img src="http://bob/zeichen/n4l2ia/svg/">
+```
+
+#### POST /zeichen/
+Nimmt ein Zeichen als JSON entgegen, und ersetzt das Zeichen in der Datenbank mit der selben id.
+
 #### PUT /zeichen/
-Nimmt ein neues Zeichen entgegen und liefert die zugehörige ZeichenID wie folgt:
+Nimmt ein neues Zeichen entgegen, und speichert es in die Datenbank. Dabei wird die mitgelieferte ID ignoriert, und die vom Server zugewiesene ID als Rückmeldung ausgegeben:
 ```JSON
 {
-    "id": "id"
+    "Name": "String",
+    "Kategorie": "String",
+    "Svg": "String"	
+
 }
 ```
 #### DELETE /zeichen/:id/
-Löscht ein taktisches Zeichen mit der ID :id
+Löscht ein taktisches Zeichen mit der ID :id aus der Datenbank.
 
 
+
+#### POST /zeichen/:id/
+Nimmt ein das geänderte JSON Objekt entgegen und überschreibt das alte Objekt.

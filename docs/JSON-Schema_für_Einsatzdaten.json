@@ -1,0 +1,81 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Einsatz",
+	"description": "Feuerwehreinsatz aus dem Feuerwehr-GIS",
+	"type": "object",
+	"properties": {
+		"meta": {
+			"type": "object",
+			"description": "Informationen über den Einsatz",
+			"properties": {
+				"einsatzstichwort": {
+					"description": "Beschreibung des Einsatzes in wenigen Stichworten",
+					"type": "string"
+				},
+				"einsatzort": {
+					"type": "string"
+				},
+				"meldender": {
+					"type": "string"
+				},
+				"objektNr": {
+					"description": "ID der Einsätze",
+					"type": "string"
+				},
+				"datumUhrzeitGruppe": {
+					"type": "string"
+				}
+			}
+		},
+		"drawnobjects": {
+			"description": "Feature Collection mit gezeichneten Geometrien auf der Karte",
+			"type": "array",
+			"$ref": "http://json-schema.org/geo"
+		},
+		"map": {
+			"description": "Zustand der Karte",
+			"type": "object",
+			"properties": {
+				"zoom": {
+					"description": "Zoomstufe der Karte",
+					"type": "integer"
+				},
+				"center": {
+					"description": "Koordinaten der Karte.",
+					"$ref": "http://json-schema.org/geo"
+				},
+				"tileServer": {
+					"description": "Quelle des Karte",
+					"type": "string"
+				}
+			}
+		},
+		"taktZeichen": {
+			"description": "Taktische Zeichen in der Kranzdarstellung",
+			"type": "array",
+			"items": {
+				"kranzposition": {
+					"description": "Position des TZ im Kranz",
+					"type": "integer",
+				},
+				"kartenposition": {
+					"description": "Koordinaten des Markers auf der Karte.",
+					"$ref": "http://json-schema.org/geo"
+				},
+				"zeichen": {
+					"description": "ID des Zeichens, das an der gegebenen Position gespeichert ist.",
+					"$ref": "taktische_Zeichen_Schema"
+				},
+				"textTop": {
+					"type": "String"
+				},
+				"textBottom": {
+					"type": "String"
+				},
+				"comment": {
+					"String"
+				}
+			}
+		}
+	}
+}
