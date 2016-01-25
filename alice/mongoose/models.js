@@ -5,10 +5,7 @@
  */
 var shortid = require('shortid');
 
-
 module.exports = function(mongoose) {
-	var shortid = require('shortid');
-	
     var datensatz = new mongoose.Schema({
         Basiskarten: String,
         Fachkarten: Object,
@@ -50,11 +47,10 @@ module.exports = function(mongoose) {
         Titel: String,
         Svg: String
     });
-
     var models = {
-        datensaetze : mongoose.model('Datensaetze', datensatz),
-        einsaetze : mongoose.model('Einsatz', einsatz),
-        taktZeichens : mongoose.model('TaktZeichen', taktZeichen)
+        datensaetze: mongoose.model('Datensaetze', datensatz),
+        einsaetze: mongoose.model('Einsatz', einsatz),
+        taktZeichens: mongoose.model('TaktZeichen', taktZeichen)
     };
 
     return models;

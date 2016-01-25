@@ -7,24 +7,36 @@
 
 var db = require('./mongoose/db.js');
 var models = require('./mongoose/models.js');
+var config = require('./config.json');
 var bodyParser = require('body-parser');
 var express = require('express');
+var request = require('request');
+var exec = require('child_process').exec;
 var app = express();
 
 
-
-
-
 app.use(function(req, res, next) {
-	res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-	next();
+  next();
 });
 
 
+var mutex = {
+    rsyncto : false,
+    rsyncfrom : false,
+};
+
 
 app.use('/', express.static(__dirname));
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+  next();
+});
 
 //use the extended request body
 app.use(bodyParser.urlencoded({
@@ -76,6 +88,25 @@ app.get('/api/einsatz/new', function(req, res) {
   });
 });
 
+/**
+* @desc Liefere einen Einsatz, der mittles ID identifieziert wird.
+*/
+app.get('/einsatz/:id', function(req, res) {
+
+  //speichere die ID des Einsatzes
+  var id = req.params.id;
+
+  //suche den Einsatz in der Datenbank
+  db.models.einsaetze.findOne({id: id}, function(err, doc) {
+    if(err) {
+      res.status(400).send(err);
+    }
+    else {
+      //sende den in der DB gefundenen Einsatz an den Client
+      res.send(doc);
+    }
+  })
+});
 
 // POST /api/einsatz/:EinsatzID
 //   Route um einen existierenden Einsatz zu editieren.
@@ -83,7 +114,7 @@ app.get('/api/einsatz/new', function(req, res) {
 app.post('/api/einsatz/:EinsatzID/', function(req, res) {
   var einsatzid = req.params.EinsatzID;
 
-  db.models.einsaetze.findById(einsatzid, function(err, value) {
+  db.models.einsaetze.findOne({id: einsatzid}, function(err, value) {
     if (err) {
       res.status(400).send(err);
     } else {
@@ -111,7 +142,7 @@ app.post('/api/einsatz/:EinsatzID/', function(req, res) {
 //	 Eine weitere Editierung des Einsatzes ist nicht möglich.
 app.post('/api/einsatz/:EinsatzID/lock', function(req, res) {
 
-  db.models.einsaetze.update({ _id: req.params.EinsatzID }, { $set: { locked: 'true' }}, function(){
+  db.models.einsaetze.update({ id: req.params.EinsatzID }, { $set: { locked: 'true' }}, function(){
 
 	  res.send("Einsatz mit ID " + req.params.EinsatzID + " wurde gesperrt.");
 
@@ -143,7 +174,6 @@ app.put('/zeichen/', function(req, res) {
 
 	//erzeuge neues Zeichen, das in der DB abgelegt werden soll.
 	var zeichen = new db.models.taktZeichens({
-		//id: shortid.generate(); Muss das angegeben werden (wegen default im model?)
 		Kategorie: req.body.Kategorie,
 		Titel: req.body.Titel,
 		Svg: req.body.Svg
@@ -216,6 +246,84 @@ app.get('/zeichen/:id/svg/', function(req, res){
 	});
 });
 
+
+
+
+
+var formData = {
+  einsaetze: Array
+};
+
+
+/**
+* @desc Versucht jede Minute eine Verbindung zu Alice herzustellen
+*/
+setInterval(function () {
+    request({url: 'http://' + config.network.alice.ip + ':' + config.network.alice.port + '/ping', timeout: 5000}, function (error, response, body) {
+        if (!error) {
+            console.log('Alice ist erreichbar! Starte Synchronisation.');
+            
+            //Starte Synchronisation der Einsätze
+            syncEinsaetze(config.network.alice);
+
+            //Starte rsync Synchronisation der GeoServer Daten
+            syncGeoTo(config.network.alice);
+            syncGeoFrom(config.network.alice);
+        }
+    });
+
+}, 60000);
+
+
+
+var syncGeoTo = function(alice) {
+    if(!mutex.rsyncto) {
+        mutex.rsyncto = true;
+        exec('rsync -aAXzve ssh /var/lib/tomcat7/webapps/geoserver/data/workspaces bob@' + alice.ip + ':/var/lib/tomcat7/webapps/geoserver/data/workspaces', function(error, stdout, stderr) {
+            console.log(stderr);
+            mutex.rsyncto = false;
+        });
+    }
+}
+
+var syncGeoFrom = function(alice) {
+    if(!mutex.rsyncfrom) {
+        mutex.rsyncfrom = true;
+        exec('rsync -aAXzve ssh bob@' + alice.ip + ':/var/lib/tomcat7/webapps/geoserver/data/workspaces /var/lib/tomcat7/webapps/geoserver/data/workspaces', function(error, stdout, stderr) {
+            console.log(stderr);
+            mutex.rsyncfrom = false;
+        });
+    }
+}
+
+
+
+/**
+* @desc Sendet die Eintraege aus der DB an Alice via post request.
+*/
+var syncEinsaetze = function (alice) {
+
+    //finde Einsaetze in der DB
+    db.models.einsaetze.find(function(err, docs) {
+      if(err) {
+        console.error(err);
+      }
+      else {
+        formData.einsaetze = JSON.stringify(docs);
+
+        /**
+        * @desc Sendet einen Einsatz an den stationaeren Server (Alice) in der Wache.
+        */
+        request.post({url: 'http://' + alice.ip + ':' + alice.port + '/private/einsatz', form: formData}, function (error, response, body) {
+            
+            if (error) {
+              return console.error('Synchronisation fehlgeschlagen:', error);
+            }
+            console.log('Synchronisation erfolgreich!  Server antwortet mit:', body);
+        });
+      }
+  });
+};
 
 
 
