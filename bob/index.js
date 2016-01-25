@@ -357,15 +357,15 @@ app.post('/private/zeichen/', function(req, res){
       db.models.taktZeichens.findOne({id: file.id}, function(err, result){
         if(result == null){
 
-          var neuerEinsatz = new db.models.taktZeichens({
+          var neuesZeichen = new db.models.taktZeichens({
             id: file.id,
             Kategorie: file.Kategorie,
             Titel: file.Titel,
             Svg: file.Svg
           });
 
-          neuerEinsatz.save();
-          console.log(neuerEinsatz);
+          neuesZeichen.save();
+          console.log(neuesZeichen);
           same = false;
         }
       });
@@ -416,12 +416,11 @@ var zeichenData = {
 
 };
 
-//var syncZeichenFrom = function(alice){
-  function syncZeichenFrom(){
-  //request.get('http://' + alice.ip + ':' + alice.port + '/zeichen/').on('response', function(response){
+//empfängt daten von alice und speichert diese in bob
+var syncZeichenFrom = function(alice){
     request({
       method: 'GET',
-      uri: 'http://localhost:3000/zeichen/'
+      uri: 'http://' + alice.ip + ':' + alice.port + '/zeichen/'
     }, function(error, response, body){
       
     
@@ -438,15 +437,15 @@ var zeichenData = {
         db.models.taktZeichens.findOne({id: file.id}, function(err, result){
           if(result == null){
 
-            var neuerEinsatz = new db.models.taktZeichens({
+            var neuesZeichen = new db.models.taktZeichens({
               id: file.id,
               Kategorie: file.Kategorie,
               Titel: file.Titel,
               Svg: file.Svg
             });
 
-            neuerEinsatz.save();
-            console.log(neuerEinsatz);
+            neuesZeichen.save();
+            console.log(neuesZeichen);
             same = false;
           }
         });
@@ -457,17 +456,15 @@ var zeichenData = {
       }, 1500);
     }
     checkDB(json, function(status){
-      if (status == 0) response.send('Datenbank wurde synchronisiert.');
-      else if (status == 1) response.send('Datenbank war synchron.');
+      if (status == 0) console.log('Datenbank wurde synchronisiert.');
+      else if (status == 1) console.log('Datenbank war synchron.');
     });
 });
 
 
-}
-//};
 
-//syncZeichenTo();
-syncZeichenFrom();
+};
+
 
 
 //start the server on Port 8080
