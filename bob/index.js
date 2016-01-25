@@ -278,8 +278,11 @@ setInterval(function () {
             //Starte Synchronisation der Einsätze
             syncEinsaetze(config.network.alice);
 
-            //Starte Synchronisation der Zeichen
-            syncZeichen(config.network.alice);
+            //Starte Synchronisation der Zeichen von Bob zu Alice
+            syncZeichenTo(config.network.alice);
+
+            //Starte Synchronisation der Zeichen von Alice zu Bob
+            syncZeichenFrom(config.network.alice);
 
             //Starte rsync Synchronisation der GeoServer Daten
             syncGeoTo(config.network.alice);
@@ -354,15 +357,15 @@ app.post('/private/zeichen/', function(req, res){
       db.models.taktZeichens.findOne({id: file.id}, function(err, result){
         if(result == null){
 
-          var neuerEinsatz = new db.models.taktZeichens({
+          var neuesZeichen = new db.models.taktZeichens({
             id: file.id,
             Kategorie: file.Kategorie,
             Titel: file.Titel,
             Svg: file.Svg
           });
 
-          neuerEinsatz.save();
-          console.log(neuerEinsatz);
+          neuesZeichen.save();
+          console.log(neuesZeichen);
           same = false;
         }
       });
@@ -385,10 +388,11 @@ app.post('/private/zeichen/', function(req, res){
 *
 */
 var zeichenData = {
-  zeichen: Array
+  taktZeichens: Array
 };
 
-var syncZeichen = function(alice){
+//var syncZeichenTo = function(alice){
+  function syncZeichenTo(){
   // contains all taktZeichen
   var zeichen;
 
@@ -401,7 +405,8 @@ var syncZeichen = function(alice){
 
 
       //send request
-      request.post({url: 'http://' + alice.ip + ':' + alice.port + '/private/zeichen', form: zeichenData}, function(error, response, body){
+      //request.post({url: 'http://' + alice.ip + ':' + alice.port + '/private/zeichen', form: zeichenData}, function(error, response, body){
+        request.post({url: 'http://localhost:3000/private/zeichen', form: zeichenData}, function(error, response, body){
         if (error) return console.error('Synchronisation fehlgeschlagen: ', error);
         else console.log('Synchronisation erfolgreich! Server antwortet mit: ', body);
       });
@@ -409,9 +414,56 @@ var syncZeichen = function(alice){
 
   });
 
-}
+};
 
-//syncZeichen();
+//empfängt daten von alice und speichert diese in bob
+var syncZeichenFrom = function(alice){
+    request({
+      method: 'GET',
+      uri: 'http://' + alice.ip + ':' + alice.port + '/zeichen/'
+    }, function(error, response, body){
+      
+    
+    //save values into db
+    
+    var same = true;
+    var body = JSON.stringify(body);
+    var json= {};
+    json.taktZeichens = JSON.parse(body);
+    var h = JSON.parse(json.taktZeichens);
+    json.taktZeichens = h;
+    function checkDB(data, callback){
+      async.each(data.taktZeichens, function(file){
+        db.models.taktZeichens.findOne({id: file.id}, function(err, result){
+          if(result == null){
+
+            var neuesZeichen = new db.models.taktZeichens({
+              id: file.id,
+              Kategorie: file.Kategorie,
+              Titel: file.Titel,
+              Svg: file.Svg
+            });
+
+            neuesZeichen.save();
+            console.log(neuesZeichen);
+            same = false;
+          }
+        });
+      });
+      setTimeout(function(){
+        if (same) callback(1);
+        else callback(0);
+      }, 1500);
+    }
+    checkDB(json, function(status){
+      if (status == 0) console.log('Datenbank wurde synchronisiert.');
+      else if (status == 1) console.log('Datenbank war synchron.');
+    });
+});
+
+
+
+};
 
 
 
