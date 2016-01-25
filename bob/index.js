@@ -58,17 +58,13 @@ app.get('/api/einsatz', function(req, res) {
 	var i = 0;
 	while(i < values.length){
 		
-		if(values[i].meta.einsatzort != null){
 			
+		var myObject = {	id: values[i].id,
+							meta: values[i].meta,
+							locked: values[i].locked
+		}			
 			
-			var myObject = {	id: values[i].id,
-								meta: values[i].meta,
-								locked: values[i].locked
-			}
-			
-			
-			dataToSend.push(myObject);	
-		}
+		dataToSend.push(myObject);	
 		
 		i++;
 	}
@@ -106,7 +102,7 @@ app.get('/api/einsatz/new', function(req, res) {
 /**
 * @desc Liefere einen Einsatz, der mittles ID identifieziert wird.
 */
-app.get('/einsatz/:id', function(req, res) {
+app.get('/api/einsatz/:id', function(req, res) {
 
   //speichere die ID des Einsatzes
   var id = req.params.id;
@@ -143,7 +139,8 @@ app.post('/api/einsatz/:EinsatzID/', function(req, res) {
                             zoom:         req.body.map.zoom,
                             center:       req.body.map.center,
                             tileServer:     req.body.map.tileServer
-                        }
+                        },
+                        taktZeichen: req.body.taktZeichen
                       }, function(error, result){
                         console.log(result);
                         res.send(result);
