@@ -17,9 +17,9 @@
   },
   "homepage": "https://github.com/jansule/feuerGISBackend#readme",
   "dependencies": {
+    "async": "^1.5.2",
     "body-parser": "^1.14.1",
     "express": "^4.13.3",
-
     "mongoose": "^4.3.1",
     "request": "^2.67.0",
     "shortid": "^2.2.4"

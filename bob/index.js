@@ -13,6 +13,7 @@ var express = require('express');
 var request = require('request');
 var exec = require('child_process').exec;
 var shortid = require('shortid');
+var async = require('async');
 var app = express();
 
 var mutex = {
@@ -106,28 +107,27 @@ app.get('/einsatz/:id', function(req, res) {
 //   Route um einen existierenden Einsatz zu editieren.
 //	 Nimmt einen neuen Einsatz entgegen und überschreibt den Existenten.
 app.post('/api/einsatz/:EinsatzID/', function(req, res) {
-  var einsatzid = req.params.EinsatzID;
-
-  db.models.einsaetze.findOne({id: einsatzid}, function(err, value) {
-    if (err) {
-      res.status(400).send(err);
-    } else {
-
-      if(value.locked){
-
-	      res.status(400).send("Einsatz ist abgeschlossen (locked)");
-
-      }
-
-      value = req.body;
-      // POST-Body = Einsatz JSON
-      value.save(function(err) {
-        if (err) return handleError(err);
-        //res.status(200); //Boost Performance if needed
-        res.send(value);
-      });
-    }
-  });
+  
+    var einsatzid = req.params.EinsatzID;
+  
+    var query = { id: einsatzid };
+    db.models.einsaetze.update(query, {   meta: {
+                            einsatzstichwort:   req.body.meta.einsatzstichwort,
+                            einsatzort:     req.body.meta.einsatzort,
+                            meldender:      req.body.meta.meldender,
+                            objektNr:     req.body.meta.objektNr,
+                            datumUhrzeitGruppe: req.body.meta.datumUhrzeitGruppe
+                          },
+                        drawnObjects: req.body.drawnObjects,
+                        map: {
+                            zoom:         req.body.map.zoom,
+                            center:       req.body.map.center,
+                            tileServer:     req.body.map.tileServer
+                        }
+                      }, function(error, result){
+                        console.log(result);
+                        res.send(result);
+                      });
 });
 
 
@@ -261,6 +261,9 @@ setInterval(function () {
             //Starte Synchronisation der Einsätze
             syncEinsaetze(config.network.alice);
 
+            //Starte Synchronisation der Zeichen
+            syncZeichen(config.network.alice);
+
             //Starte rsync Synchronisation der GeoServer Daten
             syncGeoTo(config.network.alice);
             syncGeoFrom(config.network.alice);
@@ -320,6 +323,78 @@ var syncEinsaetze = function (alice) {
   });
 };
 
+// posts data about taktische zeichen sent from alice into db
+// receives an array of objects of type taktZeichen
+//[{taktZeichen1}, {taktZeichen2}, ...]
+app.post('/private/zeichen/', function(req, res){
+  var same = true;
+  var body = JSON.stringify(req.body);
+  var json = JSON.parse(body);
+  var h = JSON.parse(json.taktZeichens);
+  json.taktZeichens = h;
+  function checkDB(data, callback){
+    async.each(data.taktZeichens, function(file){
+      db.models.taktZeichens.findOne({id: file.id}, function(err, result){
+        if(result == null){
+
+          var neuerEinsatz = new db.models.taktZeichens({
+            id: file.id,
+            Kategorie: file.Kategorie,
+            Titel: file.Titel,
+            Svg: file.Svg
+          });
+
+          neuerEinsatz.save();
+          console.log(neuerEinsatz);
+          same = false;
+        }
+      });
+    });
+    setTimeout(function(){
+      if (same) callback(1);
+      else callback(0);
+    }, 1500);
+  }
+  checkDB(json, function(status){
+    if (status == 0) res.send('Datenbank wurde synchronisiert.');
+    else if (status == 1) res.send('Datenbank war synchron.');
+  });
+});
+
+
+
+/*
+* @Desc loads all taktZeichen and sends them to alice
+*
+*/
+var zeichenData = {
+  zeichen: Array
+};
+
+var syncZeichen = function(alice){
+  // contains all taktZeichen
+  var zeichen;
+
+  //load all taktZeichen
+  db.models.taktZeichens.find(function(err, result){
+    if (err){
+      console.log(err);
+    } else {
+      zeichenData.taktZeichens = JSON.stringify(result);
+
+
+      //send request
+      request.post({url: 'http://' + alice.ip + ':' + alice.port + '/private/zeichen', form: zeichenData}, function(error, response, body){
+        if (error) return console.error('Synchronisation fehlgeschlagen: ', error);
+        else console.log('Synchronisation erfolgreich! Server antwortet mit: ', body);
+      });
+    }
+
+  });
+
+}
+
+//syncZeichen();
 
 
 

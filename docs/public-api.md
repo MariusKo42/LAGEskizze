@@ -60,9 +60,10 @@ Beim aufrufen wird der Einsatz mit der ID :id gesperrt. Es ist keine weitere Bea
 {
     "Zeichen":[
     {
-        "name": "String",
-        "category": "String",
-        "filename": "String"
+	"id": "String"
+        "Name": "String",
+        "Kategorie": "String",
+        "Svg": "String"
     }
     ]
 }
@@ -85,7 +86,10 @@ Nimmt ein Zeichen als JSON entgegen, und ersetzt das Zeichen in der Datenbank mi
 Nimmt ein neues Zeichen entgegen, und speichert es in die Datenbank. Dabei wird die mitgelieferte ID ignoriert, und die vom Server zugewiesene ID als Rückmeldung ausgegeben:
 ```JSON
 {
-    "id": String
+    "Name": "String",
+    "Kategorie": "String",
+    "Svg": "String"	
+
 }
 ```
 #### DELETE /zeichen/:id/
