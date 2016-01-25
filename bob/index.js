@@ -45,16 +45,35 @@ app.get('/', function (req, res) {
 // GET /api/einsatz
 //   Route um alle Einsätze abzurufen.
 app.get('/api/einsatz', function(req, res) {
-  db.models.einsaetze.find({}, function(error, values) {
+  	db.models.einsaetze.find({}, function(error, values) {
     if (error) {
       var message = "DB error: " + error;
       console.log(message);
       res.status(400).send(message);
     } else {
+	
+	//frontend group just wants metadata, id and locked status
+	var dataToSend = [];
+	var i = 0;
+	while(i < values.length){
+		
+		if(values[i].meta.einsatzort != null){
+			
+			
+			var myObject = {	id: values[i].id,
+								meta: values[i].meta,
+								locked: values[i].locked
+			}
+			
+			
+			dataToSend.push(myObject);	
+		}
+		
+		i++;
+	}
+	
+	res.json(dataToSend);
 
-	  // Hier wird noch ein ziemlich mächtiges JSON übergeben. Eventuell andere Struktur überlegen, wie in Dokumentation beschrieben? *Nico
-      res.json(values);
-      res.end();
     }
   });
 });

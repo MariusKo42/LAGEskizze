@@ -34,14 +34,19 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
 Übermittelt eine Liste mit verfügbaren Einsatz-IDs als JSON:
 
 ```JSON
-{
-    "Einsaetze":[
-    {
-        "id":"id",
-        "titel":"titel"
-    },
-    ]
-}
+[
+  {
+    "id": "String",
+    "locked": "Bool",
+    "meta": {
+      "datumUhrzeitGruppe": "String",
+      "einsatzort": "String",
+      "einsatzstichwort": "String",
+      "meldender": "String",
+      "objektNr": "String"
+    }
+  }, ...
+]
 ```
 #### GET /einsatz/new
 Liefert ein JSON-Objekt mit leeren Einsatzdaten und einer neuen, eindeutigen EinsatzID.
