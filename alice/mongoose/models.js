@@ -3,9 +3,10 @@
 /**
  *  @desc definition mongodb schemata
  */
-var shortid = require('shortid');
 
 module.exports = function(mongoose) {
+    var shortid = require('shortid');
+    
     var datensatz = new mongoose.Schema({
         Basiskarten: String,
         Fachkarten: Object,
@@ -15,7 +16,7 @@ module.exports = function(mongoose) {
         id: {
             type: String,
             unique: true,
-            default: shortid.generate
+            default: shortid.generate()
         },
         meta: {
             einsatzstichwort: String,
