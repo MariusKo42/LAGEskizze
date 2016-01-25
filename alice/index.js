@@ -217,43 +217,15 @@ app.post('/private/zeichen/', function(req, res){
 	});
 });
 
-/*
-* @Desc loads all taktZeichen and sends them to bob
-*
-*/
-var zeichenData = {
-	zeichen: Array
-};
-var syncZeichen = function(bob){
-	// contains all taktZeichen
-	var zeichen;
 
-	//load all taktZeichen
-	db.models.taktZeichens.find(function(err, result){
-		if(err){
-			console.log(err);
-		} else {
-			zeichenData.taktZeichens = JSON.stringify(result);
-
-			//send request
-			request.post({url: 'http://'+ bob.ip + ':' + bob.port + '/private/zeichen', form: zeichenData}, function(error, response, body){
-				if (error) return console.error('Synchronisation fehlgeschlagen: ', error);
-				console.log('Synchronisation erfolgreich! Server antwortet mit: ', body);
-			});
-		}
-
-	});
-
-}
-
-//----------für Vorführung
-app.get('/getZeichen', function(req, res){
+// sendet alle Zeichen in DB
+app.get('/zeichen/', function(req, res){
 	db.models.taktZeichens.find(function(err, result){
 		if(err) console.log(err);
 		else res.send(result);
 	});
 });
-//------------
+
 //start the server on Port 3000
 var server = app.listen(3000, function () {
   var host = server.address().address;
