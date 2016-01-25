@@ -16,7 +16,6 @@ module.exports = function(mongoose) {
         id: {
             type: String,
             unique: true,
-            default: shortid.generate()
         },
         meta: {
             einsatzstichwort: String,
@@ -42,7 +41,6 @@ module.exports = function(mongoose) {
         id: {
             type: String,
             unique: true,
-            default: shortid.generate()
         },
         Kategorie: String,
         Titel: String,

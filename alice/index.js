@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 var express = require('express');
 var request = require('request');
 var async = require('async');
+var shortid = require('shortid');
 var app = express();
 
 app.use('/', express.static(__dirname));
@@ -86,7 +87,8 @@ app.put('/zeichen/', function(req, res) {
 	var zeichen = new db.models.taktZeichens({
 		Kategorie: req.body.Kategorie,
 		Titel: req.body.Titel,
-		Svg: req.body.Svg
+		Svg: req.body.Svg,
+		id: shortid.generate()
 	});
 
 	//speichere das Zeichen in der DB

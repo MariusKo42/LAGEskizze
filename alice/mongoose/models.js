@@ -15,9 +15,7 @@ module.exports = function(mongoose) {
     var einsatz = new mongoose.Schema({
         id: {
             type: String,
-            unique: true,
-            default: shortid.generate()
-        },
+            unique: true        },
         meta: {
             einsatzstichwort: String,
             einsatzort: String,
@@ -41,8 +39,7 @@ module.exports = function(mongoose) {
     var taktZeichen = new mongoose.Schema({
         id: {
             type: String,
-            unique: true,
-            default: shortid.generate()
+            unique: true
         },
         Kategorie: String,
         Titel: String,

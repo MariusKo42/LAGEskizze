@@ -12,16 +12,8 @@ var bodyParser = require('body-parser');
 var express = require('express');
 var request = require('request');
 var exec = require('child_process').exec;
+var shortid = require('shortid');
 var app = express();
-
-
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-  next();
-});
-
 
 var mutex = {
     rsyncto : false,
@@ -72,7 +64,9 @@ app.get('/api/einsatz', function(req, res) {
 //	 Benötigt (valides) JSON nach Notation in der Dokumentation
 app.get('/api/einsatz/new', function(req, res) {
   // Einsatz hier validieren?
-  var myEinsatz = new db.models.einsaetze({});
+  var myEinsatz = new db.models.einsaetze({
+    id: shortid.generate()
+  });
 
   myEinsatz.locked = false;
 
@@ -176,7 +170,8 @@ app.put('/zeichen/', function(req, res) {
 	var zeichen = new db.models.taktZeichens({
 		Kategorie: req.body.Kategorie,
 		Titel: req.body.Titel,
-		Svg: req.body.Svg
+		Svg: req.body.Svg,
+    id: shortid.generate()
 	});
 
 	//speichere das Zeichen in der DB
