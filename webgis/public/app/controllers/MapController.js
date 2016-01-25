@@ -6,12 +6,12 @@ var commentsMap = new Map();
 var options;
 var drawControl;
 var objectColor = "#f00";
-var einsatzID = null; 
 
 app.controller("MapController", function($scope, $http, $sce, $location){
 
 	//url of the db-server:
-	$scope.dbServerAddress = $location.absUrl().split(":")[0] + ":" + $location.absUrl().split(":")[1] + ":8080/";
+	$scope.dbServerAddress = $location.absUrl().split(":")[0] + ":" 
+        + $location.absUrl().split(":")[1] + ":8080/";
 
 	$scope.sideContent = {};
 	$scope.sideContent.template = "";
@@ -47,11 +47,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         }
     };
     
-    $scope.loadEinsatz = function(id) {
-        console.log(id);
-    };
-
     $scope.saveEinsatz = function() {
+        if (!$scope.einsatz.meta.objektNr) return alert('Vor dem Speichern bitte die Objektnummer angeben!'); 
         // copy field data into $scope.einsatz.fields
         $scope.einsatz.taktZeichen = [];
         for (var i = 0; i < $scope.fields.fieldOrder.properties.length; i++) {
@@ -73,7 +70,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         drawnItems.eachLayer(function(layer) {
             var geojson = layer.toGeoJSON();
             geojson.properties.comment = commentsMap.get(drawnItems.getLayerId(layer)) || '';
-            geojson.properties.color = layer.options.color;
+            geojson.properties.color = layer.options.color || '';
             // as leaflet draw serializes a circle as a point, we need to store the radius manually.
             if (layer._mRadius) geojson.properties.circleRadius = layer._mRadius;
             $scope.einsatz.drawnObjects.push(geojson); 
@@ -84,72 +81,118 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         $scope.einsatz.map.center = map.getCenter();
         $scope.einsatz.map.tileServer = ''; // TODO: basemap functionality needs to be reworked first
         
-		// create new einsatz in database
-		if(einsatzID == null){
-			$http({
-			method: 'GET',
-			url: 'http://localhost:8080/api/einsatz/new',		
-			//data: $scope.einsatz
-			}).then(function successCallback(response) {			
-			    einsatzID = response.data.id; 
-				console.log("Einsatz angelegt mit der ID: " + einsatzID);
-				
-				//TODO: put submit into function to avoid double-code
-				//submit einsatz object to server
-				$http.post($scope.dbServerAddress + 'api/einsatz/' + einsatzID, $scope.einsatz)
-				.then(function success(res) {
-					console.log('einsatz was saved in database!');
-				}, function error(res) {
-					console.error('einsatz could not be stored in database: ' + res);
-				});
-			}, function errorCallback(response) {
-			   console.log("FEHLER: Neuer Einsatz konnte nicht angelegt werden");
-			});	   
-		}
-		else{
-			//submit einsatz object to server
-			$http.post($scope.dbServerAddress + 'api/einsatz/' + einsatzID, $scope.einsatz)
+        // submit einsatz object to server
+        function pushEinsatz() {
+			$http.post($scope.dbServerAddress + 'api/einsatz/' + $scope.einsatz.id, $scope.einsatz)
             .then(function success(res) {
                 console.log('einsatz was saved in database!');
             }, function error(res) {
                 console.error('einsatz could not be stored in database: ' + res);
             });
-		}				      
-            
-        // DEBUG
-        //console.log(JSON.stringify($scope.einsatz, null, 2));
+        };
+        
+		// push einsatz to database
+		if (!$scope.einsatz.id) {
+            // if no ID is present, request a new einsatz from the DB first
+			$http.get($scope.dbServerAddress + 'api/einsatz/new')
+                .then(function successCallback(response) {			
+                    $scope.einsatz.id = response.data.id;
+                    console.log("Einsatz angelegt mit der ID: " + $scope.einsatz.id);
+                    //submit einsatz object to server
+                    pushEinsatz();
+                }, function errorCallback(response) {
+                    console.log("FEHLER: Neuer Einsatz konnte nicht angelegt werden");
+                });
+		} else {
+            pushEinsatz();
+        }
     };
 	
 	$scope.showLoadMenu = function(){
-		
-		if ($scope.sideContent.template == "/app/templates/fgis/loadMenu.html"){
-			$scope.sideContent.change("");
-		}
-		else {
-			$scope.sideContent.change("/app/templates/fgis/loadMenu.html");
-		}
+
+        $scope.sideContent.change("/app/templates/fgis/loadMenu.html");
 		try{$scope.map.editCancel();}catch(e){}
-		$scope.loadTable();
+        
+        // get all available einsätze from DB & show them in the table
+        $http.get($scope.dbServerAddress + 'api/einsatz')
+            .then(function successCallback(response) {
+                console.log("erfolg: " + JSON.stringify(response.data, null, 2));
+                
+                $('#einsatzTable').empty();
+                for (var i = 0; i < response.data.length; i++) {
+                    var einsatz = response.data[i];
+                    var tableRow = $('<tr><td data-id="' + einsatz.id 
+                        + '">' + einsatz.meta.einsatzstichwort + '</td><td>'
+                        + einsatz.meta.einsatzort + '</td><td>'
+                        + einsatz.meta.meldender + '</td><td>'
+                        + einsatz.meta.objektNr + '</td><td>'
+                        + einsatz.meta.datumUhrzeitGruppe + '</td></tr>');
+                        
+                    tableRow.click(function() {
+                        window.location = '/#/map/' + einsatz.id;
+                    });
+                    $('#einsatzTable').append(tableRow);
+                }
+                $("#einsatzTable").trigger("update");
+            }, function errorCallback(response) {
+                console.log("misserfolg: " + response);
+            });
 	}
-	
-	$scope.loadTable = function(){
-	   $http({
-		method: 'GET',
-		url: 'http://localhost:8080/api/einsatz'	   
-	    }).then(function successCallback(response) {
-			console.log("erfolg: " + JSON.stringify(response));
-			/*
-			
-			$('#einsatzTable tr').remove();
-			for (var i = 0; i < response.length; i++) {
-				
-			}
-		    $("#einsatzTable").trigger("update");		*/
-	    }, function errorCallback(response) {
-			console.log("misserfolg: " + response);
-		});	   
-	}
-   
+    
+    
+    $scope.loadEinsatz = function(id) {
+        $http.get($scope.dbServerAddress + 'api/einsatz/' + id)
+            .then(function successCallback(response) {
+                console.log(JSON.stringify(response));
+                //$scope.einsatz = response;
+                updateState();
+            },
+            function errorCallback(response) {
+                console.error('Einsatz konnte nicht geladen werden: ' + response);
+            });
+            
+        function updateState() {
+            // setze taktische zeichen in karte
+            for (var i = 0; i < $scope.einsatz.taktZeichen.length; i++) {
+                var field = $scope.einsatz.taktZeichen[i];
+                
+                $('#image' + field.kranzposition).attr('src', field.zeichen);
+                $('#fieldComment' + field.kranzposition).text(field.comment);
+                $('#fieldTextTop' + field.kranzposition).text(field.textTop);
+                $('#fieldTextBottom' + field.kranzposition).text(field.textBottom);
+                
+                // kartenposition
+                var anchorPoint = getAnchorOfElement(field.kranzposition);
+                var anchor = map.containerPointToLatLng(anchorPoint);
+                var latlngs = [field.kartenposition, anchor];
+                linesArray[field.kranzposition] = [field.kartenposition, anchorPoint];
+                lines.addLayer(L.polyline(latlngs));
+            }
+            
+            // lade drawn Objects
+            for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
+                var geojson = $scope.einsatz.drawnObjects[i];
+                var layer = L.geoJson(geojson, {
+                    style: function(feature) {
+                        return {color: feature.properties.color};
+                    }
+                });
+                drawnItems.addLayer(layer);
+                var layerID = drawnItems.getLayerId(layer);
+                
+                // add comment
+                commentsMap.set(layerID, geojson.properties.comment);
+            }
+            
+            // TODO: setze kopfzeile
+            
+            // TODO: upate mapstate
+            map.setView($scope.einsatz.map.center);
+            map.setZoom($scope.einsatz.map.zoom);
+            // TODO: tileserver?
+        }
+    };
+
 	/********************************
 	************ Fields *************
 	********************************/
@@ -679,7 +722,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.map.objects.type = _type;
 	}
     
-    
+    var einsatzID = window.location.hash.split('/').pop();
+    if (einsatzID !== 'map') $scope.loadEinsatz(einsatzID)
 });
 
 /**
