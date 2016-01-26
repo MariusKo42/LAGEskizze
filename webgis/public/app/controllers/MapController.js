@@ -56,8 +56,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
             var line = linesArray[kranzPos];
             
             $scope.einsatz.taktZeichen.push({
-                kranzpostion: kranzPos,
-                kartenposition: line ? line[0] : {},
+                kranzposition: kranzPos,
+                kartenposition: line ? line[0] : '',
                 zeichen:    $('#image' + kranzPos).attr('src') || '', // TODO: use zeichenID from DB instead of filename? 
                 comment:    $('#fieldComment' + kranzPos).text() || '',
                 textTop:    $('#fieldTextTop' + kranzPos).text() || '',
@@ -115,9 +115,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         
         // get all available einsätze from DB & show them in the table
         $http.get($scope.dbServerAddress + 'api/einsatz')
-            .then(function successCallback(response) {
-                console.log("erfolg: " + JSON.stringify(response.data, null, 2));
-                
+            .then(function successCallback(response) {                
                 $('#einsatzTable').empty();
                 for (var i = 0; i < response.data.length; i++) {
                     var einsatz = response.data[i];
@@ -143,53 +141,52 @@ app.controller("MapController", function($scope, $http, $sce, $location){
     $scope.loadEinsatz = function(id) {
         $http.get($scope.dbServerAddress + 'api/einsatz/' + id)
             .then(function successCallback(response) {
-                console.log(JSON.stringify(response));
-                //$scope.einsatz = response;
+                $scope.einsatz = response.data;
                 updateState();
-            },
-            function errorCallback(response) {
+            }, function errorCallback(response) {
                 console.error('Einsatz konnte nicht geladen werden: ' + response);
             });
             
-        function updateState() {
+        function updateState() {            
+            // lade drawn Objects
+            //initMap();
+            for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
+                var geojson = $scope.einsatz.drawnObjects[i];
+                var layer = L.geoJson(geojson, {
+                    style: function(feature) { return {color: feature.properties.color}; }
+                });
+                drawnItems.addLayer(layer.getLayers[0]);
+                
+                // add comment
+                var layerID = drawnItems.getLayerId(layer);
+                commentsMap.set(layerID, geojson.properties.comment);
+            }
+            drawnItems.eachLayer(function(layer) {
+                setClickable(layer, false);
+            });
+                        
+            // upate mapstate
+            map.setView($scope.einsatz.map.center);
+            map.setZoom($scope.einsatz.map.zoom);
+            // TODO: tileserver?
+            
             // setze taktische zeichen in karte
             for (var i = 0; i < $scope.einsatz.taktZeichen.length; i++) {
                 var field = $scope.einsatz.taktZeichen[i];
                 
-                $('#image' + field.kranzposition).attr('src', field.zeichen);
+                $('#image' + field.kranzposition).attr('src', field.zeichen); // tuts nich
                 $('#fieldComment' + field.kranzposition).text(field.comment);
                 $('#fieldTextTop' + field.kranzposition).text(field.textTop);
                 $('#fieldTextBottom' + field.kranzposition).text(field.textBottom);
                 
                 // kartenposition
-                var anchorPoint = getAnchorOfElement(field.kranzposition);
+                if (field.kartenposition == '') continue; // field has no kartenposition
+                var anchorPoint = getAnchorOfElement('image' + field.kranzposition);
                 var anchor = map.containerPointToLatLng(anchorPoint);
                 var latlngs = [field.kartenposition, anchor];
                 linesArray[field.kranzposition] = [field.kartenposition, anchorPoint];
                 lines.addLayer(L.polyline(latlngs));
             }
-            
-            // lade drawn Objects
-            for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
-                var geojson = $scope.einsatz.drawnObjects[i];
-                var layer = L.geoJson(geojson, {
-                    style: function(feature) {
-                        return {color: feature.properties.color};
-                    }
-                });
-                drawnItems.addLayer(layer);
-                var layerID = drawnItems.getLayerId(layer);
-                
-                // add comment
-                commentsMap.set(layerID, geojson.properties.comment);
-            }
-            
-            // TODO: setze kopfzeile
-            
-            // TODO: upate mapstate
-            map.setView($scope.einsatz.map.center);
-            map.setZoom($scope.einsatz.map.zoom);
-            // TODO: tileserver?
         }
     };
 
@@ -614,7 +611,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 			setClickable(layer, true);
 		});
 	}
-
+    
 	$scope.map.objects = {};
 	$scope.map.objects.measureString = "";
 	$scope.map.objects.type = "";
@@ -723,7 +720,11 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	}
     
     var einsatzID = window.location.hash.split('/').pop();
-    if (einsatzID !== 'map') $scope.loadEinsatz(einsatzID)
+    if (einsatzID !== 'map') {   
+        window.setTimeout(function() {
+            $scope.loadEinsatz(einsatzID);
+        }, 1000); // DEBUG: 1sek delay
+    }
 });
 
 /**
