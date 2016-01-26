@@ -341,13 +341,17 @@
 	   
 	}
 
-	.eTable{
+	#einsaetze-tbl {
 		position: absolute; 
 		width: 80%; 
 		height: auto; 
-		left: 5%; 
-		color: black; 
-		background-color: #4CAF50;
+		left: 1%; 
+		color: white;
+		background-color: grey;
 	}
 
-
+    #einsaetze-tbl * {
+        border: 0;
+		color: white; 
+		background-color: #333333;
+    }
