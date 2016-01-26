@@ -148,24 +148,26 @@ app.controller("MapController", function($scope, $http, $sce, $location){
             });
             
         function updateState() {            
-            // lade drawn Objects
-         
-			/*
-            for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
-                var geojson = $scope.einsatz.drawnObjects[i];
-                var layer = L.geoJson(geojson, {
+            // lade drawn Objects			
+            for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {			   
+			   var geojson = $scope.einsatz.drawnObjects[i];					  	   
+			   var layer = L.geoJson(geojson, {
                     style: function(feature) { return {color: feature.properties.color}; }
-                });
-                drawnItems.addLayer(layer.getLayers[0]);
-                
+                });							
+                drawnItems.addLayer(layer);				
+				
                 // add comment
                 var layerID = drawnItems.getLayerId(layer);
                 commentsMap.set(layerID, geojson.properties.comment);
             }
+			
+			//TODO: set Options geojson, so setClickable can be used and interaction with drawnObjects is possible
+			/*
             drawnItems.eachLayer(function(layer) {
                 setClickable(layer, false);
             });
-            */          
+            */      
+			
             // upate mapstate
             map.setView($scope.einsatz.map.center);
             map.setZoom($scope.einsatz.map.zoom);
@@ -174,8 +176,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
             // setze taktische zeichen in karte
             for (var i = 0; i < $scope.einsatz.taktZeichen.length; i++) {
                 var field = $scope.einsatz.taktZeichen[i];
-                
-				//unschoene Loesung aber paralell zu existierender submit function. TODO: in Funktion kapseln
+               
+				//unschoene Loesung aber parallel zu existierender submit function. TODO: in Funktion kapseln
 				var _textTop, _textBottom, _comment, _image;
 
 				_textTop = '<div id="fieldTextTop'
@@ -472,9 +474,9 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.map.frozen = false;
 	$scope.map.lastClick = null;
 	$scope.map.objectId = null;
-	$scope.hideColorPicker = false;
-
-	$scope.map.objectClicked = function(type, layer, id){
+	$scope.hideColorPicker = false;		
+	
+	$scope.map.objectClicked = function(type, layer, id){		
 		if (!$scope.map.editActive){
 			drawnItems.eachLayer(function(layer) {
 				setClickable(layer, false);
@@ -826,8 +828,7 @@ function initMap(){
 
 	lines = L.layerGroup().addTo(map);
 	fachkarten = L.layerGroup().addTo(map);
-	basemap = L.layerGroup().addTo(map);
-
+	basemap = L.layerGroup().addTo(map);	
 	drawnItems = new L.FeatureGroup();
 	map.addLayer(drawnItems);
 
@@ -875,8 +876,7 @@ function initMap(){
 
 
 	drawControl = new L.Control.Draw(options);
-	map.addControl(drawControl);
-
+	map.addControl(drawControl);	
 }
 
 /**
