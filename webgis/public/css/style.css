@@ -328,19 +328,26 @@
 	}
 	
 
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-   .drawToolbar {   
+	@media screen and (-webkit-min-device-pixel-ratio:0) {
+	   .drawToolbar {   
+				
+			display: inline-block;	
+	   }
+	   .drawToolbarDiv{
+	   
+			height: 5vw;
 			
-		display: inline-block;	
-   }
-   .drawToolbarDiv{
-   
-		height: 5vw;
-		
-   }
-   
-}
+	   }
+	   
+	}
 
-
+	.eTable{
+		position: absolute; 
+		width: 80%; 
+		height: 60%; 
+		left: 5%; 
+		color: black; 
+		background-color: #4CAF50;
+	}
 
 
