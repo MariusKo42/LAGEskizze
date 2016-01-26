@@ -149,7 +149,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
             
         function updateState() {            
             // lade drawn Objects
-            //initMap();
+         
+			/*
             for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
                 var geojson = $scope.einsatz.drawnObjects[i];
                 var layer = L.geoJson(geojson, {
@@ -164,7 +165,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
             drawnItems.eachLayer(function(layer) {
                 setClickable(layer, false);
             });
-                        
+            */          
             // upate mapstate
             map.setView($scope.einsatz.map.center);
             map.setZoom($scope.einsatz.map.zoom);
@@ -174,11 +175,55 @@ app.controller("MapController", function($scope, $http, $sce, $location){
             for (var i = 0; i < $scope.einsatz.taktZeichen.length; i++) {
                 var field = $scope.einsatz.taktZeichen[i];
                 
-                $('#image' + field.kranzposition).attr('src', field.zeichen); // tuts nich
-                $('#fieldComment' + field.kranzposition).text(field.comment);
-                $('#fieldTextTop' + field.kranzposition).text(field.textTop);
-                $('#fieldTextBottom' + field.kranzposition).text(field.textBottom);
-                
+				//unschoene Loesung aber paralell zu existierender submit function. TODO: in Funktion kapseln
+				var _textTop, _textBottom, _comment, _image;
+
+				_textTop = '<div id="fieldTextTop'
+							+ field.kranzposition
+							+ '" class="fieldText fieldTextTop" style="overflow:hidden" title="' +field.textTop + '" data-toggle="tooltip">'
+							+ field.textTop
+							+ '</div>';
+
+				_textBottom = '<div id="fieldTextBottom'
+							+ field.kranzposition
+							+ '" class="fieldText fieldTextBottom" style="overflow:hidden" title="' +field.textBottom + '" data-toggle="tooltip">'
+							+ field.textBottom
+							+ '</div>';
+				_comment = '<div id="fieldComment'
+							+ field.kranzposition
+							+ '" class="fieldComment">'
+							+ field.comment
+							+ '</div>';
+
+				//insert the image:
+				if(field.zeichen != ''){
+				_image = '<img id="image'
+							+ field.kranzposition
+							+ '" draggable="true" ondragstart="drag(event)" src="'
+							+ field.zeichen
+							+ '" style="height:'
+							+ fieldOrder.size
+							+ '; width:'
+							+ fieldOrder.size
+							+ '; background-color: white; text-align: center;" />';
+				}	
+				//insert polygon if no image
+				else{
+					
+					_image = '<svg id="image'
+					+ field.kranzposition
+					+ '" viewBox="0 0 89 89" preserveAspectRatio="none" style="height:'
+					+ fieldOrder.size
+					+ '; width:'
+					+ fieldOrder.size
+					+ ';"><polygon points="2,2 88,2 88,88 2,88 2,2 2,22.5 88,22.5 88,67.5 2,67.5"/></svg>';					
+				}
+				
+				var _htmlString = _textTop + _textBottom + _comment + _image;			
+				
+				document.getElementById(field.kranzposition).innerHTML = _htmlString;				
+				
+				
                 // kartenposition
                 if (field.kartenposition == '') continue; // field has no kartenposition
                 var anchorPoint = getAnchorOfElement('image' + field.kranzposition);

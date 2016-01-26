@@ -344,7 +344,7 @@
 	.eTable{
 		position: absolute; 
 		width: 80%; 
-		height: 60%; 
+		height: auto; 
 		left: 5%; 
 		color: black; 
 		background-color: #4CAF50;
