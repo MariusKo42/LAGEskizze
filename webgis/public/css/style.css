@@ -16,7 +16,7 @@
 		top: 2.7%;
 		background-color: #333333;
 		color: white;
-		overflow: scroll;		
+		overflow: auto;
 	}	
 
 	#map{
@@ -125,24 +125,23 @@
 		position:relative;
 		width:100%;
 		height:80%;	
-		font-size: 1.6vmin;
-	
+		font-size: 1.6vh;
+
 	}
 	.tzCommentDiv{
-		position:absolute; 
-		top: 70%; 
+		position:absolute;
+		top: 70%;
 		left:2%; 
-		width:25%;
-		height:20%; 
-		font-size: 1.6vmin;
+		width:35%;
+		height:20%;
+		font-size: 1.8vh;;
 		
 	}
 	.tzAuswahl{
-	
-		left:30%; 
+		left:50%;
 		top: 70%;
-		width: 45%; 
-		position:relative;
+		width: 45%;
+		position:absolute;
 		display:inline-block;	
 	}
 	.tzAuswahl:after {

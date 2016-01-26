@@ -1,6 +1,6 @@
 <!-- Map Elements: -->
 
-<!-- map area will not be distorted, fitting representation for 16:9, space for smaller width-ratio, scrolling for smaller height ratio--> 
+<!-- map area will not be distorted, fitting representation for 16:9, space for smaller width-ratio, scrolling for smaller height ratio-->
 <div class="mapArea">
 	<div id="map"></div>
 
@@ -48,7 +48,7 @@
 
 		<a id="datasets" ng-click="map.showDatasets()" class="map-element" href="#map">Datensätze</a>
 
-		
+
 
 		<div ng-repeat="field in fields.fieldOrder.properties">
 		  <div ng-attr-id="{{field.id}}" class="fields" ng-class="field.group" ng-style="{'top': field.top, 'left': field.left, 'width': fields.fieldOrder.width,'height': fields.fieldOrder.height}" ng-click="fields.register(field.id)" ondrop="drop(event)" ondragover="allowDrop(event)">
@@ -67,6 +67,6 @@ Einsatzstichwort: <input type="text" class="titleRowInput"> Einsatzort: <input t
 
 <!--black area on the left -->
 <div id="sideContent">
-<div ng-include="sideContent.template" style="height: 100%"></div>
+<div ng-include="sideContent.template"></div>
 </div>
 
