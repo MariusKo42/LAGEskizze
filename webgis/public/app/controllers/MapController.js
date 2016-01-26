@@ -420,6 +420,10 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	}
 
 	$scope.map.deleteObjects = function(){
+        drawnItems.eachLayer(function(layer) {
+			setClickable(layer, true);
+		});
+        
 		$scope.map.editActive = true;
 		$scope.map.currentEdit = "leaflet-draw-actions leaflet-draw-actions-bottom";
 		var _element = document.getElementsByClassName("leaflet-draw-edit-remove");
@@ -461,6 +465,10 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	}
 
 	$scope.map.editCancel = function(){
+        drawnItems.eachLayer(function(layer) {
+			setClickable(layer, false);
+		});
+        $("#map").css('cursor', 'auto');
 		$scope.map.editActive = false;
 		var _element = document.getElementsByClassName($scope.map.currentEdit);
 		_element[0].children[1].children[0].click();
@@ -469,6 +477,10 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	}
 
 	$scope.map.editSave = function(){
+        drawnItems.eachLayer(function(layer) {
+			setClickable(layer, false);
+		});
+        $("#map").css('cursor', 'auto');
 		$scope.map.editActive = false;
 		var _element = document.getElementsByClassName($scope.map.currentEdit);
 		_element[0].children[0].children[0].click();
