@@ -19,10 +19,10 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
 
  "Zeichen":[
     {
-        "id": String,
-        "Kategorie": String,
-        "Titel: String,
-        "Svg": String
+        "id": "String",
+        "Kategorie": "String",
+        "Titel": "String",
+        "Svg": "String"
     }
  ]   
 }

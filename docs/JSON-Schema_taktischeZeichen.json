@@ -1,6 +1,6 @@
 {
-  "id": "id",
-  "name": "String",
-  "category": "String",
-  "filename": "String",
+  "id": "String",
+  "Kategorie": "String",
+  "Titel": "String",
+  "Svg": "String",
 }
