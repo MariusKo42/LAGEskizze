@@ -4,8 +4,16 @@
 	"description": "Taktisches Zeichen aus dem Feuerwehr-GIS",
 	"type": "object",
 	"properties": {
-		"id": "id",
-		"kategorie": "String",
-		"titel": "String",
-		"svg": "String"				
+		"id": {
+			"type": "String"
+			},
+		"kategorie": {
+			"type": "String"
+			},
+		"titel": {
+			"type": "String"
+			},
+		"svg": {
+			"type": "String"
+			}				
 }
