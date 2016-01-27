@@ -69,7 +69,7 @@ app.post('/zeichen/:id/', function(req, res) {
 
 	var id = req.params.id;
 	var query = {id: req.params.id};
-	db.models.taktZeichens.update(query, {$set: {Kategorie: req.body.Kategorie, Titel: req.body.Titel, Svg: req.body.Svg}}, function(err) {
+	db.models.taktZeichens.update(query, {$set: {kategorie: req.body.kategorie, titel: req.body.titel, svg: req.body.svg}}, function(err) {
 		if(err) {
 			console.log('Error updating the file: ' + err);
 			res.status(500).send('Fehler beim update des Zeichens.');
@@ -85,9 +85,9 @@ app.put('/zeichen/', function(req, res) {
 
 	//erzeuge neues Zeichen, das in der DB abgelegt werden soll.
 	var zeichen = new db.models.taktZeichens({
-		Kategorie: req.body.Kategorie,
-		Titel: req.body.Titel,
-		Svg: req.body.Svg,
+		kategorie: req.body.kategorie,
+		titel: req.body.titel,
+		svg: req.body.svg,
 		id: shortid.generate()
 	});
 
