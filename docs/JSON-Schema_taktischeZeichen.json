@@ -1,6 +1,19 @@
 {
-  "id": "id",
-  "name": "String",
-  "category": "String",
-  "filename": "String",
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "taktZeichen",
+	"description": "Taktisches Zeichen aus dem Feuerwehr-GIS",
+	"type": "object",
+	"properties": {
+		"id": {
+			"type": "String"
+			},
+		"kategorie": {
+			"type": "String"
+			},
+		"titel": {
+			"type": "String"
+			},
+		"svg": {
+			"type": "String"
+			}				
 }

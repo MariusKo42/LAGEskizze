@@ -8,9 +8,9 @@ module.exports = function(mongoose) {
     var shortid = require('shortid');
     
     var datensatz = new mongoose.Schema({
-        Basiskarten: String,
-        Fachkarten: Object,
-        Daten_ohne_Raumbezug: [Object]
+        basiskarten: String,
+        fachkarten: Object,
+        daten_ohne_Raumbezug: [Object]
     });
     var einsatz = new mongoose.Schema({
         id: {
@@ -41,9 +41,9 @@ module.exports = function(mongoose) {
             type: String,
             unique: true
         },
-        Kategorie: String,
-        Titel: String,
-        Svg: String
+        kategorie: String,
+        titel: String,
+        svg: String
     });
     var models = {
         datensaetze: mongoose.model('Datensaetze', datensatz),

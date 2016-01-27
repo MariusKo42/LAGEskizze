@@ -165,11 +165,11 @@ app.post('/api/einsatz/:EinsatzID/lock', function(req, res) {
 /**
 * @desc Update ein Zeichen mit den uebergebenen Informationen
 */
-app.post('/zeichen/:id/', function(req, res) {
+app.post('/api/zeichen/:id/', function(req, res) {
 
 	var id = req.params.id;
 	var query = {id: req.params.id};
-	db.models.taktZeichens.update(query, {$set: {Kategorie: req.body.Kategorie, Titel: req.body.Titel, Svg: req.body.Svg}}, function(err) {
+	db.models.taktZeichens.update(query, {$set: {kategorie: req.body.kategorie, titel: req.body.titel, svg: req.body.svg}}, function(err) {
 		if(err) {
 			console.log('Error updating the file: ' + err);
 			res.status(500).send('Fehler beim update des Zeichens.');
@@ -181,13 +181,13 @@ app.post('/zeichen/:id/', function(req, res) {
 /**
 * @desc Speichere ein uebergebenes TZ in der DB
 */
-app.put('/zeichen/', function(req, res) {
+app.put('/api/zeichen/', function(req, res) {
 
 	//erzeuge neues Zeichen, das in der DB abgelegt werden soll.
 	var zeichen = new db.models.taktZeichens({
-		Kategorie: req.body.Kategorie,
-		Titel: req.body.Titel,
-		Svg: req.body.Svg,
+		kategorie: req.body.kategorie,
+		titel: req.body.titel,
+		svg: req.body.svg,
     id: shortid.generate()
 	});
 
@@ -206,7 +206,7 @@ app.put('/zeichen/', function(req, res) {
 * @desc Loescht ein Taktisches Zeichen aus der Datenbank.
 * @param :id ID des TZ, das aus der DB geloescht werden soll
 */
-app.delete('/zeichen/:id/', function(req, res) {
+app.delete('/api/zeichen/:id/', function(req, res) {
 
 	var id = req.params.id;
 	//durch richtigen Namen für TZ ersetzen
@@ -219,7 +219,7 @@ app.delete('/zeichen/:id/', function(req, res) {
 });
 
 /* liefert alle taktischen zeichen inkl. Attribute */
-app.get('/zeichen/', function(req, res){
+app.get('/api/zeichen/', function(req, res){
 
 	db.models.taktZeichens.find(function(err, result){
 		if (err) {
@@ -232,7 +232,7 @@ app.get('/zeichen/', function(req, res){
 });
 
 /* liefert das Zeichen mit der ID :id als JSON */
-app.get('/zeichen/:id/', function(req, res){
+app.get('/api/zeichen/:id/', function(req, res){
 	var zeichenId = req.params.id;
 
 	db.models.taktZeichens.findOne({id: zeichenId}, function(err, result){
@@ -245,16 +245,16 @@ app.get('/zeichen/:id/', function(req, res){
 });
 
 /* liefert den String des Attributs Svg zurück */
-app.get('/zeichen/:id/svg/', function(req, res){
+app.get('/api/zeichen/:id/svg/', function(req, res){
 	var zeichenId = req.params.id;
 
-	db.models.taktZeichens.findOne({id: zeichenId}, {Svg: 1}, function(err, result){
+	db.models.taktZeichens.findOne({id: zeichenId}, function(err, result){
 		if (err) {
 			return console.err(err);
 			res.status(500).send('Konnte Svg des taktischen Zeichens mit der ID: ' + zeichenId + 'nicht finden.');
 		}
 		
-		res.send(result.Svg);
+		res.send(result.svg);
 	});
 });
 
@@ -359,9 +359,9 @@ app.post('/private/zeichen/', function(req, res){
 
           var neuesZeichen = new db.models.taktZeichens({
             id: file.id,
-            Kategorie: file.Kategorie,
-            Titel: file.Titel,
-            Svg: file.Svg
+            kategorie: file.kategorie,
+            titel: file.titel,
+            svg: file.svg
           });
 
           neuesZeichen.save();
@@ -439,9 +439,9 @@ var syncZeichenFrom = function(alice){
 
             var neuesZeichen = new db.models.taktZeichens({
               id: file.id,
-              Kategorie: file.Kategorie,
-              Titel: file.Titel,
-              Svg: file.Svg
+              kategorie: file.kategorie,
+              titel: file.titel,
+              svg: file.svg
             });
 
             neuesZeichen.save();
