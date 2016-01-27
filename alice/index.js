@@ -15,6 +15,13 @@ var app = express();
 
 app.use('/', express.static(__dirname));
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+  next();
+});
+
 //use the extended request body
 app.use(bodyParser.urlencoded({
   extended: true
@@ -169,6 +176,54 @@ app.post('/private/einsatz/', function(req, res) {
 		else if(status == 1) res.send('Datenbank war synchron.');
 	});
 
+});
+
+
+// posts data about taktische zeichen sent from bob into db
+// receives an array of objects of type taktZeichen
+//[{taktZeichen1}, {taktZeichen2}, ...]
+app.post('/private/zeichen/', function(req, res){
+	var same = true;
+	var body = JSON.stringify(req.body);
+	var json = JSON.parse(body);
+	var h = JSON.parse(json.taktZeichens);
+	json.taktZeichens = h;
+	function checkDB(data, callback){
+		async.each(data.taktZeichens, function(file){
+			db.models.taktZeichens.findOne({id: file.id}, function(err, result){
+				if(result == null){
+
+					var neuerEinsatz = new db.models.taktZeichens({
+						id: file.id,
+						Kategorie: file.Kategorie,
+						Titel: file.Titel,
+						Svg: file.Svg
+					});
+
+					neuerEinsatz.save();
+					console.log(neuerEinsatz);
+					same = false;
+				}
+			});
+		});
+		setTimeout(function(){
+			if (same) callback(1);
+			else callback(0);
+		}, 1500);
+	}
+	checkDB(json, function(status){
+		if (status == 0) res.send('Datenbank wurde synchronisiert.');
+		else if (status == 1) res.send('Datenbank war synchron.');
+	});
+});
+
+
+// sendet alle Zeichen in DB
+app.get('/zeichen/', function(req, res){
+	db.models.taktZeichens.find(function(err, result){
+		if(err) console.log(err);
+		else res.send(result);
+	});
 });
 
 //start the server on Port 3000

@@ -19,10 +19,10 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
 
  "Zeichen":[
     {
-        "id": String,
-        "kategorie": String
-        "titel: String,
-        "svg": String
+        "id": "String",
+        "Kategorie": "String",
+        "Titel": "String",
+        "Svg": "String"
     }
  ]   
 }
@@ -34,14 +34,19 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
 Übermittelt eine Liste mit verfügbaren Einsatz-IDs als JSON:
 
 ```JSON
-{
-    "Einsaetze":[
-    {
-        "id":"id",
-        "titel":"titel"
-    },
-    ]
-}
+[
+  {
+    "id": "String",
+    "locked": "Bool",
+    "meta": {
+      "datumUhrzeitGruppe": "String",
+      "einsatzort": "String",
+      "einsatzstichwort": "String",
+      "meldender": "String",
+      "objektNr": "String"
+    }
+  }, ...
+]
 ```
 #### GET /einsatz/new
 Liefert ein JSON-Objekt mit leeren Einsatzdaten und einer neuen, eindeutigen EinsatzID.
@@ -55,14 +60,15 @@ Beim aufrufen wird der Einsatz mit der ID :id gesperrt. Es ist keine weitere Bea
 ## Taktische Zeichen
 #### GET /zeichen/
 
-Übermittelt ein JSON Objekt, in dem die Bezeichnungen und Dateinamen für die Zeichen enthalten sind.
+Übermittelt ein JSON Objekt, in dem die Bezeichnungen und Svg's als Strings für die Zeichen enthalten sind.
 ```JSON
 {
     "Zeichen":[
     {
-        "name": "String",
-        "category": "String",
-        "filename": "String"
+	"id": "String",
+        "Kategorie": "String",
+        "Titel": "String",
+        "Svg": "String"
     }
     ]
 }
@@ -85,7 +91,10 @@ Nimmt ein Zeichen als JSON entgegen, und ersetzt das Zeichen in der Datenbank mi
 Nimmt ein neues Zeichen entgegen, und speichert es in die Datenbank. Dabei wird die mitgelieferte ID ignoriert, und die vom Server zugewiesene ID als Rückmeldung ausgegeben:
 ```JSON
 {
-    "id": String
+    "Kategorie": "String",
+    "Titel": "String",
+    "Svg": "String"	
+
 }
 ```
 #### DELETE /zeichen/:id/
