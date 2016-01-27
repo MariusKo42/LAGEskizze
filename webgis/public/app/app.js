@@ -10,5 +10,5 @@ app.config(function($routeProvider){
 			templateUrl: "app/templates/fgis/map.html",
 			controller: "MapController"
 		})
-        .otherwise({redirectTo: "/map"});
+		.otherwise({redirectTo: "/map"});
 });
