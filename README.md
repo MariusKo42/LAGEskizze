@@ -53,4 +53,4 @@ Das System wird unter MIT-Lizenz veröffentlicht.
 
 ## Abschluss
 
-Diese Software wurde von [Felix Erdmann](https://github.com/FelixErdmann),[Jan Suleiman](https://github.com/jansule),[Jan Koppe](https://github.com/JanKoppe),[Lasse Einfeldt](https://github.com/LEinfeldt) und [Nico Steffens](https://github.com/nsteffens) für den Kurs 'GeoIT im Katastrophenschutz' im Wintersemester 2015 / 2016 am [Institut für Geoinformatik der Universität Münster](https://www.uni-muenster.de/Geoinformatics/) entwickelt.
+Diese Software wurde von [Felix Erdmann](https://github.com/FelixErdmann), [Jan Suleiman](https://github.com/jansule), [Jan Koppe](https://github.com/JanKoppe), [Lasse Einfeldt](https://github.com/LEinfeldt) und [Nico Steffens](https://github.com/nsteffens) für den Kurs 'GeoIT im Katastrophenschutz' im Wintersemester 2015 / 2016 am [Institut für Geoinformatik der Universität Münster](https://www.uni-muenster.de/Geoinformatics/) entwickelt.
