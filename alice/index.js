@@ -52,7 +52,7 @@ app.get('/api/einsatz', function(req, res) {
 /**
 * @desc Liefere einen Einsatz, der mittles ID identifieziert wird.
 */
-app.get('/einsatz/:id', function(req, res) {
+app.get('/api/einsatz/:id', function(req, res) {
 
   //speichere die ID des Einsatzes
   var id = req.params.id;
@@ -72,7 +72,7 @@ app.get('/einsatz/:id', function(req, res) {
 /**
 * @desc Update ein Zeichen mit den uebergebenen Informationen
 */
-app.post('/zeichen/:id/', function(req, res) {
+app.post('/api/zeichen/:id/', function(req, res) {
 
 	var id = req.params.id;
 	var query = {id: req.params.id};
@@ -88,7 +88,7 @@ app.post('/zeichen/:id/', function(req, res) {
 /**
 * @desc Speichere ein uebergebenes TZ in der DB
 */
-app.put('/zeichen/', function(req, res) {
+app.put('/api/zeichen/', function(req, res) {
 
 	//erzeuge neues Zeichen, das in der DB abgelegt werden soll.
 	var zeichen = new db.models.taktZeichens({
@@ -113,7 +113,7 @@ app.put('/zeichen/', function(req, res) {
 * @desc Loescht ein Taktisches Zeichen aus der Datenbank.
 * @param :id ID des TZ, das aus der DB geloescht werden soll
 */
-app.delete('/zeichen/:id/', function(req, res) {
+app.delete('/api/zeichen/:id/', function(req, res) {
 
 	var id = req.params.id;
 	//durch richtigen Namen für TZ ersetzen
@@ -122,6 +122,35 @@ app.delete('/zeichen/:id/', function(req, res) {
 							: 'successfully deleted';
 		console.log(message);
 		res.send(message);
+	});
+});
+
+
+/* liefert den String des Attributs Svg zurück */
+app.get('/api/zeichen/:id/svg/', function(req, res){
+	var zeichenId = req.params.id;
+
+	db.models.taktZeichens.findOne({id: zeichenId}, function(err, result){
+		if (err) {
+			return console.err(err);
+			res.status(500).send('Konnte Svg des taktischen Zeichens mit der ID: ' + zeichenId + 'nicht finden.');
+		}
+		
+		res.send(result.svg);
+	});
+});
+
+
+/* liefert das Zeichen mit der ID :id als JSON */
+app.get('/api/zeichen/:id/', function(req, res){
+	var zeichenId = req.params.id;
+
+	db.models.taktZeichens.findOne({id: zeichenId}, function(err, result){
+		if (err) {
+			return console.err(err);
+			res.status(500).send('Konnte taktisches Zeichen mit der ID: '+ zeichenId +' nicht finden.');
+		}
+		res.send(result);
 	});
 });
 
@@ -195,9 +224,9 @@ app.post('/private/zeichen/', function(req, res){
 
 					var neuerEinsatz = new db.models.taktZeichens({
 						id: file.id,
-						Kategorie: file.Kategorie,
-						Titel: file.Titel,
-						Svg: file.Svg
+						kategorie: file.kategorie,
+						titel: file.titel,
+						svg: file.svg
 					});
 
 					neuerEinsatz.save();

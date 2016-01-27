@@ -20,9 +20,9 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
  "Zeichen":[
     {
         "id": "String",
-        "Kategorie": "String",
-        "Titel": "String",
-        "Svg": "String"
+        "kategorie": "String",
+        "titel": "String",
+        "svg": "String"
     }
  ]   
 }
@@ -66,9 +66,9 @@ Beim aufrufen wird der Einsatz mit der ID :id gesperrt. Es ist keine weitere Bea
     "Zeichen":[
     {
 	"id": "String",
-        "Kategorie": "String",
-        "Titel": "String",
-        "Svg": "String"
+        "kategorie": "String",
+        "titel": "String",
+        "svg": "String"
     }
     ]
 }
@@ -91,9 +91,9 @@ Nimmt ein Zeichen als JSON entgegen, und ersetzt das Zeichen in der Datenbank mi
 Nimmt ein neues Zeichen entgegen, und speichert es in die Datenbank. Dabei wird die mitgelieferte ID ignoriert, und die vom Server zugewiesene ID als Rückmeldung ausgegeben:
 ```JSON
 {
-    "Kategorie": "String",
-    "Titel": "String",
-    "Svg": "String"	
+    "kategorie": "String",
+    "titel": "String",
+    "svg": "String"	
 
 }
 ```

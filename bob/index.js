@@ -248,13 +248,13 @@ app.get('/api/zeichen/:id/', function(req, res){
 app.get('/api/zeichen/:id/svg/', function(req, res){
 	var zeichenId = req.params.id;
 
-	db.models.taktZeichens.findOne({id: zeichenId}, {Svg: 1}, function(err, result){
+	db.models.taktZeichens.findOne({id: zeichenId}, function(err, result){
 		if (err) {
 			return console.err(err);
 			res.status(500).send('Konnte Svg des taktischen Zeichens mit der ID: ' + zeichenId + 'nicht finden.');
 		}
 		
-		res.send(result.Svg);
+		res.send(result.svg);
 	});
 });
 
@@ -359,9 +359,9 @@ app.post('/private/zeichen/', function(req, res){
 
           var neuesZeichen = new db.models.taktZeichens({
             id: file.id,
-            Kategorie: file.Kategorie,
-            Titel: file.Titel,
-            Svg: file.Svg
+            kategorie: file.kategorie,
+            titel: file.titel,
+            svg: file.svg
           });
 
           neuesZeichen.save();
@@ -439,9 +439,9 @@ var syncZeichenFrom = function(alice){
 
             var neuesZeichen = new db.models.taktZeichens({
               id: file.id,
-              Kategorie: file.Kategorie,
-              Titel: file.Titel,
-              Svg: file.Svg
+              kategorie: file.kategorie,
+              titel: file.titel,
+              svg: file.svg
             });
 
             neuesZeichen.save();
