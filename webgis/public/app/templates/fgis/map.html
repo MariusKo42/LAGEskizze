@@ -22,24 +22,24 @@
 			</tr>
 			<tr>
 			  <td colspan="2">
-				<a id="drawRectangle" ng-click="map.draw('rectangle')" class="drawToolbar" href="#map"></a>
+				<a id="drawRectangle" ng-click="map.draw('rectangle')" class="drawToolbar" href=""></a>
 			  </td>
 			  <td colspan="2">
-				<a id="drawPolygon" ng-click="map.draw('polygon')" class="drawToolbar" href="#map"></a>
+				<a id="drawPolygon" ng-click="map.draw('polygon')" class="drawToolbar" href=""></a>
 			  </td>
 			  <td colspan="2">
-				<a id="drawLine" ng-click="map.draw('polyline')" class="drawToolbar" href="#map"></a>
+				<a id="drawLine" ng-click="map.draw('polyline')" class="drawToolbar" href=""></a>
 			  </td>
 			</tr>
 			<tr>
 			  <td colspan="2">
-				<a id="drawCircle" ng-click="map.draw('circle')" class="drawToolbar" href="#map"></a>
+				<a id="drawCircle" ng-click="map.draw('circle')" class="drawToolbar" href=""></a>
 			  </td>
 			  <td colspan="2">
-				<a id="drawPoint" ng-click="map.draw('marker')" class="drawToolbar" href="#map"></a>
+				<a id="drawPoint" ng-click="map.draw('marker')" class="drawToolbar" href=""></a>
 			  </td>
 			  <td colspan="2">
-				<a id="questionMark" ng-click="map.activateDrawInformation()" class="drawToolbar" href="#map" style="margin-top:15%">?</a>
+				<a id="questionMark" ng-click="map.activateDrawInformation()" class="drawToolbar" href="" style="margin-top:15%">?</a>
 			  </td>
 			</tr>
 		  </tbody>
@@ -62,7 +62,14 @@
 </div>
 
 <div id="titleRow">
-Einsatzstichwort: <input type="text" class="titleRowInput"> Einsatzort: <input type="text" class="titleRowInput"> Meldender: <input type="text" class="titleRowInput"> Objektnr.: <input type="text" class="titleRowInput" style="width: 50px;"> Datum-Uhrzeitgruppe: <input type="text" class="titleRowInput">
+Einsatzstichwort: <input type="text" class="titleRowInput" ng-model="einsatz.meta.einsatzstichwort"> 
+Einsatzort: <input type="text" class="titleRowInput" ng-model="einsatz.meta.einsatzort"> 
+Meldender: <input type="text" class="titleRowInput" ng-model="einsatz.meta.meldender"> 
+Objektnr.: <input type="text" class="titleRowInput" ng-model="einsatz.meta.objektNr" style="width: 50px;"> 
+Datum-Uhrzeitgruppe: <input type="text" class="titleRowInput" ng-model="einsatz.meta.datumUhrzeitGruppe">
+<button style="font-size: 1.5vh" ng-click="saveEinsatz()">Einsatz speichern!</button>
+<button style="font-size: 1.5vh" ng-click="showLoadMenu()">Einsatz laden</button>
+<button style="font-size: 1.5vh" onclick="window.location = '/'">Neuer Einsatz</button>
 </div>
 
 <!--black area on the left -->

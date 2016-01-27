@@ -10,7 +10,8 @@ var objectColor = "#f00";
 app.controller("MapController", function($scope, $http, $sce, $location){
 
 	//url of the db-server:
-	$scope.dbServerAddress = $location.absUrl().split(":")[0] + ":" + $location.absUrl().split(":")[1] + ":3000/";
+	$scope.dbServerAddress = $location.absUrl().split(":")[0] + ":" 
+        + $location.absUrl().split(":")[1] + ":8080/";
 
 	$scope.sideContent = {};
 	$scope.sideContent.template = "";
@@ -21,6 +22,192 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.sideContent.change = function(template){
 		$scope.sideContent.template = template;
 	}
+    
+    /********************************
+	********  loading/saving ********
+	********************************/
+    
+    // object that will contain the current state on save
+    $scope.einsatz = {
+        _id: '',
+        meta: { // filled via ng-model
+            einsatzstichwort: '',
+            einsatzort: '',
+            meldender: '',
+            objektNr: '',
+            datumUhrzeitGruppe: '',
+        },
+        // rest will be filled on save()
+        drawnObjects: [],
+        taktZeichen: [],
+        map: {
+            zoom: 12,
+            center: {},
+            tileServer: ''
+        }
+    };
+    
+    /* serializes the current state into $scope.einsatz & pushs it to the DB server */
+    $scope.saveEinsatz = function() {
+        if (!$scope.einsatz.meta.objektNr) return alert('Vor dem Speichern bitte die Objektnummer angeben!'); 
+        // copy field data into $scope.einsatz.fields
+        $scope.einsatz.taktZeichen = [];
+        for (var i = 0; i < $scope.fields.fieldOrder.properties.length; i++) {
+            var kranzPos = $scope.fields.fieldOrder.properties[i].id;
+            var line = linesArray[kranzPos];
+            
+            $scope.einsatz.taktZeichen.push({
+                kranzposition: kranzPos,
+                kartenposition: line ? line[0] : '',
+                zeichen:    $('#image' + kranzPos).attr('src') || '', // TODO: use zeichenID from DB instead of filename? 
+                comment:    $('#fieldComment' + kranzPos).text() || '',
+                textTop:    $('#fieldTextTop' + kranzPos).text() || '',
+                textBottom: $('#fieldTextBottom' + kranzPos).text() || ''
+            });
+        }
+        
+        // push drawn object data into $scope.einsatz.drawnObjects
+        $scope.einsatz.drawnObjects = [];
+        drawnItems.eachLayer(function(layer) {
+            var geojson = layer.toGeoJSON();
+            geojson.properties.comment = commentsMap.get(drawnItems.getLayerId(layer)) || '';
+            geojson.properties.color = layer.options.color || '';
+            // as leaflet draw serializes a circle as a point, we need to store the radius manually.
+            if (layer._mRadius) geojson.properties.circleRadius = layer._mRadius;
+            $scope.einsatz.drawnObjects.push(geojson); 
+        });
+        
+        // save map state
+        $scope.einsatz.map.zoom = map.getZoom();
+        $scope.einsatz.map.center = map.getCenter();
+        $scope.einsatz.map.tileServer = ''; // TODO: basemap functionality needs to be reworked first
+        
+        // submit einsatz object to server
+        function pushEinsatz() {
+			$http.post($scope.dbServerAddress + 'api/einsatz/' + $scope.einsatz.id, $scope.einsatz)
+            .then(function success(res) {
+                console.log('einsatz was saved in database!');
+                window.location.hash = '#/map/' + $scope.einsatz.id;
+            }, function error(res) {
+                console.error('einsatz could not be stored in database: ' + res);
+            });
+        };
+        
+		// push einsatz to database
+		if (!$scope.einsatz.id) {
+            // if no ID is present, request a new einsatz from the DB first
+			$http.get($scope.dbServerAddress + 'api/einsatz/new')
+                .then(function successCallback(response) {			
+                    $scope.einsatz.id = response.data.id;
+                    console.log("Einsatz angelegt mit der ID: " + $scope.einsatz.id);
+                    //submit einsatz object to server
+                    pushEinsatz();
+                }, function errorCallback(response) {
+                    console.log("FEHLER: Neuer Einsatz konnte nicht angelegt werden");
+                });
+		} else {
+            pushEinsatz();
+        }
+    };
+	
+    /* fills the table of available einsätzes from DB */
+	$scope.showLoadMenu = function(){
+        $scope.sideContent.change("/app/templates/fgis/loadMenu.html");
+		try{$scope.map.editCancel();}catch(e){}
+        
+        // get all available einsätze from DB & show them in the table
+        $http.get($scope.dbServerAddress + 'api/einsatz')
+            .then(function successCallback(response) {                
+                $('#einsatzTable').empty();
+                for (var i = 0; i < response.data.length; i++) {
+                    var einsatz = response.data[i];
+                    var tableRow = $('<tr onclick="window.location=\'/#/map/' + einsatz.id + '\'"><td>'
+                        + einsatz.meta.einsatzstichwort + '</td><td>'
+                        + einsatz.meta.einsatzort + '</td><td>'
+                        + einsatz.meta.meldender + '</td><td>'
+                        + einsatz.meta.objektNr + '</td><td>'
+                        + einsatz.meta.datumUhrzeitGruppe + '</td></tr>');
+
+                    $('#einsatzTable').append(tableRow);
+                }
+                $("#einsatzTable").trigger("update");
+            }, function errorCallback(response) {
+                console.log("misserfolg: " + response);
+            });
+	}
+    
+    /* loads a einsatz identified by its ID */
+    $scope.loadEinsatz = function(id) {
+        $http.get($scope.dbServerAddress + 'api/einsatz/' + id)
+            .then(function successCallback(response) {
+                updateState(response.data);
+            }, function errorCallback(response) {
+                console.error('Einsatz konnte nicht geladen werden: ' + response);
+            });
+            
+        function updateState(einsatz) {
+            $scope.einsatz = einsatz;
+            
+            // insert drawnObjects
+            for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
+                // convert geojson -> FeatureGroup -> ILayer
+			    var geojson = $scope.einsatz.drawnObjects[i];
+			    var featureGroup = L.geoJson(geojson, {
+                    pointToLayer: function(json, latlng) {
+                        if(json.properties.circleRadius) {
+                            return new L.circle(latlng, json.properties.circleRadius, {
+                                fillColor: json.properties.color,
+                                color: json.properties.color,
+                                weight: 5
+                            });
+                        } else { return new L.marker(latlng); }
+                    }
+                });
+                var layer = featureGroup.getLayers()[0]; // extract the first (and only) layer from the fGroup
+                layer.options.style = { color: geojson.properties.color };
+                layer.options.color = geojson.properties.color;
+                if (geojson.properties.circleRadius) layer.feature.geometry.type = 'circle';
+                drawnItems.addLayer(layer);
+				
+                // register comment
+                var layerID = drawnItems.getLayerId(layer);
+                commentsMap.set(layerID, geojson.properties.comment);
+                
+                // register click events
+                layer.on('click', function(e){
+                    console.log(e.target);
+                    $scope.map.objectClicked(e.target.feature.geometry.type, e.target, e.target._leaflet_id);
+                });
+            }
+
+            // make layers unclickable by default
+            drawnItems.eachLayer(function(layer) {
+                setClickable(layer, false);
+            });
+            
+            // upate mapstate
+            map.setView($scope.einsatz.map.center, $scope.einsatz.map.zoom);
+            // TODO: tileserver?
+            
+            // setze taktische zeichen in karte
+            for (var i = 0; i < $scope.einsatz.taktZeichen.length; i++) {
+                var field = $scope.einsatz.taktZeichen[i];
+               
+				var fieldHtml = getFieldHtmlString(field.kranzposition, field.zeichen,
+                    field.comment, field.textTop, field.textBottom);
+                
+				$('#' + field.kranzposition).html(fieldHtml);
+				
+                // field line / kartenposition
+                if (field.kartenposition == '') continue; // field has no kartenposition
+                var anchorPoint = getAnchorOfElement('image' + field.kranzposition);
+                var anchor = map.containerPointToLatLng(anchorPoint);
+                var latlngs = [field.kartenposition, anchor];
+                linesArray[field.kranzposition] = [field.kartenposition, anchorPoint];
+                lines.addLayer(L.polyline(latlngs));
+            }
+        }
+    };
 
 	/********************************
 	************ Fields *************
@@ -81,7 +268,6 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		}
 		else {
 			$scope.fields.currentField.image = thisImage[0].src;
-			console.log(thisImage);
 			$scope.fields.currentField.topText = "";
 			$scope.fields.currentField.bottomText = "";
 			$scope.fields.currentField.commentField = "";
@@ -99,37 +285,16 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		if(linesArray[$scope.fields.currentField.id] != null){
 			$('#' + $scope.fields.currentField.id).removeClass("activated");
 		}
-		var _textTop, _textBottom, _comment, _image;
-
-		_textTop = '<div id="fieldTextTop'
-					+ $scope.fields.currentField.id
-					+ '" class="fieldText fieldTextTop" style="overflow:hidden" title="' +$scope.fields.currentField.fieldTextTop + '" data-toggle="tooltip">'
-					+ $scope.fields.currentField.fieldTextTop
-					+ '</div>';
-
-		_textBottom = '<div id="fieldTextBottom'
-					+ $scope.fields.currentField.id
-					+ '" class="fieldText fieldTextBottom" style="overflow:hidden" title="' +$scope.fields.currentField.fieldTextBottom + '" data-toggle="tooltip">'
-					+ $scope.fields.currentField.fieldTextBottom
-					+ '</div>';
-		_comment = '<div id="fieldComment'
-					+ $scope.fields.currentField.id
-					+ '" class="fieldComment">'
-					+ $scope.fields.currentField.fieldComment
-					+ '</div>';
-
-		//insert the image:
-		_image = '<img id="image'
-					+ $scope.fields.currentField.id
-					+ '" draggable="true" ondragstart="drag(event)" src="'
-					+ $scope.fields.currentField.image
-					+ '" style="height:'
-					+ fieldOrder.size
-					+ '; width:'
-					+ fieldOrder.size
-					+ '; background-color: white; text-align: center;" />';
-		var _htmlString = _textTop + _textBottom + _comment + _image;
-		document.getElementById($scope.fields.currentField.id).innerHTML = _htmlString;
+        
+        var fieldHtml = getFieldHtmlString(
+            $scope.fields.currentField.id,
+            $scope.fields.currentField.image,
+            $scope.fields.currentField.fieldComment,
+            $scope.fields.currentField.fieldTextTop,
+            $scope.fields.currentField.fieldTextBottom
+        );
+		
+		document.getElementById($scope.fields.currentField.id).innerHTML = fieldHtml;
 		$scope.sideContent.close();
 	}
 
@@ -142,23 +307,10 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 	$scope.fields.delete = function(){
 		$scope.fields.deleteLine();
-		var htmlString = '<div id="fieldTextTop'
-						+ $scope.fields.currentField.id
-						+ '" class="fieldText fieldTextTop"></div>'
-						+ '<div id="fieldTextBottom'
-						+ $scope.fields.currentField.id
-						+ '" class="fieldText fieldTextBottom"></div>'
-						+ '<div id="fieldComment'
-						+ $scope.fields.currentField.id
-						+ '" class="fieldComment"></div>'
-						+ '<svg id="image'
-						+ $scope.fields.currentField.id
-						+ '" viewBox="0 0 89 89" preserveAspectRatio="none" style="height:'
-						+ fieldOrder.size
-						+ '; width:'
-						+ fieldOrder.size
-						+ ';"><polygon points="2,2 88,2 88,88 2,88 2,2 2,22.5 88,22.5 88,67.5 2,67.5"/></svg>';
-		document.getElementById($scope.fields.currentField.id).innerHTML = htmlString;
+        
+        var fieldHtml = getFieldHtmlString($scope.fields.currentField.id);
+		document.getElementById($scope.fields.currentField.id).innerHTML = fieldHtml;
+        
 		$scope.sideContent.close();
 		$scope.fields.currentField.active = false;
 		$('#' + $scope.fields.currentField.id).removeClass("activated");
@@ -170,6 +322,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		console.log("filter: " + string);
 		$scope.fields.symbolsFilter = string;
 	}
+    
 	/**
 	* @desc changes symbol in tz
 	* @param string: string for new symbol location
@@ -181,7 +334,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 	/********** Lines ********/
 
-	$scope.fields.deleteLine = function(){
+	$scope.fields.deleteLine = function() {
 		linesArray[$scope.fields.currentField.id] = null;
 		fitAllLines(linesArray);
 	}
@@ -259,16 +412,16 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.map.frozen = false;
 	$scope.map.lastClick = null;
 	$scope.map.objectId = null;
-	$scope.hideColorPicker = false;
-
-	$scope.map.objectClicked = function(type, layer, id){
+	$scope.hideColorPicker = false;		
+	
+	$scope.map.objectClicked = function(type, layer, id){		
 		if (!$scope.map.editActive){
 			drawnItems.eachLayer(function(layer) {
 				setClickable(layer, false);
 			});
 
 			// hide colorPicker if the selected object is a marker
-			if(type == "marker"){
+			if(type == "marker" || type.toLowerCase() == "point") {
 				$scope.hideColorPicker = true;
 			} else {
 				$scope.hideColorPicker = false;
@@ -447,7 +600,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 			setClickable(layer, true);
 		});
 	}
-
+    
 	$scope.map.objects = {};
 	$scope.map.objects.measureString = "";
 	$scope.map.objects.type = "";
@@ -502,7 +655,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		var _radius = null;
 		var _type = "";
 
-		switch (type){
+        // type can be a leaflet type, or a GeoJSON type, so we have to catch both
+		switch (type.toLowerCase()) {
 			case "rectangle":
 				_latlng = layer.getLatLngs();
 				_type = "Typ: Rechteck";
@@ -520,12 +674,14 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 				_area = Math.PI * _radius * _radius;
 				break;
 			case "polyline":
+			case "linestring":
 				_latlng = layer.getLatLngs();
 				_type = "Typ: Polylinie";
 				_length = L.GeometryUtil.accumulatedLengths(_latlng);
 				var _length = _length[_length.length-1];
 				break;
 			case "marker":
+			case "point":
 				_latlng = layer.getLatLng();
 				_type = "Typ: Punkt";
 				break;
@@ -562,6 +718,11 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.map.objects.measureString = $sce.trustAsHtml(_htmlString);
 		$scope.map.objects.type = _type;
 	}
+    
+    $scope.$on('$viewContentLoaded', function(){
+        var einsatzID = window.location.hash.split('/').pop();
+        if (['', 'map'].indexOf(einsatzID) == -1) $scope.loadEinsatz(einsatzID);
+    });
 });
 
 /**
@@ -618,8 +779,7 @@ function initMap(){
 
 	lines = L.layerGroup().addTo(map);
 	fachkarten = L.layerGroup().addTo(map);
-	basemap = L.layerGroup().addTo(map);
-
+	basemap = L.layerGroup().addTo(map);	
 	drawnItems = new L.FeatureGroup();
 	map.addLayer(drawnItems);
 
@@ -667,8 +827,7 @@ function initMap(){
 
 
 	drawControl = new L.Control.Draw(options);
-	map.addControl(drawControl);
-
+	map.addControl(drawControl);	
 }
 
 /**
@@ -766,52 +925,27 @@ function drop(ev){
 	var targetId = targetElement.id;
 
 	//save the texts:
-	console.log('element dropped: ' + startId + " -> " + targetElement.id)
-	var _textTopTarget = document.getElementById('fieldTextTop'+targetId).innerHTML;
-	var _textBottomTarget = document.getElementById('fieldTextBottom'+targetId).innerHTML;
-	var _commentTarget = document.getElementById('fieldComment'+targetId).innerHTML;
-	var _textTopStart = document.getElementById('fieldTextTop'+startId).innerHTML;
-	var _textBottomStart = document.getElementById('fieldTextBottom'+startId).innerHTML;
-	var _commentStart = document.getElementById('fieldComment'+startId).innerHTML;
+	var _imageTarget      = $('#image' + targetId).attr('src');
+	var _textTopTarget    = $('#fieldTextTop' + targetId).html();
+	var _textBottomTarget = $('#fieldTextBottom' + targetId).html();
+	var _commentTarget    = $('#fieldComment' + targetId).html();
+	var _imageStart       = $('#image' + startId).attr('src');
+	var _textTopStart     = $('#fieldTextTop' + startId).html();
+	var _textBottomStart  = $('#fieldTextBottom' + startId).html();
+	var _commentStart     = $('#fieldComment' + startId).html();
 
-	//change the images and texts:
-	var movingBackElement = document.getElementById("image" + targetId);
-	startElement.innerHTML = '<div id="fieldTextTop'
-		+ startId
-		+ '" class="fieldText fieldTextTop" style="overflow:hidden" title="'
-		+ _textTopTarget + '" data-toggle="tooltip">'
-		+ _textTopTarget
-		+ '</div><div id="fieldTextBottom'
-		+ startId
-		+ '" class="fieldText fieldTextBottom" style="overflow:hidden" title="'
-		+ _textBottomTarget + '" data-toggle="tooltip">'
-		+ _textBottomTarget
-		+ '</div><div id="fieldComment'
-		+ startId
-		+ '" class="fieldComment">'
-		+ _commentTarget
-		+ '</div>';
-	startElement.appendChild(movingBackElement);
-	targetElement.innerHTML = '<div id="fieldTextTop'
-		+ targetId
-		+ '" class="fieldText fieldTextTop" style="overflow:hidden" title="'
-		+ _textTopStart + '" data-toggle="tooltip">'
-		+ _textTopStart
-		+ '</div><div id="fieldTextBottom'
-		+ targetId
-		+ '" class="fieldText fieldTextBottom" style="overflow:hidden" title="'
-		+ _textBottomStart + '" data-toggle="tooltip">'
-		+ _textBottomStart
-		+ '</div><div id="fieldComment'
-		+ targetId
-		+ '" class="fieldComment">'
-		+ _commentStart
-		+ '</div>';
-	targetElement.appendChild(movingElement);
-	movingElement.setAttribute("id", "image" + targetId);
-	if (movingBackElement != null) {movingBackElement.setAttribute("id", "image" + startId)};
+	//swap the images and texts
+	startElement.innerHTML = getFieldHtmlString(
+        startId, _imageTarget, _commentTarget,
+        _textTopTarget, _textBottomTarget
+    );
 
-	//change the lines:
+    targetElement.innerHTML = getFieldHtmlString(
+        targetId, _imageStart, _commentStart,
+        _textTopStart, _textBottomStart
+    );
+    
+	//swap the lines:
 	var newTargetLine = linesArray[startId];
 	if (newTargetLine != null) {newTargetLine[1] = getAnchorOfElement(targetId)};
 
@@ -829,4 +963,36 @@ function drop(ev){
 		$('#' + startId).removeClass("activated");
 		$('#' + targetId).addClass("activated");
 	}*/
+}
+
+/**
+ * @desc    generates the html string for a field, identified by its kranzposition
+ * @returns html string to be placed within the fields div
+ * @example $('<div class="field" id="12"</div>').append(getFieldHtmlString('12'));
+ */
+function getFieldHtmlString(kranzposition, svgPath = '', comment = '', textTop = '', textBottom = '') {
+
+    var _textTop = '<div id="fieldTextTop' + kranzposition
+        + '" class="fieldText fieldTextTop" style="overflow:hidden" title="'
+        + textTop + '" data-toggle="tooltip">' + textTop + '</div>';
+        
+    var _textBottom = '<div id="fieldTextBottom' + kranzposition
+        + '" class="fieldText fieldTextBottom" style="overflow:hidden" title="'
+        + textBottom + '" data-toggle="tooltip">' + textBottom + '</div>';
+        
+    var _comment = '<div id="fieldComment' + kranzposition + '" class="fieldComment">'
+        + comment + '</div>';
+
+    // insert TZ if a path is given, else create a "NA" polygon
+    if (svgPath) {
+        var _image = '<img id="image' + kranzposition + '" draggable="true" ondragstart="drag(event)" src="'
+            + svgPath + '" style="height:' + fieldOrder.size + '; width:' + fieldOrder.size
+            + '; background-color: white; text-align: center;" />';
+    } else {
+        var _image = '<svg id="image' +  kranzposition + '" viewBox="0 0 89 89" preserveAspectRatio="none" style="height:'
+            + fieldOrder.size + '; width:' + fieldOrder.size
+            + ';"><polygon points="2,2 88,2 88,88 2,88 2,2 2,22.5 88,22.5 88,67.5 2,67.5"/></svg>';
+    }
+   
+    return _textTop + _textBottom + _comment + _image;		
 }

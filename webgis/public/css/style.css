@@ -327,19 +327,30 @@
 	}
 	
 
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-   .drawToolbar {   
+	@media screen and (-webkit-min-device-pixel-ratio:0) {
+	   .drawToolbar {   
+				
+			display: inline-block;	
+	   }
+	   .drawToolbarDiv{
+	   
+			height: 5vw;
 			
-		display: inline-block;	
-   }
-   .drawToolbarDiv{
-   
-		height: 5vw;
-		
-   }
-   
-}
+	   }
+	   
+	}
 
+	#einsaetze-tbl {
+		position: absolute; 
+		width: 80%; 
+		height: auto; 
+		left: 1%; 
+		color: white;
+		background-color: grey;
+	}
 
-
-
+    #einsaetze-tbl * {
+        border: 0;
+		color: white; 
+		background-color: #333333;
+    }
