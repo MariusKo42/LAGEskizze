@@ -37,7 +37,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
             objektNr: '',
             datumUhrzeitGruppe: '',
         },
-        // will be filled on save()
+        // rest will be filled on save()
         drawnObjects: [],
         taktZeichen: [],
         map: {
@@ -47,6 +47,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         }
     };
     
+    /* serializes the current state into $scope.einsatz & pushs it to the DB server */
     $scope.saveEinsatz = function() {
         if (!$scope.einsatz.meta.objektNr) return alert('Vor dem Speichern bitte die Objektnummer angeben!'); 
         // copy field data into $scope.einsatz.fields
@@ -86,6 +87,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 			$http.post($scope.dbServerAddress + 'api/einsatz/' + $scope.einsatz.id, $scope.einsatz)
             .then(function success(res) {
                 console.log('einsatz was saved in database!');
+                window.location.hash = '#/map/' + $scope.einsatz.id;
             }, function error(res) {
                 console.error('einsatz could not be stored in database: ' + res);
             });
@@ -108,8 +110,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         }
     };
 	
+    /* fills the table of available einsätzes from DB */
 	$scope.showLoadMenu = function(){
-
         $scope.sideContent.change("/app/templates/fgis/loadMenu.html");
 		try{$scope.map.editCancel();}catch(e){}
         
@@ -134,7 +136,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
             });
 	}
     
-    
+    /* loads a einsatz identified by its ID */
     $scope.loadEinsatz = function(id) {
         $http.get($scope.dbServerAddress + 'api/einsatz/' + id)
             .then(function successCallback(response) {
@@ -146,25 +148,30 @@ app.controller("MapController", function($scope, $http, $sce, $location){
         function updateState(einsatz) {
             $scope.einsatz = einsatz;
             
-            // lade drawn Objects
+            // insert drawnObjects
             for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
-			   var geojson = $scope.einsatz.drawnObjects[i];
-			   var layer = L.geoJson(geojson, {
-                    style: function(feature) { return {color: feature.properties.color}; }
-                });
+                // convert geojson -> FeatureGroup -> ILayer
+			    var geojson = $scope.einsatz.drawnObjects[i];
+			    var featureGroup = L.geoJson(geojson);
+                var layer = featureGroup.getLayers()[0]; // extract the first (and only) layer from the fGroup
+                layer.options.style = { color: geojson.properties.color };
+                layer.options.color = geojson.properties.color;
                 drawnItems.addLayer(layer);
 				
-                // add comment
+                // register comment
                 var layerID = drawnItems.getLayerId(layer);
                 commentsMap.set(layerID, geojson.properties.comment);
+                
+                // register click events
+                layer.on('click', function(e){
+                    $scope.map.objectClicked(e.target.feature.geometry.type, e.target, e.target._leaflet_id);
+                });
             }
-			
-			//TODO: set Options geojson, so setClickable can be used and interaction with drawnObjects is possible
-			/*
+
+            // make layers unclickable by default
             drawnItems.eachLayer(function(layer) {
                 setClickable(layer, false);
             });
-            */
             
             // upate mapstate
             map.setView($scope.einsatz.map.center, $scope.einsatz.map.zoom);
@@ -177,9 +184,9 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 				var fieldHtml = getFieldHtmlString(field.kranzposition, field.zeichen,
                     field.comment, field.textTop, field.textBottom);
                 
-				document.getElementById(field.kranzposition).innerHTML = fieldHtml;
+				$('#' + field.kranzposition).html(fieldHtml);
 				
-                // kartenposition
+                // field line / kartenposition
                 if (field.kartenposition == '') continue; // field has no kartenposition
                 var anchorPoint = getAnchorOfElement('image' + field.kranzposition);
                 var anchor = map.containerPointToLatLng(anchorPoint);
@@ -315,7 +322,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 	/********** Lines ********/
 
-	$scope.fields.deleteLine = function(){
+	$scope.fields.deleteLine = function() {
 		linesArray[$scope.fields.currentField.id] = null;
 		fitAllLines(linesArray);
 	}
@@ -402,7 +409,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 			});
 
 			// hide colorPicker if the selected object is a marker
-			if(type == "marker"){
+			if(type == "marker" || type.toLowerCase() == "point") {
 				$scope.hideColorPicker = true;
 			} else {
 				$scope.hideColorPicker = false;
@@ -624,7 +631,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		var _radius = null;
 		var _type = "";
 
-		switch (type){
+        // type can be a leaflet type, or a GeoJSON type, so we have to catch both
+		switch (type.toLowerCase()) {
 			case "rectangle":
 				_latlng = layer.getLatLngs();
 				_type = "Typ: Rechteck";
@@ -642,12 +650,14 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 				_area = Math.PI * _radius * _radius;
 				break;
 			case "polyline":
+			case "linestring":
 				_latlng = layer.getLatLngs();
 				_type = "Typ: Polylinie";
 				_length = L.GeometryUtil.accumulatedLengths(_latlng);
 				var _length = _length[_length.length-1];
 				break;
 			case "marker":
+			case "point":
 				_latlng = layer.getLatLng();
 				_type = "Typ: Punkt";
 				break;
@@ -685,12 +695,10 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.map.objects.type = _type;
 	}
     
-    var einsatzID = window.location.hash.split('/').pop();
-    if (einsatzID !== 'map') {   
-        window.setTimeout(function() {
-            $scope.loadEinsatz(einsatzID);
-        }, 1000); // DEBUG: 1sek delay
-    }
+    $scope.$on('$viewContentLoaded', function(){
+        var einsatzID = window.location.hash.split('/').pop();
+        if (['', 'map'].indexOf(einsatzID) == -1) $scope.loadEinsatz(einsatzID);
+    });
 });
 
 /**
