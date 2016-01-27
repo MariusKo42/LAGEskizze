@@ -152,10 +152,21 @@ app.controller("MapController", function($scope, $http, $sce, $location){
             for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
                 // convert geojson -> FeatureGroup -> ILayer
 			    var geojson = $scope.einsatz.drawnObjects[i];
-			    var featureGroup = L.geoJson(geojson);
+			    var featureGroup = L.geoJson(geojson, {
+                    pointToLayer: function(json, latlng) {
+                        if(json.properties.circleRadius) {
+                            return new L.circle(latlng, json.properties.circleRadius, {
+                                fillColor: json.properties.color,
+                                color: json.properties.color,
+                                weight: 5
+                            });
+                        } else { return new L.marker(latlng); }
+                    }
+                });
                 var layer = featureGroup.getLayers()[0]; // extract the first (and only) layer from the fGroup
                 layer.options.style = { color: geojson.properties.color };
                 layer.options.color = geojson.properties.color;
+                if (geojson.properties.circleRadius) layer.feature.geometry.type = 'circle';
                 drawnItems.addLayer(layer);
 				
                 // register comment
@@ -164,6 +175,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
                 
                 // register click events
                 layer.on('click', function(e){
+                    console.log(e.target);
                     $scope.map.objectClicked(e.target.feature.geometry.type, e.target, e.target._leaflet_id);
                 });
             }
