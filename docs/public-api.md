@@ -20,7 +20,7 @@ Die Details zu den taktischen Zeichen werden ebenfalls in einem einzelnen Objekt
  "Zeichen":[
     {
         "id": String,
-        "Kategorie": String
+        "Kategorie": String,
         "Titel: String,
         "Svg": String
     }
@@ -65,7 +65,7 @@ Beim aufrufen wird der Einsatz mit der ID :id gesperrt. Es ist keine weitere Bea
 {
     "Zeichen":[
     {
-	"id": "String"
+	"id": "String",
         "Kategorie": "String",
         "Titel": "String",
         "Svg": "String"
