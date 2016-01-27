@@ -248,7 +248,7 @@ app.post('/private/zeichen/', function(req, res){
 
 
 // sendet alle Zeichen in DB
-app.get('/zeichen/', function(req, res){
+app.get('/api/zeichen/', function(req, res){
 	db.models.taktZeichens.find(function(err, result){
 		if(err) console.log(err);
 		else res.send(result);
