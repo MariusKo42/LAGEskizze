@@ -329,8 +329,10 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	}
 
 	/**
-	* @desc changes symbol in tz
+	* @desc changes symbol of currentField in tz
 	* @param string: string for new symbol location
+	* Please note that this function is not used and should be deleted 
+	* if not used in further development
 	**/
 	$scope.fields.addSymbol = function(string){
 		$scope.fields.currentField.image = "images/symbols/" + string + ".svg";
