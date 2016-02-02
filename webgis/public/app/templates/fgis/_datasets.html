@@ -2,6 +2,6 @@
 <h2>Basiskarten</h2>
 <div class="radio">
 	<div ng-repeat="basemap in map.basemaps">
-	  <label><input type="radio" ng-click="map.showBasemap(basemap.name)" name="optradio">{{basemap.name}}</label>
+	  <label><input type="radio" ng-click="map.showBasemap(basemap.wms, basemap.layer)" name="optradio"> {{basemap.name}}</label>
 	</div>
 </div>

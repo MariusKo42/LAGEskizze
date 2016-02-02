@@ -114,7 +114,6 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	/* fills the table of available einsätzes from DB */
 	$scope.showLoadMenu = function(){
 		$scope.fields.cancel();
-		$scope.fields.currentField.id = undefined;
 		$scope.sideContent.change("/app/templates/fgis/loadMenu.html");
 		try{$scope.map.editCancel();}catch(e){}
 
@@ -245,7 +244,6 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 		// when the clicked field is already the active/current one: deselect it
 		if ($scope.fields.currentField.id == field) {
-			$scope.fields.currentField.id = undefined;
 			$scope.fields.cancel();
 			return;
 		}
@@ -308,8 +306,10 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.fields.cancel = function(){
 		$scope.sideContent.close();
 		$scope.fields.currentField.active = false;
+        $scope.map.lastClick = null;
 		$('#' + $scope.fields.currentField.id).removeClass("activated");
 		$scope.fields.deleteLastLine($scope.fields.currentField.id);
+        $scope.fields.currentField.id = undefined;
 	}
 
 	$scope.fields.delete = function(){
@@ -497,7 +497,6 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	/* click handler for datensätze button */
 	$scope.map.showDatasets = function(){
 		$scope.fields.cancel();
-		$scope.fields.currentField.id = undefined;
 		if ($scope.sideContent.template == "/app/templates/fgis/_datasets.html"){
 			$scope.sideContent.change("");
 		}
@@ -509,20 +508,19 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 	$scope.map.initBasemaps = function(){
 		// this route does not exist yet in the backend..
-
 		/*$http.get($scope.dbServerAddress + 'basemaps')
 			.success(function(response){
-				for (var i = response.length - 1; i >= 0; i--) {
-					$scope.map.basemaps.push(response[i]);
-				};
-			}).error(function(response){});
+                $scope.map.basemaps = response.data;
+			});*/
+
+		// DEBUG
+        $scope.map.basemaps = [
+            { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dtk', layer: 'nw_dtk_pan', name: 'NRW DTK' },
+            { wms: 'http://localhost:9000/geoserver/feuerGIS/wms', layer: 'feuerGIS:basemap', name: 'NRW OSM' },
+        ];
 
 		// show default basemap
-		$scope.map.showBasemap($scope.wmsServerAddress, $scope.map.basemaps[0].name);*/
-		
-		// DEBUG
-		//$scope.map.showBasemap($scope.wmsServerAddress, 'feuerGIS:basemap');
-		$scope.map.showBasemap('http://www.wms.nrw.de/geobasis/wms_nw_dtk', 'nw_dtk_pan');
+		$scope.map.showBasemap($scope.map.basemaps[0].wms, $scope.map.basemaps[0].layer);
 	};
 
 	$scope.map.showBasemap = function(wms, layer){
@@ -542,7 +540,6 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 	$scope.map.draw = function(type){
 		$scope.fields.cancel();
-		$scope.fields.currentField.id = undefined;
 		var _className = 'leaflet-draw-draw-' + type;
 		var _element = document.getElementsByClassName(_className);
 		_element[0].click();
