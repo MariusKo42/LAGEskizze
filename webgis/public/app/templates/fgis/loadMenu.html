@@ -1,4 +1,16 @@
-<table id="einsaetze-tbl">
+<div style="height: 100%; padding-left: 2%">
+    <p style="font-size: 1.4vw;"><b>Verwalten von Einsätzen</b></p>
+    <p style="font-size: 1.0vw;">Sie haben die Möglichkeit diesen Einsatz zu speichern, einen neuen Einsatz zu erstellen oder einen früheren Einsatz zu laden.</p>
+    <div>
+        <button style="font-size: 1.5vh" ng-click="saveEinsatz()">Einsatz speichern!</button>
+        <button style="font-size: 1.5vh" onclick="window.location = '/'">Neuer Einsatz</button>
+    </div>
+    <br>
+    <p style="font-size: 1.2vw;"><b>Gespeicherte Einsätze:</b></p>
+    <p style="font-size: 1.0vw;">
+        Zum Laden eines Einsatzes diesen anklicken.
+    </p>
+    <table id="einsaetze-tbl">
     <thead>
         <th>Einsatzstichwort</th>
         <th>Einsatzort</th>
@@ -8,3 +20,4 @@
     </thead>
 	<tbody style="cursor: pointer" id="einsatzTable"></tbody>
 </table>
+</div>

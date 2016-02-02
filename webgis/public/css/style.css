@@ -233,6 +233,17 @@
 		/*padding: 10px 5px 10px 5px;*/
 	}
 
+	#loadMenu{
+		top: 91%;
+		left: 54%;
+		text-decoration: none;
+		font-size: 0.8vw;
+		color: black;
+		width: 4.9%;
+		height: 4%;
+		text-align: center;
+	}
+
 	#drawTest{
 		top: 40px;
 		right: 10px;

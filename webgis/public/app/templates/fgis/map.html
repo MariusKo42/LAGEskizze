@@ -48,6 +48,8 @@
 
 		<a id="datasets" ng-click="map.showDatasets()" class="map-element" href="#map">Datensätze</a>
 
+	<a id="loadMenu"  ng-click="showLoadMenu()"class="map-element" href="#map"> Speichern/ Laden</a>
+
 
 
 		<div ng-repeat="field in fields.fieldOrder.properties">
@@ -67,9 +69,6 @@ Einsatzort: <input type="text" class="titleRowInput" ng-model="einsatz.meta.eins
 Meldender: <input type="text" class="titleRowInput" ng-model="einsatz.meta.meldender"> 
 Objektnr.: <input type="text" class="titleRowInput" ng-model="einsatz.meta.objektNr" style="width: 50px;"> 
 Datum-Uhrzeitgruppe: <input type="text" class="titleRowInput" ng-model="einsatz.meta.datumUhrzeitGruppe">
-<button style="font-size: 1.5vh" ng-click="saveEinsatz()">Einsatz speichern!</button>
-<button style="font-size: 1.5vh" ng-click="showLoadMenu()">Einsatz laden</button>
-<button style="font-size: 1.5vh" onclick="window.location = '/'">Neuer Einsatz</button>
 </div>
 
 <!--black area on the left -->

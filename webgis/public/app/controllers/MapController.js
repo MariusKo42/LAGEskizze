@@ -113,6 +113,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 	/* fills the table of available einsätzes from DB */
 	$scope.showLoadMenu = function(){
+		$scope.fields.cancel();
+		$scope.fields.currentField.id = undefined;
 		$scope.sideContent.change("/app/templates/fgis/loadMenu.html");
 		try{$scope.map.editCancel();}catch(e){}
 
@@ -494,6 +496,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 	/* click handler for datensätze button */
 	$scope.map.showDatasets = function(){
+		$scope.fields.cancel();
+		$scope.fields.currentField.id = undefined;
 		if ($scope.sideContent.template == "/app/templates/fgis/_datasets.html"){
 			$scope.sideContent.change("");
 		}
