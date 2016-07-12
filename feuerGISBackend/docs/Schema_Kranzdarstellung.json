@@ -1,0 +1,21 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": 'TZ_Position',
+	"description": 'Taktische Zeichen in der Kranzdarstellung',
+	"type": 'object',
+	"properties": {
+		"Kranzposition": {
+			"description": 'Position des TZ in der Kranzdarstellung.',
+			"type": 'integer',
+			"minimum": 1
+		},
+		"Kartenposition": {
+			"description": 'Koordinaten des Markers auf der Karte.',
+			"$ref": 'http://json-schema.org/geo'
+		},
+		"Zeichen": {
+			"description": 'Das Zeichen, das an der gegebenen Position gespeichert ist.',
+			"$ref": 'Taktische_Zeichen' // Das entwirft Jan
+		}
+	}
+}

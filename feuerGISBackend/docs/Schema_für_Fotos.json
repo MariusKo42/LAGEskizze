@@ -1,0 +1,14 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": 'Foto',
+	"description": 'Schema für die Speicherung von Fotos',
+	"type": 'object',
+	"properties": {
+		"_id": {
+			"type": 'ObjectID'
+		},
+		"imgData": {
+			"type": 'String'
+		}
+	}
+}
