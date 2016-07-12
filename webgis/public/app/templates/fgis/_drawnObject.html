@@ -19,4 +19,25 @@
 		<button ng-click="map.deleteObjects()">Objekte löschen</button>
 		<button ng-click="sideContent.close()">Schließen</button>
 	</li>
+
+	<div ng-hide="hideColorPicker" class="ng-hide">
+		<br>
+		<p>
+			Wählen Sie eine Farbe im Color-Picker aus, um die Farbe des Objektes zu ändern.
+		</p>
+		<!-- colorPicker-->
+		<input type='text' id='colorPicker' />
+		<button ng-click="map.changeObjectsColor()">Farbe speichern</button>
+	</div>
+
+	<br>
+	<br>
+	Kommentar zu diesem Objekt:
+	<div>
+		<textarea rows="10" cols="50" ng-model="map.objects.comment" type="text" placeholder="Kommentar hinzufügen" ></textarea>
+	</div>
+	<button ng-click="map.saveComment()">Kommentar speichern</button>
+
 </div>
+
+<script src="../../../js/initializeColorpicker.js"></script>

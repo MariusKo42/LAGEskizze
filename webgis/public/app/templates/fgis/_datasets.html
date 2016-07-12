@@ -1,16 +1,7 @@
 <h1>Datensätze</h1>
 <h2>Basiskarten</h2>
 <div class="radio">
-	<label><input type="radio" ng-click="map.showDefaultBasemap()" name="optradio" checked>DTK Sammeldienst (Standard)</label>
-	<div ng-repeat="basemap in map.datasets.basemaps">
-	  <label><input type="radio" ng-click="map.showBasemap(basemap.name)" name="optradio">{{basemap.name}}</label>
+	<div ng-repeat="basemap in map.basemaps">
+	  <label><input type="radio" ng-click="map.showBasemap(basemap.wms, basemap.layer)" name="optradio"> {{basemap.name}}</label>
 	</div>
-</div>
-<h2>Fachkarten</h2>
-<div ng-repeat="fachkarte in map.datasets.fachkarten" class="checkbox">
-  <label><input type="checkbox" ng-click="map.showFachkarte($index)" name="optradio">{{fachkarte.name}}</label>
-</div>
-<h2>Daten ohne Raumbezug</h2>
-<div ng-repeat="nonspatial in map.datasets.nonspatial">
-  <a href="#/map" style="text-decoration: none; color: white;" ng-click="map.showNonspatial($index)" name="nonspatial">{{nonspatial.name}}</a>
 </div>

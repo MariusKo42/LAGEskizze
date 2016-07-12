@@ -1,0 +1,102 @@
+[
+        {
+            "name": "Grundzeichen",
+            "id": 1
+        },
+        {
+            "name": "Fachaufgaben, Gefahrenabwehr",
+            "id": 2
+        },
+        {
+            "name": "Brandschutz Technische Hilfe",
+            "id": 3
+        },
+        {
+            "name": "Darstellung von Informations- und Kommunikationsmitteln über Draht",
+            "id": 4
+        },
+        {
+            "name": "Darstellung von Informations- und Kommunikationsmitteln über Funk",
+            "id": 5
+        },        
+        {
+            "name": "Führung und Leitung",
+            "id": 6
+        },
+        {
+            "name": "Führungskräfte",
+            "id": 7
+        },
+        {
+            "name": "Grundzeichen",
+            "id": 8
+        },
+        {
+            "name": "Landgebundene Fahrzeuge",
+            "id": 9
+        },
+        {
+            "name": "Luftfahrzeuge",
+            "id": 10
+        },
+        {
+            "name": "Personen mit Sonderfunktion",
+            "id": 11
+        },
+        {
+            "name": "Rettungswesen Sanitätswesen Gesundheitswesen",
+            "id": 12
+        },
+        {
+            "name": "Sonstige Einsatzmittel Gefahrenquellen",
+            "id": 13
+        },
+        {
+            "name": "Sonstige Zeichen",
+            "id": 14
+        },
+        {
+            "name": "Taktische Einheit",
+            "id": 15
+        },
+        {
+            "name": "Taktische Verbände",
+            "id": 16
+        },
+        {
+            "name": "Trennlinien Und Grenzen von Einsatzräumen",
+            "id": 17
+        },
+        {
+            "name": "Versorgung Feuerwehr",
+            "id": 18
+        },
+        {
+            "name": "Versorgung Malteser",
+            "id": 19
+        },        
+        {
+            "name": "Versorgung und Logistik",
+            "id": 20
+        },
+        {
+            "name": "Verwaltungsstufen",
+            "id": 21
+        },
+        {
+            "name": "Veterinärwesen",
+            "id": 22
+        },
+        {
+            "name": "Wasserfahrzeug",
+            "id": 23
+        },
+        {
+            "name": "Zeichen zur Darstellung von Richtungen Bewegungen Sammelpunkten",
+            "id": 24
+        },
+        {
+            "name": "Zeichen zur Gefahren-Schadendarstellung",
+            "id": 25
+        }
+]

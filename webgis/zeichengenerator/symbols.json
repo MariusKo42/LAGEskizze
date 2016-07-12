@@ -1,0 +1,870 @@
+[
+    {
+        "name": "taktische Formation",
+        "category": "Grundzeichen",
+        "keywords": ["taktische", "Formation", "Grundzeichen", "Dienststelle", "Einheit", "Verband"],
+        "filename": "Grundzeichen_taktischeFormation.svg",
+        "id" : "1"
+    },
+    {
+        "name": "Befehlsstelle",
+        "category": "Grundzeichen",
+        "keywords": ["Befehlsstelle", "Führungsstelle", "Grundzeichen"],
+        "filename": "Grundzeichen_befehlsstelle.svg",
+        "id" : "2"
+    },
+    {
+        "name": "Stelle, Einrichtung",
+        "category": "Grundzeichen",
+        "keywords": ["Stelle", "Einrichtung", "Grundzeichen"],
+        "filename": "Grundzeichen_stelleEinrichtung.svg",
+        "id" : "3"
+    },
+    {
+        "name": "Person",
+        "category": "Grundzeichen",
+        "keywords": ["Person", "Grundzeichen"],
+        "filename": "Grundzeichen_person.svg",
+        "id" : "4"
+    },
+    {
+        "name": "Gebiet, Fläche",
+        "category": "Grundzeichen",
+        "keywords": ["Gebiet", "Fläche", "Grundzeichen"],
+        "filename": "Grundzeichen_gebietFlaeche.svg",
+        "id" : "5"
+    },
+    {
+        "name": "Flächenbrand",
+        "category": "Grundzeichen",
+        "keywords": ["Flächenbrand", "Grundzeichen"],
+        "filename": "Grundzeichen_flaechenbrand.svg",
+        "id" : "6"
+    },
+    {
+        "name": "Überschwemmtes Gebiet, Hochwassser",
+        "category": "Grundzeichen",
+        "keywords": ["überschwemmt", "Gebiet", "Hochwassser", "Grundzeichen"],
+        "filename": "Grundzeichen_ueberschwemmtesGebietHochwasser.svg",
+        "id" : "7"
+    },
+    {
+        "name": "Dürregebiet",
+        "category": "Grundzeichen",
+        "keywords": ["Dürregebiet", "Grundzeichen"],
+        "filename": "Grundzeichen_duerregebiet.svg",
+        "id" : "8"
+    },
+    {
+        "name": "Einschränkungen, Ausfall der Versorgung",
+        "category": "Grundzeichen",
+        "keywords": ["Einschränkungen", "Ausfall", "Versorgung", "Grundzeichen"], 
+        "filename": "Grundzeichen_einschraenkungenAusfallDerVersorgung.svg",
+        "id" : "9"
+    },
+    {
+        "name": "Kontaminiertes Gebiet",
+        "category": "Grundzeichen",
+        "keywords": ["kontaminiert", "Gebiet", "Grundzeichen"],
+        "filename": "Grundzeichen_kontaminiertesGebiet.svg",
+        "id" : "10"
+    },
+    {
+        "name": "drohende Gefahr",
+        "category": "Grundzeichen",
+        "keywords": ["drohende", "Gefahr", "Grundzeichen"],
+        "filename": "Grundzeichen_drohendeGefahr.svg",
+        "id" : "11"
+    },
+    {
+        "name": "akute Gefahr",
+        "category": "Grundzeichen",
+        "keywords": ["akute", "Gefahr", "Grundzeichen"],
+        "filename": "Grundzeichen_akuteGefahr.svg",
+        "id" : "12"
+    },
+    {
+        "name": "Von einer Gefahr noch betroffenes Gebiet, ehemals betroffenes Gebiet",
+        "category": "Grundzeichen",
+        "keywords": ["Gefahr", "betroffen", "Gebiet", "ehemals", "Grundzeichen"],
+        "filename": "Grundzeichen_gefahrNochBetroffenesGebiet.svg",
+        "id" : "13"
+    },
+    {
+        "name": "KatS-Alarm",
+        "category": "Grundzeichen",
+        "keywords": ["Katastrophen", "Alarm", "Grundzeichen", "KatS", "Katastrophenschutz", "KatS-Alarm"],
+        "filename": "Grundzeichen_katS-Alarm.svg",
+        "id" : "14"
+    },
+    {
+        "name": "Maßnahme Allgemein",
+        "category": "Grundzeichen",
+        "keywords": ["Maßnahme", "Allgemein", "Grundzeichen"],
+        "filename": "Grundzeichen_maßnahmeAllgemein.svg",
+        "id" : "15"
+    },
+    {
+        "name": "Anlass, Ereignis",
+        "category": "Grundzeichen",
+        "keywords": ["Anlass","Ereignis","Grundzeichen"],
+        "filename": "Grundzeichen_anlassEreignis.svg",
+        "id" : "16"
+    },
+    {
+        "name": "Gefahr",
+        "category": "Grundzeichen",
+        "keywords": ["Gefahr", "Grundzeichen"],
+        "filename": "Grundzeichen_gefahr.svg",
+        "id" : "17"
+    },
+    {
+        "name": "ortsgebunden, ortsfest",
+        "category": "Grundzeichen",
+        "keywords": ["ortsgebunden", "ortsfest", "Grundzeichen"],
+        "filename": "Grundzeichen_ortsgebundenOrtsfest.svg",
+        "id" : "18"
+    },
+    {
+        "name": "Gebäude",
+        "category": "Grundzeichen",
+        "keywords": ["Gebäude", "Grundzeichen"],
+        "filename": "Grundzeichen_gebaeude.svg",
+        "id" : "19"
+    },
+    {
+        "name": "Brandbekämpfung / Löscheinsatz",
+        "category": "Brandschutz, technische Hilfe",
+        "keywords": ["Brandbekämpfung", "Löscheinsatz", "Fachaufgaben", "Gefahrenabwehr"], 
+        "filename": "BrandschutzTechnischeHilfe_BrandbekaempfungLoescheinsatz.svg",
+        "id" : "20"
+    },
+    {
+        "name": "Retten aus Höhen und Tiefen",
+        "category": "Brandschutz, technische Hilfe",
+        "keywords": ["Retten", "Höhen", "Tiefen", "Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "BrandschutzTechnischeHilfe_RettenHoehenTiefen.svg",
+        "id" : "21"
+    },
+    {
+        "name": "Wasserversorgung und -förderung",
+        "category": "Brandschutz, technische Hilfe",
+        "keywords": ["Wasserversorgung", "Wasserförderung", "Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "BrandschutzTechnischeHilfe_WasserversorgungFoerderung.svg",
+        "id" : "22"
+    },
+    {
+        "name": "Technische Hilfeleistung (einschl. Retter)",
+        "category": "Brandschutz, technische Hilfe",
+        "keywords": ["Technische", "Hilfeleistung", "Retter", "Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "BrandschutzTechnischeHilfe_TechnischeHilfeleistung.svg",
+        "id" : "23"
+    },
+    {
+        "name": "Heben von Lasten",
+        "category": "Brandschutz, technische Hilfe",
+        "keywords": ["Heben", "Lasten", "Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "BrandschutzTechnischeHilfe_HebenLasten.svg",
+        "id" : "24"
+    },
+    {
+        "name": "Bergen, Bergung",
+        "category": "Brandschutz, technische Hilfe",
+        "keywords": ["Bergen", "Bergung", "Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "BrandschutzTechnischeHilfe_BergenBergung.svg",
+        "id" : "25"
+    },
+    {
+        "name": "Räumen, Beseitigung von Hindernissen",
+        "category": "Brandschutz, technische Hilfe",
+        "keywords": ["Räumen", "Beseitigung", "Hindernisse", "Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "BrandschutzTechnischeHilfe_RaeumenBeseitigungHindernisse.svg",
+        "id" : "26"
+    },
+    {
+        "name": "Entschärfung, Kampfmittelräumung",
+        "category": "Brandschutz, technische Hilfe",
+        "keywords": ["Entschärfung", "Kampfmittelräumung", "Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "BrandschutzTechnischeHilfe_EntschaerfungKampfmittelraeumung.svg",
+        "id" : "27"
+    },
+    {
+        "name": "Sprengen",
+        "category": "Brandschutz, technische Hilfe",
+        "keywords": ["Sprengen", "Fachaufgaben", "Gefahrenabwehr"], 
+        "filename": "BrandschutzTechnischeHilfe_Sprengen.svg",
+        "id" : "28"
+    },
+    {
+        "name": "Transport",
+        "category": "Brandschutz, technische Hilfe",
+        "keywords": ["Transport","Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "BrandschutzTechnischeHilfe_Transport.svg",
+        "id" : "29"
+    },
+    {
+        "name": "Beleuchtung",
+        "category": "Brandschutz, technische Hilfe",
+        "keywords": ["Beleuchtung", "Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "BrandschutzTechnischeHilfe_Beleuchtung.svg",
+        "id" : "30"
+    },
+    {
+        "name": "Einsatz von Luftfahrzeugen",
+        "category": "Brandschutz, technische Hilfe",
+        "keywords": ["Einsatz", "Luftfahrzeuge", "Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "BrandschutzTechnischeHilfe_EinsatzLuftfahrzeuge.svg",
+        "id" : "31"
+    },
+    {
+        "name": "Ärztliche Versorgung",
+        "category": "Rettungswesen, Sanitätswesen, Gesundheitswesen",
+        "keywords": ["Ärztliche", "Versorgung", "Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "RettungswesenSanitaetswesenGesundheitswesen_AerztlicheVersorgung.svg",
+        "id" : "32"
+    },
+    {
+        "name": "Rettungswesen, Sanitätswesen, Gesundheitswesen",
+        "category": "Rettungswesen, Sanitätswesen, Gesundheitswesen",
+        "keywords": ["Rettungswesen", "Sanitätswesen", "Gesundheitswesen", "Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "RettungswesenSanitaetswesenGesundheitswesen_RettungswesenSanitaetswesenGesundheitswesen.svg",
+        "id" : "33"
+    },
+    {
+        "name": "Betreuung",
+        "category": "Betreuungswesen",
+        "keywords": ["Betreuung", "Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "Betreuungswesen_Betreuung.svg",
+        "id" : "34"
+    },
+    {
+        "name": "Unterbringung",
+        "category": "Betreuungswesen",
+        "keywords": ["Unterbringung", "Fachaufgaben", "Gefahrenabwehr", "Betreuungswesen"],
+        "filename": "Betreuungswesen_Unterbringung.svg",
+        "id" : "35"
+    },
+    {
+        "name": "Instandhaltung, Instandsetzung, materielle Infrastruktur",
+        "category": "Versorgung und Logistik",
+        "keywords": ["Instandhaltung", "Instandsetzung", "materielle", "Infrastruktur", "Fachaufgaben", "Gefahrenabwehr"], 
+        "filename": "VersorgungLogistik_InstandhaltungInstandsetzungMaterielleInfrastruktur.svg",
+        "id" : "36"
+    },    
+    {
+        "name": "Versorgung mit Brauchwasser",
+        "category": "Versorgung und Logistik",
+        "keywords": ["Versorgung", "Brauchwasser", "Fachaufgaben", "Brauchwasser", "Logistik"],
+        "filename": "VersorgungLogistik_VersorgungBrauchwasser.svg",
+        "id" : "37"
+    },    
+    {
+        "name": "Versorgung mit Trinkwasser",
+        "category": "Versorgung und Logistik",
+        "keywords": ["Versorgung", "Trinkwasser", "Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "VersorgungLogistik_VersorgungTrinkwasser.svg",
+        "id" : "38"
+    },    
+    {
+        "name": "Versorgung mit Elektrizität",
+        "category": "Versorgung und Logistik",
+        "keywords": ["Versorgung", "Elektrizität", "Fachaufgaben", "Gefahrenabwehr", "Logistik"],
+        "filename": "VersorgungLogistik_VersorgungElektrizitaet.svg",
+        "id" : "39"
+    },        
+    {
+        "name": "Versorgung, Logistik",
+        "category": "Versorgung und Logistik",
+        "keywords": ["Versorgung", "Logistik", "Fachaufgaben", "Gefahrenabwehr"],
+        "filename": "VersorgungLogistik_VersorgungLogistik.svg",
+        "id" : "40"
+    },        
+    {
+        "name": "Versorgung mit Verbrauchsgütern und Betriebsstoffen",
+        "category": "Versorgung und Logistik",
+        "keywords": ["Versorgung", "Verbrauchsgüter", "Betriebsstoffe", "Fachaufgaben", "Gefahrenabwehr", "Logistik"],
+        "filename": "VersorgungLogistik_VersorgungVerbrauchsgüterBetriebsstoffe.svg",
+        "id" : "41"
+    },
+    {
+        "name": "Veterinärwesen",
+        "category": "Veterinärwesen",
+        "keywords": ["Veterinärwesen", "Fachaufgaben", "Gefahrenabwehr"], 
+        "filename": "Veterinaerwesen_Veterinaerwesen.svg",
+        "id" : "42"
+    },
+    {
+        "name": "Schlachten",
+        "category": "Veterinärwesen",
+        "keywords": ["Schlachten", "Fachaufgaben", "Gefahrenabwehr", "Veterinärwesen"],
+        "filename": "Veterinaerwesen_Schlachten.svg",
+        "id" : "43"
+    },      
+    {
+        "name": "Fuehrung, Leitung, Stab",
+        "category": "Fuehrung und Leitung",
+        "keywords": ["Fachaufgaben", "Gefahrenabwehr", "Führung", "Leitung", "Stab"],
+        "filename": "FuehrungLeitung_fuehrungLeitungStab.svg",
+        "id" : "44"
+    },  
+    {
+        "name": "Information und Kommunikation Fernmeldewesen",
+        "category": "Fuehrung und Leitung",
+        "keywords": ["Fachaufgaben", "Gefahrenabwehr", "Führung", "Leitung", "Information", "Kommunikation", "Fernmeldewesen"],
+        "filename": "FuehrungLeitung_informationKommunikationFernmeldewesen.svg",
+        "id" : "45"
+    },  
+    {
+        "name": "Erkundung",
+        "category": "Fuehrung und Leitung",
+        "keywords": ["Fachaufgaben", "Gefahrenabwehr", "Führung", "Leitung", "Erkundung"],
+        "filename": "FuehrungLeitung_erkundung.svg",
+        "id" : "46"
+    },  
+    {
+        "name": "Warnen",
+        "category": "Fuehrung und Leitung",
+        "keywords": ["Fachaufgaben", "Gefahrenabwehr", "Führung", "Leitung", "Warnen"],
+        "filename": "FuehrungLeitung_warnen.svg",
+        "id" : "47"
+    },  
+    {
+        "name": "Trupp",
+        "category": "Taktische Einheiten",
+        "keywords": ["Größenordnung", "Hierarchie", "Zuordnung", "Ordnungsprinzipien", "taktische", "Einheit", "Trupp"],
+        "filename": "TaktischeEinheiten_trupp.svg",
+        "id" : "48"
+    },  
+    {
+        "name": "Staffel",
+        "category": "Taktische Einheiten",
+        "keywords": ["Größenordnung", "Hierarchie", "Zuordnung", "Ordnungsprinzipien", "taktische", "Einheit", "Staffel"],
+        "filename": "TaktischeEinheiten_staffel.svg",
+        "id" : "49"
+    },  
+    {
+        "name": "Gruppe",
+        "category": "Taktische Einheiten",
+        "keywords": ["Größenordnung", "Hierarchie", "Zuordnung", "Ordnungsprinzipien", "taktische", "Einheit", "Gruppe"],
+        "filename": "TaktischeEinheiten_gruppe.svg",
+        "id" : "50"
+    },  
+    {
+        "name": "Zug",
+        "category": "Taktische Einheiten",
+        "keywords": ["Größenordnung", "Hierarchie", "Zuordnung", "Ordnungsprinzipien", "taktische", "Einheit", "Zug"],
+        "filename": "TaktischeEinheiten_zug.svg",
+        "id" : "51"
+    },  
+    {
+        "name": "Zugtrupp",
+        "category": "Taktische Einheiten",
+        "keywords": ["Größenordnung", "Hierarchie", "Zuordnung", "Ordnungsprinzipien", "taktische", "Einheit", "Zugtrupp"],
+        "filename": "TaktischeEinheiten_zugtrupp.svg",
+        "id" : "52"
+    },  
+    {
+        "name": "Bereitschaft",
+        "category": "Taktische Verbaende",
+        "keywords": ["Größenordnung", "Hierarchie", "Zuordnung", "Ordnungsprinzipien", "taktischer", "Verband", "Bereitschaft"],
+        "filename": "TaktischeVerbaende_bereitschaft.svg",
+        "id" : "53"
+    },  
+    {
+        "name": "Abteilung",
+        "category": "Taktische Verbaende",
+        "keywords": ["Größenordnung", "Hierarchie", "Zuordnung", "Ordnungsprinzipien", "taktischer", "Verband", "Abteilung"],
+        "filename": "TaktischeVerbaende_abteilung.svg",
+        "id" : "54"
+    },  
+    {
+        "name": "Großverband",
+        "category": "Taktische Verbaende",
+        "keywords": ["Größenordnung", "Hierarchie", "Zuordnung", "Ordnungsprinzipien", "taktischer", "Verband", "Großverband"],
+        "filename": "TaktischeVerbaende_großverband.svg",
+        "id" : "55"
+    },  
+    {
+        "name": "Gemeinde, kreisangehoerige Stadt",
+        "category": "Verwaltungsstufen",
+        "keywords": ["Größenordnung", "Hierarchie", "Zuordnung", "Ordnungsprinzipien", "Verwaltungsstufe", "Gemeinde", "kreisangehörig", "Stadt"],
+        "filename": "Verwaltungsstufen_gemeindeKreisangehoerigeStadt.svg",
+        "id" : "56"
+    },  
+    {
+        "name": "Kreis/Landkreis, kreisfreie Stadt",
+        "category": "Verwaltungsstufen",
+        "keywords": ["Größenordnung", "Hierarchie", "Zuordnung", "Ordnungsprinzipien", "Verwaltungsstufe", "Kreis", "Landkreis", "kreisfrei", "Stadt"],
+        "filename": "Verwaltungsstufen_kreisLandkreisKreisfreieStadt.svg",
+        "id" : "57"
+    },  
+    {
+        "name": "Bezirk",
+        "category": "Verwaltungsstufen",
+        "keywords": ["Größenordnung", "Hierarchie", "Zuordnung", "Ordnungsprinzipien", "Verwaltungsstufe", "Bezirk"],
+        "filename": "Verwaltungsstufen_bezirk.svg",
+        "id" : "58"
+    },  
+    {
+        "name": "Land/Freistaat",
+        "category": "Verwaltungsstufen",
+        "keywords": ["Größenordnung", "Hierarchie", "Zuordnung", "Ordnungsprinzipien", "Verwaltungsstufe", "Land", "Freistaat"],
+        "filename": "Verwaltungsstufen_landFreistaat.svg",
+        "id" : "59"
+    },  
+    {
+        "name": "Bundesrepublik Deutschland",
+        "category": "Verwaltungsstufen",
+        "keywords": ["Größenordnung", "Hierarchie", "Zuordnung", "Ordnungsprinzipien", "Verwaltungsstufe", "Bundesrepublik", "Deutschland"],
+        "filename": "Verwaltungsstufen_bundesrepublikDeutschland.svg",
+        "id" : "60"
+    },  
+    {
+        "name": "Europaeische Union",
+        "category": "Verwaltungsstufen",
+        "keywords": ["Größenordnung", "Hierarchie", "Zuordnung", "Ordnungsprinzipien", "Verwaltungsstufe", "Europa", "EU"],
+        "filename": "Verwaltungsstufen_europaeischeUnion.svg",
+        "id" : "61"
+    },  
+    {
+        "name": "Fahrzeuge, landgebunden",
+        "category": "Landgebundene Fahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "Fahrzeuge", "landgebunden"],
+        "filename": "LandgebundeneFahrzeuge_fahrzeugeLandgebunden.svg",
+        "id" : "62"
+    },  
+    {
+        "name": "Kraftfahrzeug, landgebunden",
+        "category": "Landgebundene Fahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "landgebunden", "Kraftfahrzeug"],
+        "filename": "LandgebundeneFahrzeuge_kraftfahrzeugLandgebunden.svg",
+        "id" : "63"
+    },  
+    {
+        "name": "Kraftfahrzeug, mehrspurig, gelaendegaengig",
+        "category": "Landgebundene Fahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "landgebunden", "Kraftfahrzeug", "mehrspurig", "geländegängig"],
+        "filename": "LandgebundeneFahrzeuge_kraftfahrzeugMehrspurigGelaendegaengig.svg",
+        "id" : "64"
+    },  
+    {
+        "name": "Wechselladerfahrzeug",
+        "category": "Landgebundene Fahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "landgebunden", "Wechselladerfahrzeug"],
+        "filename": "LandgebundeneFahrzeuge_wechselladerfahrzeug.svg",
+        "id" : "65"
+    },  
+    {
+        "name": "Abrollbehaelter, Container",
+        "category": "Landgebundene Fahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "landgebunden", "Abrollbehälter", "Container"],
+        "filename": "LandgebundeneFahrzeuge_abrollbehaelterContainer.svg",
+        "id" : "66"
+    },  
+    {
+        "name": "Anhaenger",
+        "category": "Landgebundene Fahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "landgebunden", "Anhänger"],
+        "filename": "LandgebundeneFahrzeuge_anhaenger.svg",
+        "id" : "67"
+    },  
+    {
+        "name": "Schienenfahrzeug",
+        "category": "Landgebundene Fahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "landgebunden", "Schienenfahrzeug"],
+        "filename": "LandgebundeneFahrzeuge_schienenfahrzeug.svg",
+        "id" : "68"
+    },  
+    {
+        "name": "Kettenfahrzeug",
+        "category": "Landgebundene Fahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "landgebunden", "Kettenfahrzeug"],
+        "filename": "LandgebundeneFahrzeuge_kettenfahrzeug.svg",
+        "id" : "69"
+    },  
+    {
+        "name": "Fahrrad",
+        "category": "Landgebundene Fahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "landgebunden", "Fahrrad"],
+        "filename": "LandgebundeneFahrzeuge_fahrrad.svg",
+        "id" : "70"
+    },  
+    {
+        "name": "Kraftrad",
+        "category": "Landgebundene Fahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "landgebunden", "Kraftrad"],
+        "filename": "LandgebundeneFahrzeuge_kraftrad.svg",
+        "id" : "71"
+    },  
+    {
+        "name": "Raeumgeraet",
+        "category": "Landgebundene Fahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "landgebunden", "Räumgerät"],
+        "filename": "LandgebundeneFahrzeuge_raeumgeraet.svg",
+        "id" : "72"
+    },  
+    {
+        "name": "Hebegeraet",
+        "category": "Landgebundene Fahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "landgebunden", "Hebegerät"],
+        "filename": "LandgebundeneFahrzeuge_hebegeraet.svg",
+        "id" : "73"
+    },  
+    {
+        "name": "Bagger",
+        "category": "Landgebundene Fahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "landgebunden", "Bagger"],
+        "filename": "LandgebundeneFahrzeuge_bagger.svg",
+        "id" : "74"
+    },  
+    {
+        "name": "Wasserfahrzeug",
+        "category": "Wasserfahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "Wasserfahrzeug"],
+        "filename": "Wasserfahrzeuge_wasserfahrzeug.svg",
+        "id" : "75"
+    },  
+    {
+        "name": "Flugzeug",
+        "category": "Luftfahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "Luftfahrzeug", "Flugzeug"],
+        "filename": "Luftfahrzeuge_flugzeug.svg",
+        "id" : "76"
+    },  
+    {
+        "name": "Hubschrauber",
+        "category": "Luftfahrzeuge",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Fahrzeug", "Luftfahrzeug", "Hubschrauber"],
+        "filename": "Luftfahrzeuge_hubschrauber.svg",
+        "id" : "77"
+    },  
+    {
+        "name": "Sirene",
+        "category": "Sonstige Einsatzmittel, Gefahrenquellen",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Sirene"],
+        "filename": "SonstigeEinsatzmittelGefahrenquellen_sirene.svg",
+        "id" : "78"
+    },  
+    {
+        "name": "Lautsprecher",
+        "category": "Sonstige Einsatzmittel, Gefahrenquellen",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Lautsprecher"],
+        "filename": "SonstigeEinsatzmittelGefahrenquellen_lautsprecher.svg",
+        "id" : "79"
+    },  
+    {
+        "name": "Sprengmittel, Sprengkoerper, Blindgaenger",
+        "category": "Sonstige Einsatzmittel, Gefahrenquellen",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Sprengmittel", "Sprengkörper", "Blindgänger"],
+        "filename": "SonstigeEinsatzmittelGefahrenquellen_sprengmittelSprengkoerperBlindgaenger.svg",
+        "id" : "80"
+    },  
+    {
+        "name": "Trinkwasser",
+        "category": "Sonstige Einsatzmittel, Gefahrenquellen",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Trinkwasser"],
+        "filename": "SonstigeEinsatzmittelGefahrenquellen_trinkwasser.svg",
+        "id" : "81"
+    },  
+    {
+        "name": "Brauchwasser",
+        "category": "Sonstige Einsatzmittel, Gefahrenquellen",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Brauchwasser"],
+        "filename": "SonstigeEinsatzmittelGefahrenquellen_brauchwasser.svg",
+        "id" : "82"
+    },  
+    {
+        "name": "Versorgung mit Betriebsstoffen und Verbrauchsguetern",
+        "category": "Sonstige Einsatzmittel, Gefahrenquellen",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Versorgung", "Betriebsstoffe", "Verbrauchsgüter"],
+        "filename": "SonstigeEinsatzmittelGefahrenquellen_betriebsstoffversorgungVerbrauchsgueterversorgung.svg",
+        "id" : "83"
+    },  
+    {
+        "name": "Verpflegung",
+        "category": "Sonstige Einsatzmittel, Gefahrenquellen",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Verpflegung"],
+        "filename": "SonstigeEinsatzmittelGefahrenquellen_verpflegung.svg",
+        "id" : "84"
+    },  
+    {
+        "name": "Unterbringung",
+        "category": "Sonstige Einsatzmittel, Gefahrenquellen",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Unterbringung", "Unterkunft"],
+        "filename": "SonstigeEinsatzmittelGefahrenquellen_unterbringung.svg",
+        "id" : "85"
+    },  
+    {
+        "name": "Zelt",
+        "category": "Sonstige Einsatzmittel, Gefahrenquellen",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Zelt"],
+        "filename": "SonstigeEinsatzmittelGefahrenquellen_zelt.svg",
+        "id" : "86"
+    },  
+    {
+        "name": "Geraete",
+        "category": "Sonstige Einsatzmittel, Gefahrenquellen",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Geräte"],
+        "filename": "SonstigeEinsatzmittelGefahrenquellen_geraete.svg",
+        "id" : "87"
+    },  
+    {
+        "name": "Bruecke",
+        "category": "Sonstige Einsatzmittel, Gefahrenquellen",
+        "keywords": ["Gegenstand", "Einsatzmittel", "Gefahrenquelle", "Brücke"],
+        "filename": "SonstigeEinsatzmittelGefahrenquellen_bruecke.svg",
+        "id" : "88"
+    },  
+    {
+        "name": "Richtung des Vortragens eines Einsatzes",
+        "category": "Richtungen, Bewegungen, Sammelpunkte",
+        "keywords": ["Richtungen", "Bewegungen", "Sammelpunkte", "Tendenzen", "Einsatz"],
+        "filename": "RichtungenBewegungenSammelpunkte_richtungEinsatz.svg",
+        "id" : "89"
+    },
+    {
+        "name": "Richtung, gerichtete Bewegung, Verbindung",
+        "category": "Richtungen, Bewegungen, Sammelpunkte",
+        "keywords": ["Richtungen", "Bewegungen", "Sammelpunkte", "Tendenzen", "Richtung", "gerichtet", "Bewegung", "Verbindung"],
+        "filename": "RichtungenBewegungenSammelpunkte_richtungGerichteteBewegungVerbindung.svg",
+        "id" : "90"
+    },
+    {
+        "name": "Ausgangspunkt einer Bewegung",
+        "category": "Richtungen, Bewegungen, Sammelpunkte",
+        "keywords": ["Richtungen", "Bewegungen", "Sammelpunkte", "Tendenzen", "Ausgangspunkt", "Bewegung"],
+        "filename": "RichtungenBewegungenSammelpunkte_ausgangspunktBewegung.svg",
+        "id" : "91"
+    },
+    {
+        "name": "Endpunkt einer Bewegung",
+        "category": "Richtungen, Bewegungen, Sammelpunkte",
+        "keywords": ["Richtungen", "Bewegungen", "Sammelpunkte", "Tendenzen", "Endpunkt", "Bewegung"],
+        "filename": "RichtungenBewegungenSammelpunkte_endpunktBewegung.svg",
+        "id" : "92"
+    },   
+    {
+        "name": "Bewegung in zwei Richtungen",
+        "category": "Richtungen, Bewegungen, Sammelpunkte",
+        "keywords": ["Richtungen", "Bewegungen", "Sammelpunkte", "Tendenzen", "Bewegung", "zwei", "Richtung"],
+        "filename": "RichtungenBewegungenSammelpunkte_bewegungZweiRichtungen.svg",
+        "id" : "93"
+    },
+    {
+        "name": "Sammeln",
+        "category": "Richtungen, Bewegungen, Sammelpunkte",
+        "keywords": ["Richtungen", "Bewegungen", "Sammelpunkte", "Tendenzen", "Sammeln"],
+        "filename": "RichtungenBewegungenSammelpunkte_sammeln.svg",
+        "id" : "94"
+    },
+    {
+        "name": "Tendenz steigend",
+        "category": "Richtungen, Bewegungen, Sammelpunkte",
+        "keywords": ["Richtungen", "Bewegungen", "Sammelpunkte", "Tendenzen", "Tendenz", "steigend"],
+        "filename": "RichtungenBewegungenSammelpunkte_tendenzSteigend.svg",
+        "id" : "95"
+    },
+    {
+        "name": "Tendenz unverändert",
+        "category": "Richtungen, Bewegungen, Sammelpunkte",
+        "keywords": ["Richtungen", "Bewegungen", "Sammelpunkte", "Tendenzen", "Tendenz", "unverändert"],
+        "filename": "RichtungenBewegungenSammelpunkte_tendenzUnveraendert.svg",
+        "id" : "96"
+    },
+    {
+        "name": "Tendenz fallend",
+        "category": "Richtungen, Bewegungen, Sammelpunkte",
+        "keywords": ["Richtungen", "Bewegungen", "Sammelpunkte", "Tendenzen", "Tendenz", "fallend"],
+        "filename": "RichtungenBewegungenSammelpunkte_tendezFallend.svg",
+        "id" : "97"
+    },
+    {
+        "name": "geringfügig erhöhte Aktivität bis 25% Ausfall",
+        "category": "Richtungen, Bewegungen, Sammelpunkte",
+        "keywords": ["Richtungen", "Bewegungen", "Sammelpunkte", "Tendenzen", "geringfügig", "erhöht", "Aktivität", "25%", "Ausfall"],
+        "filename": "RichtungenBewegungenSammelpunkte_geringfuegigErhoehteAktivitaet25%Ausfall.svg",
+        "id" : "98"
+    },
+    {
+        "name": "moderat erhöhte Aktivität bis 50% Ausfall",
+        "category": "Richtungen, Bewegungen, Sammelpunkte",
+        "keywords": ["Richtungen", "Bewegungen", "Sammelpunkte", "Tendenzen", "moderat", "erhöht", "Aktivität", "50%", "Ausfall"],
+        "filename": "RichtungenBewegungenSammelpunkte_moderatErhoehteAktivitaet50%Ausfall.svg",
+        "id" : "99"
+    },
+    {
+        "name": "deutlich erhöhte Aktivität bis 75% Ausfall",
+        "category": "Richtungen, Bewegungen, Sammelpunkte",
+        "keywords": ["Richtungen", "Bewegungen", "Sammelpunkte", "Tendenzen", "deutlich", "erhöht", "Aktivität", "75%", "Ausfall"],
+        "filename": "RichtungenBewegungenSammelpunkte_deutlichErhoehteAktivitaet75%Ausfall.svg",
+        "id" : "100"
+    },
+    {
+        "name": "stark erhöhte Aktivität/Totalausfall",
+        "category": "Richtungen, Bewegungen, Sammelpunkte",
+        "keywords": ["Richtungen", "Bewegungen", "Sammelpunkte", "Tendenzen", "stark", "erhöht", "Aktivität", "100%", "Ausfall", "Totalausfall"],
+        "filename": "RichtungenBewegungenSammelpunkte_starkErhoehteAktivitaetTotalausfall.svg",
+        "id" : "101"
+    },
+    {
+        "name": "Bildübertragung über Draht",
+        "category": "Informations- und Kommunikationsmittel über Draht",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Draht", "Bildübertragung"],
+        "filename": "InformationsKommunikationsmittelDraht_bilduebertragung.svg",
+        "id" : "102"
+    },
+    {
+        "name": "Datenübertragung über Draht",
+        "category": "Informations- und Kommunikationsmittel über Draht",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Draht", "Datenübertragung"],
+        "filename": "InformationsKommunikationsmittelDraht_datenuebertragung.svg",
+        "id" : "103"
+    },
+    {
+        "name": "Fax über Draht",
+        "category": "Informations- und Kommunikationsmittel über Draht",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Draht", "Fax"],
+        "filename": "InformationsKommunikationsmittelDraht_fax.svg",
+        "id" : "104"
+    },
+    {
+        "name": "Fernsprechen über Draht",
+        "category": "Informations- und Kommunikationsmittel über Draht",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Draht", "Fernsprechen"],
+        "filename": "InformationsKommunikationsmittelDraht_fernsprechen.svg",
+        "id" : "105"
+    },
+    {
+        "name": "Fernschreiben über Draht",
+        "category": "Informations- und Kommunikationsmittel über Draht",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Draht", "Fernschreiben"],
+        "filename": "InformationsKommunikationsmittelDraht_fernschreiben.svg",
+        "id" : "106"
+    },
+    {
+        "name": "Festbildübertragung",
+        "category": "Informations- und Kommunikationsmittel über Draht",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Draht", "Festbildübertragung"],
+        "filename": "InformationsKommunikationsmittelDraht_festbilduebertragung.svg",
+        "id" : "107"
+    },
+    {
+        "name": "Kabelbau",
+        "category": "Informations- und Kommunikationsmittel über Draht",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Draht", "Kabelbau"],
+        "filename": "InformationsKommunikationsmittelDraht_kabelbau.svg",
+        "id" : "108"
+    },
+    {
+        "name": "Bildübertragung über Funk",
+        "category": "Informations- und Kommunikationsmittel über Funk",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Funk", "Bildübertragung"],
+        "filename": "InformationsKommunikationsmittelFunk_bilduebertragung.svg",
+        "id" : "109"
+    },
+    {
+        "name": "Datenübertragung über Funk",
+        "category": "Informations- und Kommunikationsmittel über Funk",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Funk", "Datendübertragung"],
+        "filename": "InformationsKommunikationsmittelFunk_Datenuebertragung.svg",
+        "id" : "110"
+    },   
+    {
+        "name": "Fax über Funk",
+        "category": "Informations- und Kommunikationsmittel über Funk",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Funk", "Fax"],
+        "filename": "InformationsKommunikationsmittelFunk_fax.svg",
+        "id" : "111"
+    },
+    {
+        "name": "Fernsprechen über Funk",
+        "category": "Informations- und Kommunikationsmittel über Funk",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Funk", "Fernsprechen"],
+        "filename": "InformationsKommunikationsmittelFunk_fernsprechen.svg",
+        "id" : "112"
+    },
+    {
+        "name": "Fernschreiben über Funk",
+        "category": "Informations- und Kommunikationsmittel über Funk",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Funk", "Fernschreiben"],
+        "filename": "InformationsKommunikationsmittelFunk_fernschreiben.svg",
+        "id" : "113"
+    },
+    {
+        "name": "Festbildübertragung über Funk",
+        "category": "Informations- und Kommunikationsmittel über Funk",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Funk", "Festbildübertragung"],
+        "filename": "InformationsKommunikationsmittelFunk_festbilduebertragung.svg",
+        "id" : "114"
+    },
+    {
+        "name": "Relaisfunkbetrieb",
+        "category": "Informations- und Kommunikationsmittel über Funk",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Funk", "Relaisfunkbetrieb"],
+        "filename": "InformationsKommunikationsmittelFunk_relaisfunkbetrieb.svg",
+        "id" : "115"
+    },
+    {
+        "name": "Richtbetrieb",
+        "category": "Informations- und Kommunikationsmittel über Funk",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Funk", "Richtbetrieb"],
+        "filename": "InformationsKommunikationsmittelFunk_richtbetrieb.svg",
+        "id" : "116"
+    },
+    {
+        "name": "digitaler Sprechfunk",
+        "category": "Informations- und Kommunikationsmittel über Funk",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Funk", "digital", "Sprechfunk"],
+        "filename": "InformationsKommunikationsmittelFunk_digitalerSprechfunk.svg",
+        "id" : "117"
+    },
+    {
+        "name": "Handfunkgerät (digitaler Sprechfunk)",
+        "category": "Informations- und Kommunikationsmittel über Funk",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Funk", "Handfunkgerät", "digital", "Sprechfunk"],
+        "filename": "InformationsKommunikationsmittelFunk_handfunkgeraet.svg",
+        "id" : "118"
+    },
+    {
+        "name": "Fahrzeugfunkgerät (digitaler Sprechfunk)",
+        "category": "Informations- und Kommunikationsmittel über Funk",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Funk", "Fahrzeugfunkgerät", "digital", "Sprechfunk"],
+        "filename": "InformationsKommunikationsmittelFunk_fahrzeugfunkgeraet.svg",
+        "id" : "119"
+    },
+    {
+        "name": "Feststation (digitaler Sprechfunk)",
+        "category": "Informations- und Kommunikationsmittel über Funk",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Funk", "Feststation", "digital", "Sprechfunk"],
+        "filename": "InformationsKommunikationsmittelFunk_feststation.svg",
+        "id" : "120"
+    },
+    {
+        "name": "DMO-Betrieb (digitaler Sprechfunk)",
+        "category": "Informations- und Kommunikationsmittel über Funk",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Funk", "DMO-Betrieb", "DMO", "digital", "Sprechfunk"],
+        "filename": "InformationsKommunikationsmittelFunk_DMO.svg",
+        "id" : "121"
+    },    
+    {
+        "name": "TMO-Betrieb (digitaler Sprechfunk)",
+        "category": "Informations- und Kommunikationsmittel über Funk",
+        "keywords": ["Informationsmittel", "Kommunikationsmittel", "Funk", "TMO-Betrieb", "TMO", "digital", "Sprechfunk"],
+        "filename": "InformationsKommunikationsmittelFunk_handfunkgeraet.svg",
+        "id" : "122"
+    },  
+    {
+        "name": "Hinweis auf Vermutung",
+        "category": "Sonstige Zeichen",
+        "keywords": ["sonstige", "Zeichen", "Hinweis", "Vermutung"],
+        "filename": "SonstigeZeichen_hinweisAufVermutung.svg",
+        "id" : "123"
+    },
+    {
+        "name": "Hinweis auf akute Situation",
+        "category": "Sonstige Zeichen",
+        "keywords": ["sonstige", "Zeichen", "Hinweis", "akut", "Situation"],
+        "filename": "SonstigeZeichen_hinweisAufAkuteSituation.svg",
+        "id" : "124"
+    }    
+]
