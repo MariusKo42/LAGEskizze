@@ -809,7 +809,7 @@ function getAnchorOfElement(elementId){
 function initMap(){
 	map = L.map('map', {
 		zoomControl: true
-	}).setView([51.95, 7.6], 13);
+	}).setView([51.50, 7.6], 8);
 	L.control.scale({
 		position: 'bottomright',
 		metric: true,
