@@ -592,7 +592,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		var wmsLayer = L.tileLayer.wms(wms, {
 			layers: layer,
 			format: 'image/png',
-			transparent: false
+			transparent: false,
+            attribution: '&copy; geobasis.nrw 2016'
 		});
 		basemap.clearLayers();
 		basemap.addLayer(wmsLayer);
