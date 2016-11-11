@@ -23,7 +23,11 @@
 	<div ng-hide="hideColorPicker" class="ng-hide">
 		<br>
 		<p>
-			Wählen Sie eine Farbe im Color-Picker aus, um die Farbe des Objektes zu ändern.
+			Ändern Sie die Darstellung der Geometrie.
+		</p>
+        <input type="checkbox" name="dashed" id="dashed" ng-click="map.changeDashed()"> Gestrichelte Linie
+		<p>
+			Ändern Sie die Farbe der Geomerie.
 		</p>
 		<!-- colorPicker-->
 		<input type='text' id='colorPicker' />
