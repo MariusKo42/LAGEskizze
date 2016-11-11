@@ -1,0 +1,29 @@
+{
+  "name": "lageskizze",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:eftas/LAGEskizze.git"
+  },
+  "author": "Sebastian Niklasch, Holger Fritze, Bastian Zimmer, Georg Kaspar",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^1.4.3"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "electron": "^1.4.5",
+    "express": "^4.14.0",
+    "jquery": "^3.1.1",
+    "leaflet": "^0.7.7",
+    "leaflet-draw": "^0.4.0",
+    "leaflet-geometryutil": "^0.7.2",
+    "lodash": "^4.16.6",
+    "lowdb": "^0.14.0"
+  }
+}

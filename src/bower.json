@@ -1,0 +1,33 @@
+{
+  "name": "lageskizze",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Sebastian Niklasch",
+    "Holger Fritze",
+    "Bastian Zimmer",
+    "Georg Kaspar"
+  ],
+  "license": "MIT",
+  "homepage": "http://eftas.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-route": "^1.5.8",
+    "jquery": "^3.1.1",
+    "bootstrap": "^3.3.7",
+    "json-formatter": "^0.6.0",
+    "spectrum": "^1.8.0",
+    "leaflet": "^0.7.7",
+    "leaflet-draw": "^0.4.0",
+    "leaflet-geometry": "^0.4.0"
+  }
+}
