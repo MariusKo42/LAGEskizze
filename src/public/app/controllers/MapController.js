@@ -1,5 +1,5 @@
 var app = angular.module("fgis");
-var map, drawnItems, drawControl, basemap, dashStyle;
+var map, drawnItems, drawControl, basemap, dashStyle, newColor;
 var lines,
 	linesArray = [];
 var commentsMap = new Map();
@@ -689,12 +689,13 @@ app.controller("MapController", function($scope, $http, $sce, $location){
      * Once the checkbox is selected the style of the geometry is changed
      */
 	$scope.map.changeDashed = function() {
+	    var tmpColor = drawnItems.getLayer($scope.map.objectId).options.color;
 	    if (dashStyle === null) {
 	        dashStyle = [20, 15];
-	        drawnItems.getLayer($scope.map.objectId).setStyle({color: objectColor, dashArray: dashStyle});
+	        drawnItems.getLayer($scope.map.objectId).setStyle({color: tmpColor, dashArray: dashStyle});
         } else {
             dashStyle = null;
-            drawnItems.getLayer($scope.map.objectId).setStyle({color: objectColor, dashArray: null});
+            drawnItems.getLayer($scope.map.objectId).setStyle({color: tmpColor, dashArray: null});
         }
 	}
 
