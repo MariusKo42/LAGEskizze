@@ -1,5 +1,5 @@
 var app = angular.module("fgis");
-var map, drawnItems, drawControl, basemap;
+var map, drawnItems, drawControl, basemap, dashStyle, newColor;
 var lines,
 	linesArray = [];
 var commentsMap = new Map();
@@ -198,12 +198,16 @@ app.controller("MapController", function($scope, $http, $sce, $location){
      */
 	$scope.setColorPicker = function() {
         objectColor = drawnItems.getLayer($scope.map.objectId).options.color;
+        dashStyle = drawnItems.getLayer($scope.map.objectId).options.dashArray;
         $("#colorPicker").spectrum({
             color: objectColor,
             change: function(color) {
                 newColor = color.toHexString();
             }
         });
+        // Checkbox will be checked if the dashStyle is set
+        if (dashStyle === null) $('#dashed').prop('checked', false);
+        else $('#dashed').prop('checked', true);
     };
 
 	/**
@@ -588,7 +592,8 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		var wmsLayer = L.tileLayer.wms(wms, {
 			layers: layer,
 			format: 'image/png',
-			transparent: false
+			transparent: false,
+            attribution: '&copy; geobasis.nrw 2016'
 		});
 		basemap.clearLayers();
 		basemap.addLayer(wmsLayer);
@@ -679,7 +684,20 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 	// change the color of the choosen object
 	$scope.map.changeObjectsColor = function() {
-		drawnItems.getLayer($scope.map.objectId).setStyle({color: newColor});
+		drawnItems.getLayer($scope.map.objectId).setStyle({color: newColor, dashArray: dashStyle});
+	}
+    /**
+     * Once the checkbox is selected the style of the geometry is changed
+     */
+	$scope.map.changeDashed = function() {
+	    var tmpColor = drawnItems.getLayer($scope.map.objectId).options.color;
+	    if (dashStyle === null) {
+	        dashStyle = [20, 15];
+	        drawnItems.getLayer($scope.map.objectId).setStyle({color: tmpColor, dashArray: dashStyle});
+        } else {
+            dashStyle = null;
+            drawnItems.getLayer($scope.map.objectId).setStyle({color: tmpColor, dashArray: null});
+        }
 	}
 
 	$scope.map.objects.getMeasurement = function(type, layer){
@@ -792,7 +810,7 @@ function getAnchorOfElement(elementId){
 function initMap(){
 	map = L.map('map', {
 		zoomControl: true
-	}).setView([51.95, 7.6], 13);
+	}).setView([51.50, 7.6], 8);
 	L.control.scale({
 		position: 'bottomright',
 		metric: true,

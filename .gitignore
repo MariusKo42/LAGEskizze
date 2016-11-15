@@ -35,3 +35,6 @@ src/public/lib
 # don't push Taktischen Zeichen to GitHub, as they are copyrighted (?)
 src/public/images/symbols/*.svg
 !src/public/images/symbols/_universal.svg
+
+# fire database
+src/fireDatabase.json
