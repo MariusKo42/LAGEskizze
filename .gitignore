@@ -2,6 +2,9 @@
 logs
 *.log
 
+# IntelliJ project files
+.idea/
+
 # Runtime data
 pids
 *.pid
@@ -24,12 +27,11 @@ build/Release
 
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
-node_modules
+src/node_modules
 
 # bower libs
-webgis/public/lib
-administrationsserver/admin-client/public/lib
+src/public/lib
 
 # don't push Taktischen Zeichen to GitHub, as they are copyrighted (?)
-webgis/public/images/symbols/*.svg
-!webgis/public/images/symbols/_universal.svg
+src/public/images/symbols/*.svg
+!src/public/images/symbols/_universal.svg
