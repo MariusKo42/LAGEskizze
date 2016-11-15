@@ -21,6 +21,5 @@
     ```
 3. Run application
    ```
-   # within the src directory
    node_modules/.bin/electron .
    ```
