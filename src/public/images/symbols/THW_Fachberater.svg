@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="141.732px" height="141.732px" viewBox="0 0 141.732 141.732" enable-background="new 0 0 141.732 141.732"
+	 xml:space="preserve">
+<g>
+	<defs>
+		<rect id="SVGID_1_" width="141.732" height="141.732"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
+	</clipPath>
+	<line clip-path="url(#SVGID_2_)" fill="none" stroke="#000000" stroke-width="2" x1="0" y1="28.346" x2="141.732" y2="28.346"/>
+	<line clip-path="url(#SVGID_2_)" fill="none" stroke="#000000" stroke-width="2" x1="0" y1="113.385" x2="141.732" y2="113.385"/>
+</g>
+<rect x="43.512" y="43.511" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 70.8663 171.0855)" fill="#27509B" width="54.709" height="54.71"/>
+<rect x="43.512" y="43.511" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 70.8663 171.0855)" fill="none" stroke="#27509B" stroke-width="2" width="54.709" height="54.71"/>
+<g>
+	<defs>
+		<rect id="SVGID_3_" width="141.732" height="141.732"/>
+	</defs>
+	<clipPath id="SVGID_4_">
+		<use xlink:href="#SVGID_3_"  overflow="visible"/>
+	</clipPath>
+	<path clip-path="url(#SVGID_4_)" fill="none" stroke="#FFFFFF" stroke-width="2" d="M35.6,70.866
+		c11.755,11.755,23.511,23.511,35.266,35.267c11.755-11.756,23.511-23.512,35.267-35.267C94.377,59.111,82.621,47.355,70.866,35.6
+		L35.6,70.866z"/>
+</g>
+<g>
+	<path fill="#FFFFFF" d="M55.608,75.298v3.087H49.12v-3.087h1.449v-8.776h-1.386v2.037h-2.688v-5.102h11.8v5.102h-2.667v-2.037
+		h-1.386v8.776H55.608z"/>
+	<path fill="#FFFFFF" d="M61.3,66.522h-1.449v-3.065h6.467v3.065h-1.344v2.708h4.388v-2.708h-1.365v-3.065h6.488v3.065h-1.471v8.776
+		h1.471v3.087h-6.488v-3.087h1.365v-3.002h-4.388v3.002h1.365v3.087h-6.488v-3.087H61.3V66.522z"/>
+	<path fill="#FFFFFF" d="M79.843,78.385l-3.191-11.863h-1.155v-3.065h6.026v3.065h-1.239l1.471,6.088l2.141-9.154h3.234l2.12,9.385
+		l1.491-6.32h-1.26v-3.065h6.025v3.065h-1.154L91.16,78.385h-3.359l-2.289-9.28l-2.31,9.28H79.843z"/>
+</g>
+<line fill="none" stroke="#FFFFFF" stroke-width="2" x1="59.953" y1="45.771" x2="81.78" y2="45.771"/>
+</svg>
