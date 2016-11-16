@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="141.732px" height="141.732px" viewBox="0 0 141.732 141.732" enable-background="new 0 0 141.732 141.732"
+	 xml:space="preserve">
+<polygon fill="none" stroke="#000000" stroke-width="2" stroke-linejoin="round" points="7.086,58.581 70.867,34.014 
+	134.646,58.581 "/>
+<g>
+	<defs>
+		<rect id="SVGID_1_" width="141.732" height="141.732"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
+	</clipPath>
+	<line clip-path="url(#SVGID_2_)" fill="none" stroke="#000000" stroke-width="2" x1="0" y1="28.346" x2="141.732" y2="28.346"/>
+	<line clip-path="url(#SVGID_2_)" fill="none" stroke="#000000" stroke-width="2" x1="0" y1="113.385" x2="141.732" y2="113.385"/>
+</g>
+<polyline fill="none" stroke="#000000" stroke-width="2" points="7.086,58.581 7.086,107.716 134.646,107.716 134.646,58.581 "/>
+<line fill="none" stroke="#000000" stroke-width="2" x1="70.866" y1="58.581" x2="70.866" y2="107.858"/>
+<line fill="none" stroke="#000000" stroke-width="2" x1="38.977" y1="70.9" x2="38.977" y2="95.539"/>
+<line fill="none" stroke="#000000" stroke-width="2" x1="102.756" y1="70.9" x2="102.756" y2="95.539"/>
+<line fill="none" stroke="#000000" stroke-width="2" x1="134.787" y1="83.648" x2="7.086" y2="83.648"/>
+</svg>
