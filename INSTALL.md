@@ -20,6 +20,7 @@
     bower install
     ```
 3. Run application
-   ```
-   node_modules/.bin/electron .
-   ```
+    ```
+    # from within the src directory
+    node_modules/.bin/electron .
+    ```
