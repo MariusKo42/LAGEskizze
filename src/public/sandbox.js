@@ -327,6 +327,7 @@ app.controller("mapCtrl", function($scope, $http){
             var thisImage = document.getElementById(field).getElementsByTagName('img');
             $scope.fields.currentField.id = field;
             $scope.fields.currentField.active = true;
+            currentField = $('#' + field);
             currentField.addClass("activated"); //highlight
 
             drawnItems.eachLayer(function(layer) {
@@ -636,7 +637,9 @@ app.controller("mapCtrl", function($scope, $http){
             $("#map").css('cursor', 'auto');
             $scope.map.editActive = false;
             var _element = document.getElementsByClassName($scope.map.currentEdit);
-            _element[0].children[0].children[0].click();
+            if (_element.length > 0) {
+                _element[0].children[0].children[0].click();
+            }
             $scope.map.objectId = "";
             commentsMap.delete($scope.map.objectId);
         };
