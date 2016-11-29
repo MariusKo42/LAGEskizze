@@ -11,15 +11,29 @@ const electron = require('electron');
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
+const windowManager = require('electron-window-manager');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
-
+let secondWindow;
 function createWindow() {
+    windowManager.open('mainWindow', 'LAGEplan', 'file://' + __dirname + '/public/index.html', null, {
+        'width': 1024,
+        'height': 600,
+        'icon': __dirname + '/public/images/logo128.png',
+        'showDevTools': true,
+        'resizable': true
+    });
+    windowManager.open('secondWindow', 'Menü', 'file://' + __dirname + '/public/secondWindow.html', null, {
+        'width': 1024,
+        'height': 600,
+        'icon': __dirname + '/public/images/logo128.png',
+        'showDevTools': true,
+        'resizable': true
+    });
     // Create the browser window.
-    mainWindow = new BrowserWindow({width: 1024, height: 600, icon: __dirname + '/public/images/logo128.png'});
-
+    /*
     // Hide the menu bar, but allow it to be brought up by pressing `alt`.
     //mainWindow.setMenuBarVisibility(false);
     //mainWindow.setAutoHideMenuBar(true);
@@ -36,7 +50,8 @@ function createWindow() {
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
         mainWindow = null
-    })
+    });
+    */
 }
 
 // This method will be called when Electron has finished
@@ -45,6 +60,7 @@ function createWindow() {
 app.on('ready', createWindow);
 
 // Quit when all windows are closed.
+/*
 app.on('window-all-closed', function () {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
@@ -60,7 +76,7 @@ app.on('activate', function () {
         createWindow()
     }
 });
-
+*/
 /* client code */
 // JSON database for Node and the browser powered by lodash API
 var low = require('lowdb');

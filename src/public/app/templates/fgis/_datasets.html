@@ -1,7 +1,8 @@
-<h1>Datensätze</h1>
-<h2>Basiskarten</h2>
-<div class="radio">
-	<div ng-repeat="basemap in map.basemaps">
-	  <label><input type="radio" ng-click="map.showBasemap(basemap.wms, basemap.layer)" name="optradio"> {{basemap.name}}</label>
-	</div>
+<div class="row">
+    <div class="col-xs-12">
+        <p></p>
+        <div ng-repeat="basemap in basemaps">
+            <label><input type="radio" ng-click="showBasemap(basemap.wms, basemap.layer)" name="optradio"> {{basemap.name}}</label>
+        </div>
+    </div>
 </div>

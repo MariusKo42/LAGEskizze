@@ -1,44 +1,42 @@
-<style type="text/css">
-	ul { 
-		list-style: none outside none;
-	}
-	li {
-		margin: 0 2px;
-		display: inline;
-	}
-</style>
-<div style="margin: 10px;">
-	<h1>Objektinformationen</h1>
-
-	<div ng-bind="map.objects.type"></div>
-	<div ng-bind-html="map.objects.measureString"></div>
-	<br>
-	<li>
-		<button ng-click="map.editObjects()">Objekte bearbeiten</button>
-		<button ng-click="map.deleteObjects()">Objekte löschen</button>
-		<button ng-click="sideContent.close()">Schließen</button>
-	</li>
-
-	<div ng-hide="hideColorPicker" class="ng-hide">
-		<br>
-		<p>
-			Ändern Sie die Darstellung der Geometrie.
-		</p>
-        <input type="checkbox" name="dashed" id="dashed" ng-click="map.changeDashed()"> Gestrichelte Linie
-		<p>
-			Ändern Sie die Farbe der Geomerie.
-		</p>
-		<!-- colorPicker-->
-		<input type='text' id='colorPicker' />
-		<button ng-click="map.changeObjectsColor()">Farbe speichern</button>
-	</div>
-
-	<br>
-	<br>
-	Kommentar zu diesem Objekt:
-	<div>
-		<textarea rows="10" cols="50" ng-model="map.objects.comment" type="text" placeholder="Kommentar hinzufügen" ></textarea>
-	</div>
-	<button ng-click="map.saveComment()">Kommentar speichern</button>
-
+<div class="row">
+    <div class="col-xs-12">
+        <p ng-bind-html="metadata"></p>
+        <button data-toggle="modal" data-target=".bs-example-modal-sm" type="button" class="btn btn-default btn-lg" ng-click="editObjects()">Objekte verändern</button>
+        <span data-toggle="modal" data-target=".bs-example-modal-sm">
+            <button id="btnDeleteObject" data-toggle="tooltip" data-placement="right" title="Die zu löschenden Objekte auf der Karte auswählen" type="button" class="btn btn-default btn-lg" ng-click="deleteObjects()">Objekte löschen</button>
+        </span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="geomAttr">
+            <h4>Darstellung der Geometrie ändern</h4>
+            <input type="checkbox" name="dashed" id="dashed" ng-click="changeDashed()"> Gestrichelte Linie
+            <div id="cp2" class="input-group colorpicker-component">
+                <input type="text" value="#00AABB" class="form-control" />
+                <span class="input-group-addon"><i></i></span>
+            </div>
+            <h4>Kommentar zu diesem Objekt</h4>
+            <textarea id="commentGeom" rows="10" cols="50" ng-model="comment" placeholder="Kommentar hinzufügen" ></textarea><br>
+            <button id="saveSelectedColour" type="button" class="btn btn-default btn-lg" ng-click="changeGeomStyle()">Eigenschaften speichern</button>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="gridSystemModalLabel">Durchgeführte Änderungen</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button type="button" class="btn btn-default btn-lg" ng-click="editSave()">Speichern</button>
+                        <button type="button" class="btn btn-default btn-lg" ng-click="editCancel()">Verwerfen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

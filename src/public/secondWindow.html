@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="lib/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" />
+    <link rel="stylesheet" href="lib/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css.map" />
+    <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="lib/angular/angular.min.js"></script>
+    <script src="lib/angular-route/angular-route.min.js"></script>
+    <script src="lib/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+    <script src="js/fields.js"></script>
+    <script src="images/symbols/symbols.js"></script>
+    <script src="secondWindow.js"></script>
+    <script src='lib/spectrum/spectrum.js'></script>
+
+    <!-- Insert this line after script imports -->
+    <script>if (window.module) module = window.module;</script>
+</head>
+<body ng-app="handleSecondWindow">
+    <ul class="nav nav-pills navbar-static-top" role="tablist">
+        <li id="navFieldContent" role="presentation" class="active"><a href="#fieldContent" aria-controls="home" role="tab" data-toggle="tab">Taktische Zeichen</a></li>
+        <li id="navLoadMenu" role="presentation"><a href="#loadMenu" aria-controls="profile" role="tab" data-toggle="tab">Verwaltung</a></li>
+        <li id="navEditObject" role="presentation"><a href="#editObject" aria-controls="profile" role="tab" data-toggle="tab">Objektinformationen</a></li>
+        <li id="navLayer" role="presentation"><a href="#layer" aria-controls="settings" role="tab" data-toggle="tab">Kartenmaterial</a></li>
+    </ul>
+    <div class="container-fluid" ng-view></div>
+</body>
+</html>

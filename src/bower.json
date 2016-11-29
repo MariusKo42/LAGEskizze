@@ -28,6 +28,7 @@
     "spectrum": "^1.8.0",
     "leaflet": "^0.7.7",
     "leaflet-draw": "^0.4.0",
-    "leaflet-geometry": "^0.4.0"
+    "leaflet-geometry": "^0.4.0",
+    "bootstrap-colorpicker": "^2.3.6"
   }
 }

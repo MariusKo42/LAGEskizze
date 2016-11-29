@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col-xs-8">
+        <p></p>
+        <input type="text" placeholder="Filter" ng-model="fields.symbolsFilter">
+        <button type="button" class="btn btn-default btn-lg" ng-click="fields.fiterSymbols('')">Filter l&ouml;schen </button>
+        <p></p>
+        <button style="margin: 5px" ng-repeat="category in fields.symbols.categories" type="button" class="btn btn-default btn-lg" ng-click="fields.fiterSymbols(category.keyword)">{{category.name}}</button>
+        <br>
+        <img style="padding: inherit" ng-repeat="symbol in fields.symbols.symbols | filter:fields.symbolsFilter" ng-click="fields.selectSymbol(symbol.name)" ng-src="images/symbols/{{symbol.name}}.svg" ng-title="{{symbol.name}}" alt="Description" />
+    </div>
+    <div class="col-xs-4">
+        <div id="myAffix" data-spy="affix">
+            <input id="fieldTextTop" ng-model="fields.currentField.fieldTextTop" type="text" placeholder="Text eingeben">
+            <br>
+            <img id="ImageSrc" ng-src="{{fields.currentField.image}}"/>
+            <br>
+            <input id="fieldTextBottom" ng-model="fields.currentField.fieldTextBottom" type="text" placeholder="Text eingeben">
+            <h4>Kommentar</h4>
+            <textarea id="fieldComment" rows="10" cols="50" ng-model="fields.currentField.fieldComment" type="text" placeholder="Kommentar hinzufügen" ></textarea>
+            <br>
+            <button type="button" class="btn btn-default btn-lg" ng-click="fields.submit()">Bestätigen</button>
+            <button type="button" class="btn btn-default btn-lg" ng-click="fields.delete()">Löschen</button>
+            <button type="button" class="btn btn-default btn-lg" ng-click="fields.deleteLine()">Ort löschen</button>
+        </div>
+    </div>
+</div>
