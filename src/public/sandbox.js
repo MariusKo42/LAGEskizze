@@ -31,13 +31,6 @@ app.controller("mapCtrl", function($scope, $http){
         // object that will contain the current state on save
         $scope.einsatz = {
             id: 0,
-            meta: { // filled via ng-model
-                einsatzstichwort: '',
-                einsatzort: '',
-                meldender: '',
-                objektNr: '',
-                datumUhrzeitGruppe: ''
-            },
             // rest will be filled on save()
             drawnObjects: [],
             taktZeichen: [],
@@ -100,13 +93,6 @@ app.controller("mapCtrl", function($scope, $http){
             $scope.$apply(function () {
                 $scope.einsatz = {
                     id: 0,
-                    meta: { // filled via ng-model
-                        einsatzstichwort: '',
-                        einsatzort: '',
-                        meldender: '',
-                        objektNr: '',
-                        datumUhrzeitGruppe: ''
-                    },
                     // rest will be filled on save()
                     drawnObjects: [],
                     taktZeichen: [],
@@ -137,11 +123,6 @@ app.controller("mapCtrl", function($scope, $http){
          * serializes the current state into $scope.einsatz & pushs it to the DB server
          */
         $scope.saveEinsatz = function() {
-            // Mandatory fields
-            if (!$scope.einsatz.meta.einsatzstichwort || !$scope.einsatz.meta.einsatzort || !$scope.einsatz.meta.meldender || !$scope.einsatz.meta.objektNr || !$scope.einsatz.meta.datumUhrzeitGruppe) {
-                return alert('Die Felder Einsatzstichwort, Einsatzort, Meldender, Objektnr und Uhrzeitgruppe sind erforderlich.');
-            }
-
             // If an id already exists, a current entry is edited
             if (!$scope.einsatz.id) {
                 // Date.now() - current timestamp in ms
@@ -773,9 +754,8 @@ function initMap(){
 function getAnchorOfElement(elementId){
     var _this = $("#"+elementId);
     var _map = $("#map");
-    var _titleRow = $("#titleRow");
-    var _mapTop = parseInt(_map.css('top'), 10) + parseInt(_titleRow.css('height'), 10);
-    var _mapLeft = parseInt(_map.css('left'), 10);
+    var _mapTop = _map.offset().top;
+    var _mapLeft = _map.offset().left;
     var _mapWidth = parseInt(_map.css('width'), 10);
     var _mapHeight = parseInt(_map.css('height'), 10);
     var offset = _this.offset();
@@ -784,15 +764,18 @@ function getAnchorOfElement(elementId){
     var centerX = offset.left + width / 2;
     var centerY = offset.top + height / 2;
 
-    //left column:
+    // left column:
     if(centerX < _mapLeft){return [2, centerY - _mapTop]}
     //right column:
-    else if (centerX > _mapLeft + _mapWidth - 1) {return [offset.left - _mapLeft, centerY - _mapTop]}
+    else if (centerX > _mapLeft + _mapWidth - 1) {
+        if (elementId === 41) return [_mapWidth, 2];
+        else if (elementId === 48) return [_mapWidth, offset.top - _mapTop];
+        else return [offset.left - _mapLeft, centerY - _mapTop];
+    }
     //top row:
     else if (centerY < _mapTop + 1 ) {return [centerX - _mapLeft, 2]}
     // bottom row:
     else if (centerY > _mapTop + _mapHeight - 1) {return [centerX - _mapLeft, offset.top - _mapTop]}
-
 }
 
 /**

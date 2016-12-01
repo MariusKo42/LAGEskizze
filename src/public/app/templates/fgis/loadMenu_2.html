@@ -7,18 +7,12 @@
         <p></p>
         <table class="table table-hover">
             <tr>
-            <th>Stichwort</th>
-            <th>Ort</th>
-            <th>Meldender</th>
-            <th>Objektnr.</th>
-            <th>Uhrzeitgruppe</th>
+            <th>#</th>
+            <th>Zeitpunkt</th>
             </tr>
             <tr ng-repeat="dbEntry in fireDB" ng-click="loadMission(dbEntry)">
-                <td>{{dbEntry.meta.einsatzstichwort}}</td>
-                <td>{{dbEntry.meta.einsatzort}}</td>
-                <td>{{dbEntry.meta.meldender}}</td>
-                <td>{{dbEntry.meta.objektNr}}</td>
-                <td>{{dbEntry.meta.datumUhrzeitGruppe}}</td>
+                <td>{{$index + 1}}</td>
+                <td>{{dbEntry.id | date:'dd/MM/yyyy - hh:mm'}}</td>
             </tr>
         </table>
     </div>
