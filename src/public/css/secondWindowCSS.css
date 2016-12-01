@@ -1,0 +1,19 @@
+.flex-grid {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.imageWithText {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    margin: 10px;
+    width: 142px;
+}
+
+.imageWithText .imageWithText-label {
+    width: 142px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

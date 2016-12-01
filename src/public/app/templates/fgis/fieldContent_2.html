@@ -6,11 +6,16 @@
         <p></p>
         <button style="margin: 5px" ng-repeat="category in fields.symbols.categories" type="button" class="btn btn-default btn-lg" ng-click="fields.fiterSymbols(category.keyword)">{{category.name}}</button>
         <br>
-        <img style="padding: inherit" ng-repeat="symbol in fields.symbols.symbols | filter:fields.symbolsFilter" ng-click="fields.selectSymbol(symbol.name)" ng-src="images/symbols/{{symbol.name}}.svg" ng-title="{{symbol.name}}" alt="Description" />
+        <div class="flex-grid">
+            <span ng-repeat="symbol in fields.symbols.symbols | filter:fields.symbolsFilter" class="imageWithText">
+                <span class="imageWithText-label">{{symbol.name}}</span>
+                <img style="padding: inherit"  ng-click="fields.selectSymbol(symbol.name)" ng-src="images/symbols/{{symbol.name}}.svg" ng-title="{{symbol.name}}" alt="Description" />
+            </span>
+        </div>
     </div>
     <div class="col-xs-4">
         <div id="myAffix" data-spy="affix">
-            <input id="fieldTextTop" ng-model="fields.currentField.fieldTextTop" type="text" placeholder="Text eingeben">
+            <input id="fieldTextTop" ng-model="fields.currentField.fieldTextTop" type="text" readonly>
             <br>
             <img id="ImageSrc" ng-src="{{fields.currentField.image}}"/>
             <br>

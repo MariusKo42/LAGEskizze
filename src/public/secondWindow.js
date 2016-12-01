@@ -147,6 +147,7 @@ app.controller('fieldContentCtrl', function($scope) {
      * if not used in further development
      **/
     $scope.fields.selectSymbol = function(string) {
+        $scope.fields.currentField.fieldTextTop = string;
         $scope.fields.currentField.image = "images/symbols/" + string + ".svg";
     };
 

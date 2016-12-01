@@ -90,6 +90,8 @@ app.controller("mapCtrl", function($scope, $http){
             lines.clearLayers();
             linesArray = [];
 
+            $scope.fields.delete();
+
             $scope.$apply(function () {
                 $scope.einsatz = {
                     id: 0,
