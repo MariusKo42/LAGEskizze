@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="info.js"></script>
+    <!-- Insert this line after script imports -->
+    <script>if (window.module) module = window.module;</script>
+</head>
+<body>
+<div class="container well">
+    <div class="row">
+        <div class="col-xs-6">
+            <h1>IdF NRW LAGEtool Stab</h1>
+            <ul>
+                <li>Guido Fortkamp</li>
+                <li>Sebastian Niklasch / Saphir El-Kaiy</li>
+                <li>Institut für Geoinformatik (IfGI) Westfälische Wilhelmsuniversität Münster</li>
+            </ul>
+            <h2>Kooperation</h2>
+            <p>Unterstützt durch das Institut der Feuerwehr NRW und EFTAS Fernerkundung Technologietransfer GmbH</p>
+            <a class="btn btn-success btn-lg" onclick="startTool()" role="button">Starten</a>
+            <button style="float: right" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#disclaimer">
+                Disclaimer und Lizenz
+            </button>
+            <h2>Partner</h2>
+            <div style="display: flex; flex-direction: row; align-items: center">
+                <img class="img-responsive" src="images/logo_idf.png">
+                <img style="height: 100%; margin-left: 10px" class="img-responsive" src="images/eftas.png">
+            </div>
+            <div class="modal fade bs-example-modal-lg" id="disclaimer" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Software: IdF NRW LAGEtool (Stab)</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h2>Digitale Lagedarstellung für operativ-taktische Stabsarbeit.</h2>
+                            <p>LAGEtool ist die Adaption der zentralen Lagedarstellung eines Unfalls, eines Feuers oder einer Katastrophe, wie sie im Lagedarstellungssystem Nordrhein-Westfalen (NRW) vom Institut der Feuerwehr NRW vorgeschlagen wird. Sie fügt sich thematisch in die analogen Schadenskonten, Bereitstellungsräume, Einsatzabschnitte etc. der Taktischen Arbeitswand ein und lässt sich über eine Splitscreen-Variante unabhängig von der eigentlichen Lagedarstellung bedienen.</p>
+                            <p>Es handelt sich um ein Javascript-basiertes System zur raumbezogenen Visualisierung, das eine Unterstützung bei der konsistenten und strukturierten Einsatzstellen-Organisation in Einsätzen der Feuerwehr zum Ziel hat.  Es implementiert die Vorgaben der Feuerwehr-Dienstvorschrift 100.</p>
+                            <p>Die Open Source Anwendung ist unter Nutzung von node.js und AngularJS geschrieben. Der Quellcode ist eingestellt auf GitHub unter <b>https://github.com/eftas/LAGEskizze</b></p>
+                            <p>Für die Nutzung auf dem Desktop etwa in Einsatzleitwagen oder dem Stabsraum ist die Anwendung in einen einfach zu nutzenden „Electron-Container“ gekapselt worden. Die jeweils aktuellste Version kann über die EFTAS-Homepage herunter geladen werden.</p>
+                            <p>Als Geobasisdaten (ATKIS / ALKIS)  nutzt die aktuelle Version das Open Data-Angebot des NRW-Atlasses, der vom Land Nordrhein-Westfalen (Geobasis.nrw) bereit gestellt wird. Das entsprechende Copyright liegt beim Bundesland NRW, die jeweiligen Nutzungsbedingungen sind zu beachten. Bezüglich der Taktischen Zeichen wurde auf Konformität zur "Empfehlung für Taktische Zeichen im Bevölkerungsschutz" (Ständige Konferenz für Katastrophenvorsorge im Bevölkerungsschutz, 2010) geachtet.</p>
+                            <h2>Lizenz</h2>
+                            <p>Die Software steht unter der „MIT-Lizenz“ (https://de.wikipedia.org/wiki/MIT-Lizenz) als OpenSource für nicht-kommerzielle Nutzung durch Feuerwehren im Rahmen der Gefahrenabwehr zur Verfügung.
+                            Die Software benutzt folgende OpenSource-Komponenten:</p>
+                            <ul>
+                                <li>Leaflet: http://leafletjs.com/</li>
+                                <li>https://nodejs.org/en/</li>
+                                <li>angular.js: https://angularjs.org/</li>
+                            </ul>
+                            <h2>Disclaimer</h2>
+                            <p>Das Produkt ist vielfach getestet worden und wird insbesondere bei der Freiwilligen Feuerwehr Werne auch in Ausbildung und Einsatz genutzt. Die Funktionen sind nach bestem Wissen und Gewissen ausgeführt und geprüft. Trotzdem handelt es sich um Software, die aus unterschiedlichsten Gründen versagen kann. Daher übernimmt weder das IdF NRW noch die EFTAS eine Gewährleistung für Funktionen der Software oder irgendwelche Schäden, die im Zusammenhang mit der Nutzung dieser Software – bewusst oder unbewusst - entstehen können. Es obliegt insbesondere im Einsatzfall immer dem Einsatzleiter oder der Einsatzleiterin zu entscheiden, ob die Software eingesetzt wird, oder eine analoge Version der Lagedarstellung verwendet werden soll. Er oder Sie übernehmen für die Entscheidung die jeweilige Verantwortung. Es ist darauf zu achten, Redundanzen zu schaffen, etwa das Kartenbild auf einem Whiteboard „abzupausen“.</p>
+                            <p>Die Software basiert in der aktuellen Version in wesentlichen Teilen auf Online-Diensten für die Kartenbereitstellung (Web Map Services, WMS). Ist diese nicht verfügbar, kann der Kartenhintergrund nicht geladen werden und die Software verliert ihre grundlegende Funktion. Zudem ist sie abhängig von einer guten Hardware-Infrastruktur, die dem heutigen Stand der Technik entsprechen muss. Die genannten Parteien übernehmen keine Garantie dafür, dass die Software in jeder denkbaren Konstellation lauffähig ist.</p>
+                            <h2>Geodaten</h2>
+                            <p>Die Geodaten in der aktuell angebotenen  Version IdF NRW LAGEtool (Stab) entstammen dem NRW-Atlas der Bezirksregierung Köln, Geobasis.nrw. Mit Genehmigung der Bezirksregierung Köln vom 22.07.2016 dürfen die Daten unter der angegebenen MIT-Lizenz für die oben genannte Zwecke (siehe Lizenz) genutzt werden. Weitere Verwendung der Geodienste regelt die Bezirksregierung Köln in ihren Nutzungsbedingungen für den NRW-Atlas: http://www.bezreg-koeln.nrw.de/brk_internet/geobasis/dienste/nrwatlas/nutzungsbedingungen.pdf</p>
+                            <h2>Taktische Zeichen</h2>
+                            <p>Die Taktischen Zeichen basieren auf folgenden Vorgaben:</p>
+                            <ul>
+                                <li>Ständige Konferenz für Katastrophenvorsorge und Bevölkerungsschutz (SKK)(2012): Empfehlungen für Taktische Zeichen im Bevölkerungsschutz.- Bundesamt für Bevölkerungsschutz und Katastrophenhilfe (BBK), Bonn, 56 S.</li>
+                                <li>Mit ausdrücklicher Zustimmung der genannten Quelle und zusätzlicher Bestätigung des BBK vom 19.07.2016 dürfen die Taktischen Zeichen für nicht-kommerzielle Nutzung im Rahmen dieser Anwendung genutzt werden.</li>
+                                <li>Die Erstellung der Taktischen Zeichen erfolgte durch Brandoberinspektor Sebastian Ramrath, Feuerwehr Much, und Dr. Bodo Bernsdorf, Feuerwehr Werne, denen an dieser Stelle für die Bereitstellung der Grafiken gedankt sei.</li>
+                            </ul>
+                            <h2>Installationsanleitung</h2>
+                            <p>Wichtiger Hinweis: Mit der Installation der Software stimmt der Nutzer oder die Nutzerin den Lizenzbedingungen und den im Disclaimer gegebenen Hinweisen zu. Er oder sie erkennt die Urheberschaft der Software ebenso an, wie diejenigen der Geodaten und der taktischen Zeichen.</p>
+                            <p>Das Archiv LAGEtool-win32-x64.zip enthält alle zum Betrieb der Software notwendigen Komponenten inkl. der unter Lizenz genannten Komponenten, der Taktischen Zeichen und der Links zu den Geodaten des NRW-Atlas.</p>
+                            <p>Das Archiv ist lediglich in ein Verzeichnis zu entpacken. Ein Doppelklick auf die ausführbare Datei LAGEtool.exe startet die Software. Es wird empfohlen, sich auf dem Desktop eine Verknüpfung zur Datei LAGEtool.exe anzulegen. Die Datei darf nicht aus dem Verzeichnis – etwa auf den Desktop - verschoben werden!</p>
+                            <h2>Danksagung</h2>
+                            <p>Mit ihren Bachelor-Arbeiten am Institut für Geoinformatik der Westfälischen Wilhelmsuniversität Münster haben Saphir El-Kaiy und Sebastian Niklasch erheblich zum Gelingen des Projektes beigetragen. Auch mehrere Studienarbeiten haben Verbesserungen am ersten Prototypen erbracht. Diese Arbeiten wurden fachlich von Holger Fritze MSc. (WWU Münster) und BOI Dr. Bodo Bernsdorf (Freiwillige Feuerwehr Werne und EFTAS Fernerkundung Technologietransfer GmbH) betreut.  Umgesetzt wurde die vorliegende Software durch die EFTAS, die auch das OpenSource-Projekt auf GitHub hostet.</p>
+                            <p>Fachlich betreut und für die Stabsarbeit angepasst wird das Projekt von Guido Fortkamp (IdF NRW).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <img class="img-responsive" src="images/logoNRW.png">
+        </div>
+    </div>
+</div>
+</body>
+</html>

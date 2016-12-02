@@ -146,9 +146,9 @@ app.controller('fieldContentCtrl', function($scope) {
      * Please note that this function is not used and should be deleted
      * if not used in further development
      **/
-    $scope.fields.selectSymbol = function(string) {
-        $scope.fields.currentField.fieldTextTop = string;
-        $scope.fields.currentField.image = "images/symbols/" + string + ".svg";
+    $scope.fields.selectSymbol = function(name, title) {
+        $scope.fields.currentField.fieldTextTop = title;
+        $scope.fields.currentField.image = "images/symbols/" + name + ".svg";
     };
 
     $scope.fields.submit = function() {
