@@ -767,17 +767,13 @@ function getAnchorOfElement(elementId){
     var centerY = offset.top + height / 2;
 
     // left column:
-    if(centerX < _mapLeft){return [2, centerY - _mapTop]}
+    if(centerX < _mapLeft) return [2, centerY - _mapTop];
     //right column:
-    else if (centerX > _mapLeft + _mapWidth - 1) {
-        if (elementId === 41) return [_mapWidth, 2];
-        else if (elementId === 48) return [_mapWidth, offset.top - _mapTop];
-        else return [offset.left - _mapLeft, centerY - _mapTop];
-    }
+    else if (centerX > _mapLeft + _mapWidth - 1) return [offset.left - _mapLeft, centerY - _mapTop];
     //top row:
-    else if (centerY < _mapTop + 1 ) {return [centerX - _mapLeft, 2]}
+    else if (centerY < _mapTop + 1 ) return [centerX - _mapLeft, 2];
     // bottom row:
-    else if (centerY > _mapTop + _mapHeight - 1) {return [centerX - _mapLeft, offset.top - _mapTop]}
+    else if (centerY > _mapTop + _mapHeight - 1) return [centerX - _mapLeft, offset.top - _mapTop];
 }
 
 /**

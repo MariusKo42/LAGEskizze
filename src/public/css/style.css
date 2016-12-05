@@ -11,7 +11,7 @@ html, body {
 	top: 11.7%;
 	left: 5.9%;
 	height: 76.2%;
-	width: 48.4%;
+	width: 88%;
 	position: absolute;
 	cursor:auto;
 }
@@ -71,7 +71,7 @@ html, body {
 }
 .rightcol{
 	position: absolute;
-	left: 54.37%;
+	left: 94%;
 }
 
 .fieldText{
