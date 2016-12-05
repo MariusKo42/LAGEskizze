@@ -18,18 +18,25 @@ const windowManager = require('electron-window-manager');
 let mainWindow;
 let secondWindow;
 function createWindow() {
-    windowManager.open('mainWindow', 'LAGEplan', 'file://' + __dirname + '/public/index.html', null, {
-        'width': 1024,
-        'height': 600,
+    windowManager.createNew('mainWindow', 'LAGEplan', 'file://' + __dirname + '/public/index.html', null, {
+        'width': 1920,
+        'height': 1080,
         'icon': __dirname + '/public/images/logo128.png',
-        'showDevTools': true,
+        'showDevTools': false,
         'resizable': true
     });
-    windowManager.open('secondWindow', 'Menü', 'file://' + __dirname + '/public/secondWindow.html', null, {
-        'width': 1024,
-        'height': 600,
+    windowManager.createNew('secondWindow', 'Menü', 'file://' + __dirname + '/public/secondWindow.html', null, {
+        'width': 1920,
+        'height': 1080,
         'icon': __dirname + '/public/images/logo128.png',
-        'showDevTools': true,
+        'showDevTools': false,
+        'resizable': true
+    });
+    windowManager.open('infoWindow', 'Information', 'file://' + __dirname + '/public/info.html', null, {
+        'width': 1920,
+        'height': 1080,
+        'icon': __dirname + '/public/images/logo128.png',
+        'showDevTools': false,
         'resizable': true
     });
     // Create the browser window.
@@ -60,7 +67,6 @@ function createWindow() {
 app.on('ready', createWindow);
 
 // Quit when all windows are closed.
-/*
 app.on('window-all-closed', function () {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
@@ -68,7 +74,7 @@ app.on('window-all-closed', function () {
         app.quit()
     }
 });
-
+/*
 app.on('activate', function () {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.

@@ -89,11 +89,16 @@ app.controller("mapCtrl", function($scope, $http){
             drawnItems.clearLayers();
             lines.clearLayers();
             linesArray = [];
-
             $scope.fields.delete();
+            // All fields are reset
+            for (var i = 0; i < $scope.fields.fieldOrder.properties.length; i++) {
+                document.getElementById($scope.fields.fieldOrder.properties[i].id).innerHTML = getFieldHtmlString($scope.fields.fieldOrder.properties[i].id, '', '', '', '');
+                $('#' + $scope.fields.fieldOrder.properties[i].id).removeClass("activated");
+            }
 
             $scope.$apply(function () {
                 $scope.einsatz = {
+                    time: '',
                     id: 0,
                     // rest will be filled on save()
                     drawnObjects: [],
@@ -125,10 +130,13 @@ app.controller("mapCtrl", function($scope, $http){
          * serializes the current state into $scope.einsatz & pushs it to the DB server
          */
         $scope.saveEinsatz = function() {
+            var date = new Date();
+            // Readable time string
+            $scope.einsatz.time = date.toLocaleString();
             // If an id already exists, a current entry is edited
             if (!$scope.einsatz.id) {
-                // Date.now() - current timestamp in ms
-                $scope.einsatz.id = Date.now();
+                // Current timestamp in ms
+                $scope.einsatz.id = date.getTime();
             }
             // copy field data into $scope.einsatz.fields
             $scope.einsatz.taktZeichen = [];

@@ -12,7 +12,8 @@
             </tr>
             <tr ng-repeat="dbEntry in fireDB" ng-click="loadMission(dbEntry)">
                 <td>{{$index + 1}}</td>
-                <td>{{dbEntry.id | date:'dd/MM/yyyy - hh:mm'}}</td>
+                <!--<td>{{dbEntry.id | date:'dd/MM/yyyy - hh:mm':'+1200'}}</td>-->
+                <td>{{dbEntry.time}}</td>
             </tr>
         </table>
     </div>

@@ -17,10 +17,10 @@ html, body {
 }
 
 .mapArea {
-	top: 2.5%;
 	width: 100%;
 	display: inline-block;
 	position: relative;
+	height: 100%;
 }
 .mapArea:after {
 	padding-top: 49.1%;
