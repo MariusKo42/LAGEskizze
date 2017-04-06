@@ -12,25 +12,50 @@
     <script>if (window.module) module = window.module;</script>
 </head>
 <body>
-<div class="container well">
+<div class="container">
     <div class="row">
-        <div class="col-xs-6">
-            <h1>IdF NRW LAGEtool Stab</h1>
-            <ul>
-                <li>Guido Fortkamp</li>
-                <li>Sebastian Niklasch / Saphir El-Kaiy</li>
-                <li>Institut für Geoinformatik (IfGI) Westfälische Wilhelmsuniversität Münster</li>
-            </ul>
-            <h2>Kooperation</h2>
-            <p>Unterstützt durch das Institut der Feuerwehr NRW und EFTAS Fernerkundung Technologietransfer GmbH</p>
-            <a class="btn btn-success btn-lg" onclick="startTool()" role="button">Starten</a>
-            <button style="float: right" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#disclaimer">
-                Disclaimer und Lizenz
-            </button>
-            <h2>Partner</h2>
-            <div style="display: flex; flex-direction: row; align-items: center">
-                <img class="img-responsive" src="images/logo_idf.png">
-                <img style="height: 100%; margin-left: 10px" class="img-responsive" src="images/eftas.png">
+        <div class="col-xs-12">
+            <div class="media">
+                <div class="media-body">
+                    <h2 class="media-heading"><b>IdF NRW - LAGEtool</b></h2>
+                </div>
+                <div class="media-right">
+                    <img class="media-object" src="images/logoNRW.png">
+                </div>
+            </div>
+            <div style="font-size: 20px; margin-top: 20px">
+                <p>Das IdF NRW - LAGEtool ist ein Werkzeug zur Lagedarstellung auf Kartenbasis. Es basiert auf dem Lagedarstellungssystem NRW, dort der zentralen Lageskizze, und bietet die Daten des NRW-Atlas als Grundlage.</p>
+                <p>Das IdF NRW-LAGEtool ist als OpenSource von den Feuerwehren in NRW kostenfrei nutzbar (siehe Lizenz) und wird in der vorliegenden Version in einer Kooperation zwischen dem IdF NRW und der EFTAS Fernerkundung Technologietransfer GmbH bereit gestellt.</p>
+
+                <div class="media">
+                    <div class="media-body">
+                        <h3 class="media-heading"><b>Verantwortlich</b></h3>
+                        BAR Guido Fortkamp (IdF NRW)
+                    </div>
+                    <div class="media-right">
+                        <img class="media-object" src="images/logo_idf.png">
+                    </div>
+                </div>
+                <div class="media">
+                    <div class="media-body">
+                        <h3 class="media-heading"><b>Konzeption und Entwicklung</b></h3>
+                        BOI Dr. Bodo Bernsdorf (Freiwillige Feuerwehr Werne)
+                        <br/>Saphir El-Kaiy (WWU Münster, Institut für Geoinformatik)
+                        <br/>Sebastian Niklasch (WWU Münster, Institut für Geoinformatik)
+                        <br/>Bastian Zimmer (EFTAS Fernerkundung Technologietransfer GmbH)
+                    </div>
+                    <div class="media-right">
+                        <img class="media-object" src="images/eftas.png">
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 20px">
+                <a class="btn btn-success btn-lg" onclick="startTool()" role="button">
+                    Starten
+                </a>
+                <button style="float: right" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#disclaimer">
+                    Disclaimer und Lizenz
+                </button>
             </div>
             <div class="modal fade bs-example-modal-lg" id="disclaimer" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg" role="document">
@@ -77,9 +102,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-xs-6">
-            <img class="img-responsive" src="images/logoNRW.png">
         </div>
     </div>
 </div>
