@@ -58,7 +58,7 @@ app.controller("mapCtrl", function($scope, $http){
 
         windowManager.bridge.on('delete', function(value) {
             if (value == 'deleteLine') {
-                $scope.fields.deleteLine();
+                $scope.fields.deleteLocationOnMap();
             } else if (value == 'deleteSymbol') {
                 $scope.fields.delete();
             }
@@ -146,7 +146,7 @@ app.controller("mapCtrl", function($scope, $http){
 
                 $scope.einsatz.taktZeichen.push({
                     kranzposition: kranzPos,
-                    kartenposition: line ? line[0] : '',
+                    kartenposition: line ? [line[0],line[2]] : '',
                     zeichen:    $('#image' + kranzPos).attr('src') || '',
                     comment:    $('#fieldComment' + kranzPos).text() || '',
                     textTop:    $('#fieldTextTop' + kranzPos).text() || '',
@@ -264,6 +264,7 @@ app.controller("mapCtrl", function($scope, $http){
                 // setze taktische zeichen in karte
                 for (var i = 0; i < $scope.einsatz.taktZeichen.length; i++) {
                     var field = $scope.einsatz.taktZeichen[i];
+                    var mapPosition = field.kartenposition;
 
                     var fieldHtml = getFieldHtmlString(field.kranzposition, field.zeichen,
                         field.comment, field.textTop, field.textBottom);
@@ -271,12 +272,17 @@ app.controller("mapCtrl", function($scope, $http){
                     $('#' + field.kranzposition).html(fieldHtml);
 
                     // field line / kartenposition
-                    if (field.kartenposition == '') continue; // field has no kartenposition
+                    if (field.kartenposition == '') {
+                        continue; // field has no kartenposition
+                    } else if (field.kartenposition[1] != null ) {
+                        mapPosition = map.containerPointToLatLng(field.kartenposition[0]);
+                    }
                     var anchorPoint = getAnchorOfElement('image' + field.kranzposition);
                     var anchor = map.containerPointToLatLng(anchorPoint);
-                    var latlngs = [field.kartenposition, anchor];
-                    linesArray[field.kranzposition] = [field.kartenposition, anchorPoint];
-                    lines.addLayer(L.polyline(latlngs));
+                    var latlngs = [mapPosition, anchor];
+                    linesArray[field.kranzposition] = [field.kartenposition[0], anchorPoint, field.kartenposition[1]];
+                    fitAllLines(linesArray);
+                    // lines.addLayer(L.polyline(latlngs));
                 }
             }
         };
@@ -387,9 +393,22 @@ app.controller("mapCtrl", function($scope, $http){
 
         /********** Lines ********/
 
-        $scope.fields.deleteLine = function() {
+        $scope.fields.deleteLocationOnMap = function() {
+            var neighbourPos = linesArray[$scope.fields.currentField.id][2];
+            if (neighbourPos != null) {
+                if (neighbourPos > $scope.fields.currentField.id) {
+                    $scope.negativeLoop($scope.fields.currentField.id);
+                } else {
+                    $scope.positiveLoop($scope.fields.currentField.id);
+                }
+            }
             linesArray[$scope.fields.currentField.id] = null;
             fitAllLines(linesArray);
+        };
+
+        $scope.fields.deleteLine = function() {
+            // linesArray[$scope.fields.currentField.id] = null;
+            // fitAllLines(linesArray);
         };
 
         $scope.fields.updateLine = function(){
@@ -404,14 +423,96 @@ app.controller("mapCtrl", function($scope, $http){
         $scope.fields.addLine = function(){
             if ($scope.fields.currentField.id) {
                 var anchorPoint = getAnchorOfElement($scope.fields.currentField.id);
-                var anchor = map.containerPointToLatLng(anchorPoint);
-                var latlngs = [$scope.map.lastClick, anchor];
-                if(linesArray[$scope.fields.currentField.id] == null){
-                    linesArray[$scope.fields.currentField.id] = [$scope.map.lastClick, anchorPoint];
-                    lines.addLayer(L.polyline(latlngs));
-                    $scope.fields.currentField.active = true;
-                    $scope.map.lastClick = null;
+                var newLineEndPos = L.latLng($scope.map.lastClick.lat, $scope.map.lastClick.lng);
+                var shortestDist = null;
+                var tmpDist = null;
+                var nearestNeighbour = null;
+                var nearestNeighbourPosition = null;
+                var casketSameRegion = false;
+
+                /**
+                 * Suche nach dem Element, welches am nächsten liegt
+                 */
+                var arrayRangeNeighbours = null;
+                for(i=0; i < linesArray.length; i++) {
+                    if (linesArray[i] != null && !linesArray[i][2]) {
+                        tmpDist = newLineEndPos.distanceTo(L.latLng(linesArray[i][0].lat, linesArray[i][0].lng));
+                        if (tmpDist <= 50) {
+                            if (shortestDist == null || tmpDist < shortestDist) {
+                                shortestDist = tmpDist;
+                                nearestNeighbour = linesArray[i];
+                                nearestNeighbourPosition = i;
+                                // top
+                                if (i <= 24 && $scope.fields.currentField.id <= 24) casketSameRegion = true;
+                                // right
+                                else if (i >= 47 && $scope.fields.currentField.id >= 47) casketSameRegion = true;
+                                // bottom
+                                else if (i <= 39 && $scope.fields.currentField.id <= 39) casketSameRegion = true;
+                                // left
+                                else if (i >= 41 && $scope.fields.currentField.id >= 41) casketSameRegion = true;
+                            }
+                        }
+                    }
                 }
+
+                var createSummarize = false;
+                if (nearestNeighbour && casketSameRegion) {
+                    if (nearestNeighbourPosition > $scope.fields.currentField.id) {
+                        for (var i = nearestNeighbourPosition - 1; linesArray.length; i--) {
+                            if (i == $scope.fields.currentField.id) {
+                                if (linesArray[i]) if (linesArray[i][2] != null) $scope.negativeLoop(i);
+                                linesArray[i] = [nearestNeighbour[1], anchorPoint, nearestNeighbourPosition];
+                                createSummarize = true;
+                                break;
+                            } else if (linesArray[i]) {
+                                if (linesArray[i][2] == null || linesArray[i][2] != nearestNeighbourPosition) break;
+                            } else if (!linesArray[i]) break;
+                        }
+                    } else {
+                        for (var i = nearestNeighbourPosition + 1; i <= linesArray.length; i++) {
+                            if (i == $scope.fields.currentField.id) {
+                                if (linesArray[i]) if (linesArray[i][2] != null) $scope.positiveLoop(i);
+                                linesArray[i] = [nearestNeighbour[1], anchorPoint, nearestNeighbourPosition];
+                                createSummarize = true;
+                                break;
+                            } else if (linesArray[i]) {
+                                if (linesArray[i][2] == null || linesArray[i][2] != nearestNeighbourPosition) break;
+                            } else if (!linesArray[i]) break;
+                        }
+                    }
+                } else {
+                    if (linesArray[$scope.fields.currentField.id]) {
+                        if (linesArray[$scope.fields.currentField.id][2] != null) {
+                            if ($scope.fields.currentField.id < linesArray[$scope.fields.currentField.id][2]) $scope.negativeLoop($scope.fields.currentField.id, linesArray[$scope.fields.currentField.id][2]);
+                            else $scope.positiveLoop($scope.fields.currentField.id);
+                        }
+                    }
+                }
+
+                if (!createSummarize || !nearestNeighbour) {
+                    linesArray[$scope.fields.currentField.id] = [$scope.map.lastClick, anchorPoint, null];
+                }
+                fitAllLines(linesArray);
+                $scope.fields.currentField.active = true;
+                $scope.map.lastClick = null;
+            }
+        };
+
+        $scope.negativeLoop = function (startPos) {
+            for(var i = startPos - 1; linesArray.length; i--) {
+                if (linesArray[i]) {
+                    if (linesArray[i][2] == linesArray[startPos][2]) linesArray[i] = null;
+                    else break;
+                } else break;
+            }
+        };
+
+        $scope.positiveLoop = function (startPos) {
+            for(var i = startPos + 1; i <= linesArray.length; i++) {
+                if (linesArray[i]) {
+                    if (linesArray[i][2] == linesArray[startPos][2]) linesArray[i] = null;
+                    else break;
+                } else break;
             }
         };
 
@@ -813,7 +914,9 @@ function fitAllLines(linesArray){
     lines.clearLayers();
     for (var i = linesArray.length - 1; i >= 0; i--) {
         try {
-            var p1 = linesArray[i][0];
+            var p1 = null;
+            if (linesArray[i][2] != null) p1 =  map.containerPointToLatLng(linesArray[i][0]);
+            else p1 = linesArray[i][0];
             var p2 = map.containerPointToLatLng(linesArray[i][1]);
             var latlngs = [p1, p2];
             lines.addLayer(L.polyline(latlngs));
