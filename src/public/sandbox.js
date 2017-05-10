@@ -392,7 +392,7 @@ app.controller("mapCtrl", function($scope, $http){
         };
 
         /********** Lines ********/
-
+        // Die Verortung von einem Element wird gelöscht, in diesem Fall müssen ggf. die Zuweisungen von anderen Elementen entfernt werden.
         $scope.fields.deleteLocationOnMap = function() {
             var neighbourPos = linesArray[$scope.fields.currentField.id][2];
             if (neighbourPos != null) {
@@ -402,6 +402,7 @@ app.controller("mapCtrl", function($scope, $http){
                     $scope.positiveLoop($scope.fields.currentField.id);
                 }
             }
+            // Das aktuell ausgewählte Element wird zurückgesetzt.
             linesArray[$scope.fields.currentField.id] = null;
             fitAllLines(linesArray);
         };
@@ -423,25 +424,29 @@ app.controller("mapCtrl", function($scope, $http){
         $scope.fields.addLine = function(){
             if ($scope.fields.currentField.id) {
                 var anchorPoint = getAnchorOfElement($scope.fields.currentField.id);
+                // Position in der Karte
                 var newLineEndPos = L.latLng($scope.map.lastClick.lat, $scope.map.lastClick.lng);
                 var shortestDist = null;
                 var tmpDist = null;
+                // Element / Kästchen nächster Nachbar
                 var nearestNeighbour = null;
+                // Position im Array des nächsten Nachbarn
                 var nearestNeighbourPosition = null;
+                // Boolesche Variable. Wenn true, dann ist sichergestellt das die kästchen auf der gleichen Ebene liegen (oben, unten, links, rechts)
                 var casketSameRegion = false;
-
-                /**
-                 * Suche nach dem Element, welches am nächsten liegt
-                 */
+                // Nach einem Klick in die Karte wird im Umkreis von x metern, das nächstgelegene Element gesucht.
                 var arrayRangeNeighbours = null;
                 for(i=0; i < linesArray.length; i++) {
                     if (linesArray[i] != null && !linesArray[i][2]) {
                         tmpDist = newLineEndPos.distanceTo(L.latLng(linesArray[i][0].lat, linesArray[i][0].lng));
+                        // Liegt die Distanz unter x Metern, dann wird die Entfernung zwischengespeichert. Alle Elemente werden überprüft, das Element mit dem kürzesten Abstand wird ausgewählt.
                         if (tmpDist <= 50) {
                             if (shortestDist == null || tmpDist < shortestDist) {
                                 shortestDist = tmpDist;
                                 nearestNeighbour = linesArray[i];
                                 nearestNeighbourPosition = i;
+                                // Nur Elemente die auf der gleiche Ebene liegen können miteinander verbunden werden.
+                                // Der obere Bereich liegt zwischen 11 und 24. Ist die Id des aktuellen Elementes und des gefundenen Nachbarns kleiner gleich 24, dann liegen beide Elemente auf der selben Ebene.
                                 // top
                                 if (i <= 24 && $scope.fields.currentField.id <= 24) casketSameRegion = true;
                                 // right
@@ -456,19 +461,30 @@ app.controller("mapCtrl", function($scope, $http){
                 }
 
                 var createSummarize = false;
+                // True, wenn ein Nachbar gefunden wurde und beide Elemente im selben Bereich liegen
                 if (nearestNeighbour && casketSameRegion) {
+                    // Es wird überprüft, ob der gefundene Nachbar vor oder hinter dem aktuell ausgewählten Element liegt.
+                    // Liegt der Nachbar vor dem aktuellen Element, dann müssen evtl. alle Elemente unterhalb des aktuell ausgewählten Elementes verändert/angepasst werden
                     if (nearestNeighbourPosition > $scope.fields.currentField.id) {
+                        // Bei den folgenden If-Abfragen, wird überürüft ob eine Summenklammer erstellt werden darf. Bedingung hierfür ist: Es dürfen nur direkt benachbarte Elemente verbunden werden.
+                        // Wenn zwischen zwei Elemente ein leeres Feld liegt oder ein Element welches bereits anderweitig verortet wurde, dann ist keine Summenklammer erlaubt.
+                        // In der Schleife wird vom potentiellen Nachbarn zum aktuellen Element iteriert. Liegen zwischen den beiden Elemente z.B. keine leeren Feldern, dann ist eine Zusammenfassung erlaubt.
                         for (var i = nearestNeighbourPosition - 1; linesArray.length; i--) {
+                            // Das gefundene Element entspricht dem aktuell ausgewählten Element. Eine Summenklammer wird erstellt.
                             if (i == $scope.fields.currentField.id) {
+                                // Wenn das Element bereits einem anderen Nachbarn zugeordnet wurde, dann müssen alle Abhängigkeiten angepasst werden
                                 if (linesArray[i]) if (linesArray[i][2] != null) $scope.negativeLoop(i);
                                 linesArray[i] = [nearestNeighbour[1], anchorPoint, nearestNeighbourPosition];
                                 createSummarize = true;
                                 break;
                             } else if (linesArray[i]) {
+                                // Das Feld besitzt bereits einen aderen Nachbarn oder ist anderweitig verortet, dann ist keine Summenklammer erlaubt
                                 if (linesArray[i][2] == null || linesArray[i][2] != nearestNeighbourPosition) break;
+                                // Leeres Feld - Eine Summenklammer ist nicht erlaubt.
                             } else if (!linesArray[i]) break;
                         }
                     } else {
+                        // Im Folgenden wird das gleiche gemacht wie oben. Der Unterschied ist die Richtung in der das Array durchlaufen und das die Funktion positiveLoop aufgerufen wird
                         for (var i = nearestNeighbourPosition + 1; i <= linesArray.length; i++) {
                             if (i == $scope.fields.currentField.id) {
                                 if (linesArray[i]) if (linesArray[i][2] != null) $scope.positiveLoop(i);
@@ -481,14 +497,17 @@ app.controller("mapCtrl", function($scope, $http){
                         }
                     }
                 } else {
+                    // Es wurde kein Nachbar gefunden oder die Elemente befinden sich nicht auf der gleichen Ebene
                     if (linesArray[$scope.fields.currentField.id]) {
+                        // Das Element besitzt bereits eine Summenklammer mit einem anderen Nachbarn. In diesem Fall wird die Verbindung aufgelöst.
+                        // Weiterhin müssen die ab- oder aufsteigenden Nachbarn überprüft werden.
                         if (linesArray[$scope.fields.currentField.id][2] != null) {
                             if ($scope.fields.currentField.id < linesArray[$scope.fields.currentField.id][2]) $scope.negativeLoop($scope.fields.currentField.id, linesArray[$scope.fields.currentField.id][2]);
                             else $scope.positiveLoop($scope.fields.currentField.id);
                         }
                     }
                 }
-
+                // Wenn kein Nachbar gefunden wurde und die Elemente nicht auf der gleiche Ebene liegen, dann wird eine Linie gezeichnet. Vom Kästchen bis zur Verortung in der Karte.
                 if (!createSummarize || !nearestNeighbour) {
                     linesArray[$scope.fields.currentField.id] = [$scope.map.lastClick, anchorPoint, null];
                 }
@@ -498,6 +517,9 @@ app.controller("mapCtrl", function($scope, $http){
             }
         };
 
+        // Wird die Zuweisung von einem Element geändert, dann müssen ggf. die Zuweisungen von anderen Elementen angepasst werden
+        // Beispiel: [12][12][12 - Vater] - Die ersten beiden Elemente besitzen den selben Vater (rechts) und bilden mit diesem eine Summenklammer.
+        // Wird die Verortung vom mittleren Element verändert und die Summenklammer wird aufgelöst, dann muss die Zuweisung vom ersten Element entfernt werden. Da nur benachbarte Elemente eine Summenklammer bilden dürfen.
         $scope.negativeLoop = function (startPos) {
             for(var i = startPos - 1; linesArray.length; i--) {
                 if (linesArray[i]) {
@@ -506,7 +528,7 @@ app.controller("mapCtrl", function($scope, $http){
                 } else break;
             }
         };
-
+        // Diese Funktion verhält sich wie die obige Funktion. Der Unterschied ist nur die Richtung in der innerhalb des Array iteriert wird.
         $scope.positiveLoop = function (startPos) {
             for(var i = startPos + 1; i <= linesArray.length; i++) {
                 if (linesArray[i]) {
@@ -915,6 +937,7 @@ function fitAllLines(linesArray){
     for (var i = linesArray.length - 1; i >= 0; i--) {
         try {
             var p1 = null;
+            // Wenn das Element einem Vater zugeordnet ist, dann müssen die Koordinaten in LatLng umgewandelt werden
             if (linesArray[i][2] != null) p1 =  map.containerPointToLatLng(linesArray[i][0]);
             else p1 = linesArray[i][0];
             var p2 = map.containerPointToLatLng(linesArray[i][1]);
