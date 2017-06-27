@@ -394,17 +394,35 @@ app.controller("mapCtrl", function($scope, $http){
         /********** Lines ********/
         // Die Verortung von einem Element wird gelöscht, in diesem Fall müssen ggf. die Zuweisungen von anderen Elementen entfernt werden.
         $scope.fields.deleteLocationOnMap = function() {
-            var neighbourPos = linesArray[$scope.fields.currentField.id][2];
-            if (neighbourPos != null) {
-                if (neighbourPos > $scope.fields.currentField.id) {
-                    $scope.negativeLoop($scope.fields.currentField.id);
-                } else {
-                    $scope.positiveLoop($scope.fields.currentField.id);
+            var currentFieldId = $scope.fields.currentField.id;
+            var currentItemAssignedTo = linesArray[currentFieldId][2];
+            var leftItem = linesArray[currentFieldId - 1];
+            var rightItem = linesArray[currentFieldId + 1];
+            // Das ausgewählte Element hat ein Vater-Element
+            if (currentItemAssignedTo != null) {
+                $scope.handleAssignment(currentFieldId, currentItemAssignedTo);
+            } else {
+                if (typeof(leftItem) != 'undefined') {
+                    if (leftItem[2] == currentFieldId) {
+                        $scope.handleAssignment(currentFieldId - 1, leftItem[2]);
+                        linesArray[currentFieldId - 1] = null;
+                    }
+                }
+                if (typeof(rightItem) != 'undefined') {
+                    if (rightItem[2] == currentFieldId) {
+                        $scope.handleAssignment(currentFieldId + 1, rightItem[2]);
+                        linesArray[currentFieldId + 1] = null;
+                    }
                 }
             }
             // Das aktuell ausgewählte Element wird zurückgesetzt.
-            linesArray[$scope.fields.currentField.id] = null;
+            linesArray[currentFieldId] = null;
             fitAllLines(linesArray);
+        };
+
+        $scope.handleAssignment = function(fieldId, assignedTo) {
+            if (assignedTo > fieldId) $scope.negativeLoop(fieldId);
+            else $scope.positiveLoop(fieldId);
         };
 
         $scope.fields.deleteLine = function() {
