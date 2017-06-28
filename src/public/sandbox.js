@@ -483,8 +483,17 @@ app.controller("mapCtrl", function($scope, $http){
                 if (nearestNeighbour && casketSameRegion) {
                     // Es wird überprüft, ob der gefundene Nachbar vor oder hinter dem aktuell ausgewählten Element liegt.
                     // Liegt der Nachbar vor dem aktuellen Element, dann müssen evtl. alle Elemente unterhalb des aktuell ausgewählten Elementes verändert/angepasst werden
-                    if (nearestNeighbourPosition > $scope.fields.currentField.id) createSummarize = $scope.checkCreateSummarize(nearestNeighbourPosition - 1, nearestNeighbour, anchorPoint, nearestNeighbourPosition, 'negativeLoop');
-                    else createSummarize = $scope.checkCreateSummarize(nearestNeighbourPosition + 1, nearestNeighbour, anchorPoint, nearestNeighbourPosition, 'positiveLoop');
+                    if (nearestNeighbourPosition > $scope.fields.currentField.id) {
+                        for (i = nearestNeighbourPosition - 1; linesArray.length; i--) {
+                            createSummarize = $scope.checkCreateSummarize(i, nearestNeighbour, anchorPoint, nearestNeighbourPosition, 'negativeLoop');
+                            if (createSummarize != null) break;
+                        }
+                    } else {
+                        for (i = nearestNeighbourPosition + 1; i <= linesArray.length; i++) {
+                            createSummarize = $scope.checkCreateSummarize(i, nearestNeighbour, anchorPoint, nearestNeighbourPosition, 'positiveLoop');
+                            if (createSummarize != null) break;
+                        }
+                    }
                 } else {
                     // Es wurde kein Nachbar gefunden oder die Elemente befinden sich nicht auf der gleichen Ebene
                     if (linesArray[$scope.fields.currentField.id]) {
@@ -509,25 +518,22 @@ app.controller("mapCtrl", function($scope, $http){
         // Bei den folgenden If-Abfragen, wird überürüft ob eine Summenklammer erstellt werden darf. Bedingung hierfür ist: Es dürfen nur direkt benachbarte Elemente verbunden werden.
         // Wenn zwischen zwei Elemente ein leeres Feld liegt oder ein Element welches bereits anderweitig verortet wurde, dann ist keine Summenklammer erlaubt.
         // In der Schleife wird vom potentiellen Nachbarn zum aktuellen Element iteriert. Liegen zwischen den beiden Elemente z.B. keine leeren Feldern, dann ist eine Zusammenfassung erlaubt.
-        $scope.checkCreateSummarize = function(startIndex, nearestNeighbour, anchorPoint, nearestNeighbourPosition, loop) {
-            var createSummarize = false;
-            for (var i = startIndex; linesArray.length; i--) {
-                // Das gefundene Element entspricht dem aktuell ausgewählten Element. Eine Summenklammer wird erstellt.
-                if (i == $scope.fields.currentField.id) {
-                    // Wenn das Element bereits einem anderen Nachbarn zugeordnet wurde, dann müssen alle Abhängigkeiten angepasst werden
-                    if (linesArray[i]) if (linesArray[i][2] != null) {
-                        if (loop == 'negativeLoop') $scope.negativeLoop(i);
-                        else $scope.positiveLoop(i)
-                    }
-                    linesArray[i] = [nearestNeighbour[1], anchorPoint, nearestNeighbourPosition];
-                    createSummarize = true;
-                    break;
-                } else if (linesArray[i]) {
-                    // Das Feld besitzt bereits einen aderen Nachbarn oder ist anderweitig verortet, dann ist keine Summenklammer erlaubt
-                    if (linesArray[i][2] == null || linesArray[i][2] != nearestNeighbourPosition) break;
-                    // Leeres Feld - Eine Summenklammer ist nicht erlaubt.
-                } else if (!linesArray[i]) break;
-            }
+        $scope.checkCreateSummarize = function(i, nearestNeighbour, anchorPoint, nearestNeighbourPosition, loop) {
+            var createSummarize = null;
+            // Das gefundene Element entspricht dem aktuell ausgewählten Element. Eine Summenklammer wird erstellt.
+            if (i == $scope.fields.currentField.id) {
+                // Wenn das Element bereits einem anderen Nachbarn zugeordnet wurde, dann müssen alle Abhängigkeiten angepasst werden
+                if (linesArray[i]) if (linesArray[i][2] != null) {
+                    if (loop == 'negativeLoop') $scope.negativeLoop(i);
+                    else $scope.positiveLoop(i)
+                }
+                linesArray[i] = [nearestNeighbour[1], anchorPoint, nearestNeighbourPosition];
+                createSummarize = true;
+            } else if (linesArray[i]) {
+                // Das Feld besitzt bereits einen aderen Nachbarn oder ist anderweitig verortet, dann ist keine Summenklammer erlaubt
+                if (linesArray[i][2] == null || linesArray[i][2] != nearestNeighbourPosition) createSummarize = false;
+                // Leeres Feld - Eine Summenklammer ist nicht erlaubt.
+            } else if (!linesArray[i]) createSummarize = false;
             return createSummarize
         };
 
