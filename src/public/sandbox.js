@@ -395,29 +395,31 @@ app.controller("mapCtrl", function($scope, $http){
         // Die Verortung von einem Element wird gelöscht, in diesem Fall müssen ggf. die Zuweisungen von anderen Elementen entfernt werden.
         $scope.fields.deleteLocationOnMap = function() {
             var currentFieldId = $scope.fields.currentField.id;
-            var currentItemAssignedTo = linesArray[currentFieldId][2];
-            var leftItem = linesArray[currentFieldId - 1];
-            var rightItem = linesArray[currentFieldId + 1];
-            // Das ausgewählte Element hat ein Vater-Element
-            if (currentItemAssignedTo != null) {
-                $scope.handleAssignment(currentFieldId, currentItemAssignedTo);
-            } else {
-                if (typeof(leftItem) != 'undefined') {
-                    if (leftItem[2] == currentFieldId) {
-                        $scope.handleAssignment(currentFieldId - 1, leftItem[2]);
-                        linesArray[currentFieldId - 1] = null;
+            if (typeof(linesArray[currentFieldId]) != 'undefined' && linesArray[currentFieldId] != null) {
+                var currentItemAssignedTo = linesArray[currentFieldId][2];
+                var leftItem = linesArray[currentFieldId - 1];
+                var rightItem = linesArray[currentFieldId + 1];
+                // Das ausgewählte Element hat ein Vater-Element
+                if (currentItemAssignedTo != null) {
+                    $scope.handleAssignment(currentFieldId, currentItemAssignedTo);
+                } else {
+                    if (typeof(leftItem) != 'undefined' && leftItem != null) {
+                        if (leftItem[2] == currentFieldId) {
+                            $scope.handleAssignment(currentFieldId - 1, leftItem[2]);
+                            linesArray[currentFieldId - 1] = null;
+                        }
+                    }
+                    if (typeof(rightItem) != 'undefined' && rightItem != null) {
+                        if (rightItem[2] == currentFieldId) {
+                            $scope.handleAssignment(currentFieldId + 1, rightItem[2]);
+                            linesArray[currentFieldId + 1] = null;
+                        }
                     }
                 }
-                if (typeof(rightItem) != 'undefined') {
-                    if (rightItem[2] == currentFieldId) {
-                        $scope.handleAssignment(currentFieldId + 1, rightItem[2]);
-                        linesArray[currentFieldId + 1] = null;
-                    }
-                }
+                // Das aktuell ausgewählte Element wird zurückgesetzt.
+                linesArray[currentFieldId] = null;
+                fitAllLines(linesArray);
             }
-            // Das aktuell ausgewählte Element wird zurückgesetzt.
-            linesArray[currentFieldId] = null;
-            fitAllLines(linesArray);
         };
 
         $scope.handleAssignment = function(fieldId, assignedTo) {
