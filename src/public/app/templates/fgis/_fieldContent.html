@@ -17,10 +17,6 @@
 		<div style="font-size: 1vw;  margin-left:2%">Taktische Symbole</div>
 		<input type="text" style="display: inline-block; position:relative; width: 28%; font-size: 1.5vh; height:10%;  margin-left:2%" placeholder="Filter" ng-model="fields.symbolsFilter">
 		<button style="top: 10%; font-size: 1.5vh;" ng-click=" fields.fiterSymbols('')">Filter l&ouml;schen </button>
-		<!-- todo: href anpassen -->
-		<!--<input type="button" style="top: 10%; font-size: 1.5vh; margin-left:2%;" onclick="window.open('/zeichengenerator');" value="Zeichengenerator" />-->
-		<!-- todo: update function -->
-		<!--<input type="button" style="top: 10%; font-size: 1.5vh;" onclick="" value="Zeichen aktualisieren" />-->
 		<ul id="filter" style="text-align: left; margin-left:2%; top:70%; width:98%; position:absolute">
 			<li ng-repeat="category in fields.symbols.categories" ng-click="">
 				<button style="font-size: 1.5vh; height:15%" ng-click="fields.fiterSymbols(category.keyword)">{{category.name}}</button>

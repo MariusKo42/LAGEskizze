@@ -80,7 +80,6 @@ ex.use(bodyParser.urlencoded({
 }));
 ex.use(bodyParser.json());
 
-ex.use('/zeichengenerator', express.static(__dirname + '/zeichengenerator/'));
 ex.use('/', express.static(__dirname + '/public'));
 
 server = ex.listen(1337, function(err) {
