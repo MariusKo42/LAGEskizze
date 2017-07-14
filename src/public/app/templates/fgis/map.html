@@ -38,7 +38,7 @@
 	  </tbody>
 	</table>
 	<div ng-repeat="field in fields.fieldOrder.properties">
-  		<div ng-attr-id="{{field.id}}" class="fields" ng-class="field.group" ng-style="{'top': field.top, 'left': field.left, 'width': fields.fieldOrder.width,'height': fields.fieldOrder.height}" ng-click="fields.register(field.id)" ondrop="drop(event)" ondragover="allowDrop(event)">
+  		<div droppable ng-attr-id="{{field.id}}" class="fields" ng-class="field.group" ng-style="{'top': field.top, 'left': field.left, 'width': fields.fieldOrder.width,'height': fields.fieldOrder.height}" ng-click="fields.register(field.id)" drop="handleDrop(element)" ondragover="allowDrop(event)">
 			<div ng-attr-id="fieldTextTop{{field.id}}" class="fieldText fieldTextTop"></div>
 		  	<div ng-attr-id="fieldTextBottom{{field.id}}" class="fieldText fieldTextBottom"></div>
 		  	<div ng-attr-id="fieldComment{{field.id}}" class="fieldComment"></div>
