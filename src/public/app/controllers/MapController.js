@@ -5,7 +5,7 @@ var lines,
 var commentsMap = new Map();
 var objectColor = "#f00";
 
-app.controller("MapController", function($scope, $http, $sce, $location){
+app.controller("MapController", function($scope, $http, $sce){
     // url of the local server
     $scope.localAddress = 'http://localhost:1337/';
 
@@ -67,7 +67,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
      */
 	$scope.deleteEntry = function () {
 		if ($scope.einsatz.id) {
-			$http.delete($scope.localAddress + 'api/deleteEntry/' + $scope.einsatz.id)
+			$http['delete']($scope.localAddress + 'api/deleteEntry/' + $scope.einsatz.id)
 				.then(function successCallback(response) {
 					if (response.data.result) {
                         lines.clearLayers();
@@ -355,7 +355,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 			$scope.fields.currentField.fieldComment = document.getElementById('fieldComment'+field).innerHTML;
 		}
 		$scope.sideContent.change(_template);
-	}
+	};
 
 	//submit the field ('bestaetigen')
 	$scope.fields.submit = function(){
@@ -375,7 +375,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 		document.getElementById($scope.fields.currentField.id).innerHTML = fieldHtml;
 		$scope.sideContent.close();
-	}
+	};
 
 	$scope.fields.cancel = function(){
 		$scope.sideContent.close();
@@ -384,9 +384,9 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$('#' + $scope.fields.currentField.id).removeClass("activated");
 		$scope.fields.deleteLastLine($scope.fields.currentField.id);
         $scope.fields.currentField.id = undefined;
-	}
+	};
 
-	$scope.fields.delete = function(){
+	$scope.fields['delete'] = function(){
 		$scope.fields.deleteLine();
 
 		var fieldHtml = getFieldHtmlString($scope.fields.currentField.id, '', '', '', '');
@@ -396,13 +396,13 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.fields.currentField.active = false;
 		$('#' + $scope.fields.currentField.id).removeClass("activated");
 		$scope.fields.currentField.id = null;
-	}
+	};
 
 	//filter the list of fields
 	$scope.fields.fiterSymbols = function(string){
 		console.log("filter: " + string);
 		$scope.fields.symbolsFilter = string;
-	}
+	};
 
 	/**
 	* @desc changes symbol of currentField in tz
@@ -413,14 +413,14 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	$scope.fields.addSymbol = function(string){
 		$scope.fields.currentField.image = "images/symbols/" + string + ".svg";
 		document.getElementById('image'+ $scope.fields.currentField.id).src = $scope.fields.currentField.image;
-	}
+	};
 
 	/********** Lines ********/
 
 	$scope.fields.deleteLine = function() {
 		linesArray[$scope.fields.currentField.id] = null;
 		fitAllLines(linesArray);
-	}
+	};
 
 	$scope.fields.updateLine = function(){
 		if ($scope.fields.currentField.active) {
@@ -429,7 +429,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		} else {
 			$scope.fields.addLine();
 		}
-	}
+	};
 
 	$scope.fields.addLine = function(){
 		if ($scope.fields.currentField.id) {
@@ -443,7 +443,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 				$scope.map.lastClick = null;
 			}
 		}
-	}
+	};
 
 	$scope.fields.deleteLastLine = function(oldId){
 		if (oldId) {
@@ -454,7 +454,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 				fitAllLines(linesArray);
 			}
 		}
-	}
+	};
 
 	/********************************
 	************** Map **************
@@ -472,12 +472,12 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 			itemDrawed = false;
 		}
 	});
-	map.on('move', function(e){
+	map.on('move', function(){
 		fitAllLines(linesArray);
 	});
-	map.on('draw:drawstop', function(e){});
+	map.on('draw:drawstop', function(){});
 
-	map.on('draw:drawstart', function(e){});
+	map.on('draw:drawstart', function(){});
 
 	map.on('draw:created', function (e) {
 		var type = e.layerType,
@@ -513,14 +513,14 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 			$scope.map.showComment();
 			$scope.$apply(function() {});
 		}
-	}
+	};
 
 	$scope.map.zoomIn = function(){
-		if (!$scope.map.frozen) {map.zoomIn();};
-	}
+		if (!$scope.map.frozen) {map.zoomIn();}
+	};
 	$scope.map.zoomOut = function(){
-		if (!$scope.map.frozen) {map.zoomOut();};
-	}
+		if (!$scope.map.frozen) {map.zoomOut();}
+	};
 	$scope.map.freeze = function(){
 		if($scope.map.frozen){
 			$scope.map.frozen = false;
@@ -548,7 +548,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 			$("#freezeMap").css('color', 'grey');
 			$(".customZoomControl").css('color', '#ddd');
 		}
-	}
+	};
 
 	/************** Map Layers ************/
 	/*** TODO: adapt to new backend */
@@ -565,7 +565,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 			$scope.sideContent.change("app/templates/fgis/_datasets.html");
 		}
 		try{$scope.map.editCancel();}catch(e){}
-	}
+	};
 
 	$scope.map.initBasemaps = function(){
 		// this route does not exist yet in the backend..
@@ -597,7 +597,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		});
 		basemap.clearLayers();
 		basemap.addLayer(wmsLayer);
-	}
+	};
 
 	/************** Map draw ************/
 
@@ -609,7 +609,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		var _className = 'leaflet-draw-draw-' + type;
 		var _element = document.getElementsByClassName(_className);
 		_element[0].click();
-	}
+	};
 
 	$scope.map.deleteObjects = function(){
 		drawnItems.eachLayer(function(layer) {
@@ -622,7 +622,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		_element[0].click();
 		$scope.sideContent.textvar = "Die zu löschenden Objekte bitte anklicken";
 		$scope.sideContent.change("app/templates/fgis/_editObjects.html");
-	}
+	};
 
 	$scope.map.editObjects = function(){
 		$scope.map.editActive = true;
@@ -632,13 +632,13 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		$scope.sideContent.textvar = "Objekte bearbeiten";
 		$scope.sideContent.change("app/templates/fgis/_editObjects.html");
 		$scope.map.objectId = "";
-	}
+	};
 
 	$scope.map.activateDrawInformation = function(){
 		drawnItems.eachLayer(function(layer) {
 			setClickable(layer, true);
 		});
-	}
+	};
 
 	$scope.map.objects = {};
 	$scope.map.objects.measureString = "";
@@ -648,14 +648,14 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 	// save a comment for a drawn object using a map (first value: ObjectId from leafletDraw, second value: commentText)
 	$scope.map.saveComment = function(){
 		commentsMap.set($scope.map.objectId, $scope.map.objects.comment);
-	}
+	};
 
 	$scope.map.showComment = function(){
 	    if ($scope.sideContent.template.includes('_drawnObject')) $scope.setColorPicker();
 
 		$scope.map.objects.comment = commentsMap.get($scope.map.objectId);
 		$scope.sideContent.change("app/templates/fgis/_drawnObject.html");
-	}
+	};
 
 	$scope.map.editCancel = function(){
 		drawnItems.eachLayer(function(layer) {
@@ -667,7 +667,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		_element[0].children[1].children[0].click();
 		$scope.map.objectId = "";
 		$scope.sideContent.close();
-	}
+	};
 
 	$scope.map.editSave = function(){
 		drawnItems.eachLayer(function(layer) {
@@ -678,14 +678,14 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 		var _element = document.getElementsByClassName($scope.map.currentEdit);
 		_element[0].children[0].children[0].click();
 		$scope.map.objectId = "";
-		commentsMap.delete($scope.map.objectId);
+		commentsMap['delete']($scope.map.objectId);
 		$scope.sideContent.close();
-	}
+	};
 
 	// change the color of the choosen object
 	$scope.map.changeObjectsColor = function() {
 		drawnItems.getLayer($scope.map.objectId).setStyle({color: newColor, dashArray: dashStyle});
-	}
+	};
     /**
      * Once the checkbox is selected the style of the geometry is changed
      */
@@ -698,12 +698,11 @@ app.controller("MapController", function($scope, $http, $sce, $location){
             dashStyle = null;
             drawnItems.getLayer($scope.map.objectId).setStyle({color: tmpColor, dashArray: null});
         }
-	}
+	};
 
 	$scope.map.objects.getMeasurement = function(type, layer){
 		var _htmlString = "";
 		var _area = null;
-		var _length = null;
 		var _latlng = null;
 		var _radius = null;
 		var _type = "";
@@ -748,17 +747,17 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 				_htmlString = "Fläche: " + Math.floor(_area/100)/100 + "ha / "
 								+ Math.floor(_area/10000)/100 + "km<sup>2</sup><br>";
 			}
-		};
+		}
 		if (_length != null) {
 			if (_length < 10000){
 				_htmlString = "Länge: " + Math.floor(_length) + "m";
 			} else {
 				_htmlString = "Länge: " + Math.floor(_length/100)/10 + "km";
 			}
-		};
+		}
 		$scope.map.objects.measureString = $sce.trustAsHtml(_htmlString);
 		$scope.map.objects.type = _type;
-	}
+	};
 
 
 	/********* INIT **********/
@@ -775,7 +774,7 @@ app.controller("MapController", function($scope, $http, $sce, $location){
 
 /**
  * @desc calculates coordinates for the anchor point (centered to the TZ slot) of the lines to be drawn correctly on map
- * @param elementID: ID of html element for which anchor point will get calculated.
+ * @param elementId: ID of html element for which anchor point will get calculated.
  * @return calculated coordinates
  */
 function getAnchorOfElement(elementId){
@@ -831,7 +830,7 @@ function initMap(){
 			polygon: {
 				allowIntersection: true,
 				shapeOptions: { color: '#ff0000',  clickable: false },
-				showArea: true,
+				showArea: true
 			},
 			rectangle: {
 				shapeOptions: { clickable: false,  color: '#ff0000' }
@@ -892,7 +891,7 @@ function fitAllLines(linesArray){
 		} catch(e){
 			// do nothing, because the linesArray will have holes
 		}
-	};
+	}
 }
 
 /****************************************
@@ -946,10 +945,10 @@ function drop(ev){
 
 	//swap the lines:
 	var newTargetLine = linesArray[startId];
-	if (newTargetLine != null) {newTargetLine[1] = getAnchorOfElement(targetId)};
+	if (newTargetLine != null) {newTargetLine[1] = getAnchorOfElement(targetId)}
 
 	var newStartLine = linesArray[targetId];
-	if (newStartLine != null) {newStartLine[1] = getAnchorOfElement(startId)};
+	if (newStartLine != null) {newStartLine[1] = getAnchorOfElement(startId)}
 
 	linesArray[startId] = newStartLine;
 	linesArray[targetId] = newTargetLine;
@@ -975,12 +974,13 @@ function getFieldHtmlString(kranzposition, svgPath , comment, textTop, textBotto
 		+ comment + '</div>';
 
 	// insert TZ if a path is given, else create a "NA" polygon
+	var _image = '';
 	if (svgPath) {
-		var _image = '<img id="image' + kranzposition + '" draggable="true" ondragstart="drag(event)" src="'
+		_image = '<img id="image' + kranzposition + '" draggable="true" ondragstart="drag(event)" src="'
 			+ svgPath + '" style="height:' + fieldOrder.size + '; width:' + fieldOrder.size
 			+ '; background-color: white; text-align: center;" />';
 	} else {
-		var _image = '<svg id="image' +  kranzposition + '" viewBox="0 0 89 89" preserveAspectRatio="none" style="height:'
+		_image = '<svg id="image' +  kranzposition + '" viewBox="0 0 89 89" preserveAspectRatio="none" style="height:'
 			+ fieldOrder.size + '; width:' + fieldOrder.size
 			+ ';"><polygon points="2,2 88,2 88,88 2,88 2,2 2,22.5 88,22.5 88,67.5 2,67.5"/></svg>';
 	}

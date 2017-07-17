@@ -31,5 +31,5 @@ var fieldOrder = {
 	],
 	"width": "5.52%",
 	"height": "11.04%", 
-	"size": "100%",
-}
+	"size": "100%"
+};

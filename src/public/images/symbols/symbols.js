@@ -110,4 +110,4 @@ var symbolProperties = {
 		{"name":"Rettungsdienst", "keyword": "rettungsdienst", "id": 3},
 		{"name":"THW", "keyword": "thw", "id": 4}
 	]
-}
+};
