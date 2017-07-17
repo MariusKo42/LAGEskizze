@@ -38,3 +38,5 @@ src/public/images/symbols/*.svg
 
 # fire database
 src/fireDatabase.json
+src/lageskizze-win32-ia32/
+src/lageskizze-win32-x64/
