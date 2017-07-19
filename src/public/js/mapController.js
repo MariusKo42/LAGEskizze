@@ -31,11 +31,11 @@ app.directive('droppable', function() {
 app.config(function ($routeProvider) {
     $routeProvider
         .when('/map', {
-            templateUrl: './app/templates/fgis/map.html',
+            templateUrl: '../public/app/templates/fgis/map.html',
             controller: 'mapCtrl'
         })
         .otherwise({
-            templateUrl: './app/templates/fgis/map.html',
+            templateUrl: '../public/app/templates/fgis/map.html',
             controller: 'mapCtrl'
         })
 });

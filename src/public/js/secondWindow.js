@@ -4,23 +4,23 @@ var windowManager = require('electron').remote.require('electron-window-manager'
 app.config(function ($routeProvider) {
     $routeProvider
         .when('/loadMenu', {
-            templateUrl: './app/templates/fgis/loadMenu_2.html',
+            templateUrl: '../public/app/templates/fgis/loadMenu_2.html',
             controller: 'loadMenuCtrl'
         })
         .when('/fieldContent', {
-            templateUrl: './app/templates/fgis/fieldContent_2.html',
+            templateUrl: '../public/app/templates/fgis/fieldContent_2.html',
             controller: 'fieldContentCtrl'
         })
         .when('/layer', {
-            templateUrl: './app/templates/fgis/_datasets.html',
+            templateUrl: '../public/app/templates/fgis/_datasets.html',
             controller: 'layerCtrl'
         })
         .when('/editObject', {
-            templateUrl: './app/templates/fgis/_drawnObject.html',
+            templateUrl: '../public/app/templates/fgis/_drawnObject.html',
             controller: 'editObjectCtrl'
         })
         .otherwise({
-            templateUrl: './app/templates/fgis/fieldContent_2.html',
+            templateUrl: '../public/app/templates/fgis/fieldContent_2.html',
             controller: 'fieldContentCtrl'
         })
 });
