@@ -500,10 +500,6 @@ app.controller("MapController", function($scope, $http, $sce){
 
 	/********** Lines ********/
 
-	$scope.fields.deleteLine = function() {
-		console.log('deleteLine');
-	};
-
 	// The location of an element is deleted, in this case the assignments of other elements may need to be removed/changed.
 	$scope.fields.deleteLocationOnMap = function(fieldid) {
 		var currentFieldId = fieldid;
