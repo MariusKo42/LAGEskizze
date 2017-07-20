@@ -192,8 +192,8 @@ app.controller('loadMenuCtrl', function ($scope, $http) {
         windowManager.bridge.emit('saveMission', 'saveEntry');
     };
 
-    $scope.deleteEntry = function () {
-        windowManager.bridge.emit('deleteEntry', true);
+    $scope.deleteEntry = function (value) {
+        windowManager.bridge.emit('deleteEntry', value);
     };
 });
 

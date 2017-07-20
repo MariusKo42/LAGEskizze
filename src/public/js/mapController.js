@@ -118,6 +118,11 @@ app.controller("mapCtrl", function($scope, $http) {
             }
         };
 
+        // A data record should be stored at a fixed time interval. 1800000 ms is equivalent to 30 minutes.
+            // setInterval(function () {
+            //     $scope.saveEinsatz();
+            // }, 1800000);
+
         windowManager.bridge.on('submitField', function(value) {
             $scope.fields.submit(value.fieldTop, value.fieldBottom, value.imageSrc, value.fieldComment);
         });
@@ -153,8 +158,8 @@ app.controller("mapCtrl", function($scope, $http) {
             $scope.resetMap();
         });
 
-        windowManager.bridge.on('deleteEntry', function () {
-            $scope.deleteEntry();
+        windowManager.bridge.on('deleteEntry', function (value) {
+            $scope.deleteEntry(value.id);
             $scope.resetMap();
         });
 
@@ -192,9 +197,9 @@ app.controller("mapCtrl", function($scope, $http) {
         /**
          * The current dataset is removed from the database.
          */
-        $scope.deleteEntry = function () {
-            if ($scope.einsatz.id) {
-                $http.delete($scope.localAddress + 'api/deleteEntry/' + $scope.einsatz.id)
+        $scope.deleteEntry = function (id) {
+            if (id) {
+                $http.delete($scope.localAddress + 'api/deleteEntry/' + id)
                     .then(function successCallback(response) {
                         if (response.data.result) {
                             windowManager.bridge.emit('reloadSecWin', true);
@@ -207,57 +212,70 @@ app.controller("mapCtrl", function($scope, $http) {
          * serializes the current state into $scope.einsatz & pushs it to the DB server
          */
         $scope.saveEinsatz = function() {
-            var date = new Date();
-            // Readable time string
-            $scope.einsatz.time = date.toLocaleString();
-            // Current timestamp in ms
-            $scope.einsatz.id = date.getTime();
-            // copy field data into $scope.einsatz.fields
-            $scope.einsatz.taktZeichen = [];
-            for (var i = 0; i < $scope.fields.fieldOrder.properties.length; i++) {
-                var kranzPos = $scope.fields.fieldOrder.properties[i].id;
-                var line = linesArray[kranzPos];
-
-                $scope.einsatz.taktZeichen.push({
-                    kranzposition: kranzPos,
-                    kartenposition: line ? [line[0],line[2],line[3]] : '',
-                    zeichen:    $('#image' + kranzPos).attr('src') || '',
-                    comment:    $('#fieldComment' + kranzPos).text() || '',
-                    textTop:    $('#fieldTextTop' + kranzPos).text() || '',
-                    textBottom: $('#fieldTextBottom' + kranzPos).text() || ''
-                });
+            var i = 0;
+            // An entry can only be saved if a symbol is set or a line has been drawn into the map.
+            var startSaveing = false;
+            if (linesArray.length > 0) {
+                for(i = 0; i < linesArray.length; i++) {
+                    if (linesArray[i]) {
+                        startSaveing = true;
+                        break;
+                    }
+                }
             }
+            if (startSaveing) {
+                var date = new Date();
+                // Readable time string
+                $scope.einsatz.time = date.toLocaleString();
+                // Current timestamp in ms
+                $scope.einsatz.id = date.getTime();
+                // copy field data into $scope.einsatz.fields
+                $scope.einsatz.taktZeichen = [];
+                for (i = 0; i < $scope.fields.fieldOrder.properties.length; i++) {
+                    var kranzPos = $scope.fields.fieldOrder.properties[i].id;
+                    var line = linesArray[kranzPos];
 
-            // push drawn object data into $scope.einsatz.drawnObjects
-            $scope.einsatz.drawnObjects = [];
-            drawnItems.eachLayer(function(layer) {
-                var geojson = layer.toGeoJSON();
-                geojson.properties.comment = commentsMap.get(drawnItems.getLayerId(layer)) || '';
-                geojson.properties.color = layer.options.color || '';
-                // as leaflet draw serializes a circle as a point, we need to store the radius manually.
-                if (layer._mRadius) geojson.properties.circleRadius = layer._mRadius;
-                $scope.einsatz.drawnObjects.push(geojson);
-            });
-            // save map state
-            $scope.einsatz.map.zoom = map.getZoom();
-            $scope.einsatz.map.center = map.getCenter();
-            $scope.einsatz.map.tileServer = '';
-
-            /**
-             * A new entry is added to the database.
-             */
-            function postEntry() {
-                $http.post($scope.localAddress + 'api/addEntry/', $scope.einsatz)
-                    .then(function successCallback(response) {
-                        if (response.data.result) {
-                            // The table is updated
-                            windowManager.bridge.emit('reloadSecWin', true);
-                        }
+                    $scope.einsatz.taktZeichen.push({
+                        kranzposition: kranzPos,
+                        kartenposition: line ? [line[0],line[2],line[3]] : '',
+                        zeichen:    $('#image' + kranzPos).attr('src') || '',
+                        comment:    $('#fieldComment' + kranzPos).text() || '',
+                        textTop:    $('#fieldTextTop' + kranzPos).text() || '',
+                        textBottom: $('#fieldTextBottom' + kranzPos).text() || ''
                     });
-            }
+                }
 
-            if ($scope.einsatz.id) {
-                postEntry();
+                // push drawn object data into $scope.einsatz.drawnObjects
+                $scope.einsatz.drawnObjects = [];
+                drawnItems.eachLayer(function(layer) {
+                    var geojson = layer.toGeoJSON();
+                    geojson.properties.comment = commentsMap.get(drawnItems.getLayerId(layer)) || '';
+                    geojson.properties.color = layer.options.color || '';
+                    // as leaflet draw serializes a circle as a point, we need to store the radius manually.
+                    if (layer._mRadius) geojson.properties.circleRadius = layer._mRadius;
+                    $scope.einsatz.drawnObjects.push(geojson);
+                });
+                // save map state
+                $scope.einsatz.map.zoom = map.getZoom();
+                $scope.einsatz.map.center = map.getCenter();
+                $scope.einsatz.map.tileServer = '';
+
+                /**
+                 * A new entry is added to the database.
+                 */
+                function postEntry() {
+                    $http.post($scope.localAddress + 'api/addEntry/', $scope.einsatz)
+                        .then(function successCallback(response) {
+                            if (response.data.result) {
+                                // The table is updated
+                                windowManager.bridge.emit('reloadSecWin', true);
+                            }
+                        });
+                }
+
+                if ($scope.einsatz.id) {
+                    postEntry();
+                }
             }
         };
 
