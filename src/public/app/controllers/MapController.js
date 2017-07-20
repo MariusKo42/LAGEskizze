@@ -5,6 +5,29 @@ var lines,
 var commentsMap = new Map();
 var objectColor = "#f00";
 
+app.directive('droppable', function() {
+	return {
+		scope: {
+			drop: '&' // parent
+		},
+		link: function(scope, element) {
+			// again we need the native object
+			var el = element[0];
+			el.addEventListener(
+				'drop',
+				function(e) {
+					// Stops some browsers from redirecting.
+					if(e.preventDefault) e.preventDefault();
+					if(e.stopPropagation) e.stopPropagation();
+					scope.drop({element:e});
+					return false;
+				},
+				false
+			);
+		}
+	}
+});
+
 app.controller("MapController", function($scope, $http, $sce){
     // url of the local server
     $scope.localAddress = 'http://localhost:1337/';
@@ -30,6 +53,66 @@ app.controller("MapController", function($scope, $http, $sce){
         }
     });
 
+	// This function is activated as soon as an element is moved by drag and drop.
+	// The position in the map has to be adjusted again
+	$scope.handleDrop = function(element) {
+		var startId = element.dataTransfer.getData("text");
+		var startElement = document.getElementById(startId);
+		// we drop onto the fieldText or svg, so we need to access the parent field-div
+		var targetElement = element.target.parentNode;
+		// if we drop onto the svg polygon element, we need to go one level higher
+		if (!$(targetElement).hasClass('fields'))
+			targetElement = targetElement.parentNode;
+		var targetId = targetElement.id;
+
+		if (startId != targetId) {
+			//save the texts:
+			var _imageTarget      = $('#image' + targetId).attr('src');
+			var _textTopTarget    = $('#fieldTextTop' + targetId).html();
+			var _textBottomTarget = $('#fieldTextBottom' + targetId).html();
+			var _commentTarget    = $('#fieldComment' + targetId).html();
+			var _imageStart       = $('#image' + startId).attr('src');
+			var _textTopStart     = $('#fieldTextTop' + startId).html();
+			var _textBottomStart  = $('#fieldTextBottom' + startId).html();
+			var _commentStart     = $('#fieldComment' + startId).html();
+
+			//swap the images and texts
+			startElement.innerHTML = getFieldHtmlString(
+				startId, _imageTarget, _commentTarget,
+				_textTopTarget, _textBottomTarget
+			);
+
+			targetElement.innerHTML = getFieldHtmlString(
+				targetId, _imageStart, _commentStart,
+				_textTopStart, _textBottomStart
+			);
+			var elements = [];
+			//  An element is moved from a to b. The position in the map must be retained.
+			//  The new position and the original location in the map are saved
+			if (linesArray[startId]) {
+				// Only in this case, the position on the map is also stored in the object.
+				// By drag & drop, the element is first removed and then re-marked. When deleting, the position in the map is lost, this must be saved. So the position on the map is stored in the object.
+				elements.push({
+					'mappos': linesArray[startId][3],
+					'fieldid': parseInt(targetId)
+				});
+			}
+			// An element already exists at the position b, then this is moved from b to a. Both elements exchange their places
+			if (linesArray[targetId]) {
+				elements.push({
+					'mappos': linesArray[targetId][3],
+					'fieldid': parseInt(startId)
+				});
+			}
+
+			// If an element is moved, the old position is first deleted and then redrawn
+			$scope.fields.deleteLocationOnMap(parseInt(startId));
+			$scope.fields.deleteLocationOnMap(parseInt(targetId));
+			// The elements are re-drawn
+			$scope.fields.addLine(elements);
+		}
+	};
+
 	/********************************
 	********  loading/saving ********
 	********************************/
@@ -53,6 +136,9 @@ app.controller("MapController", function($scope, $http, $sce){
 			tileServer: '' // basemap layer
 		}
 	};
+
+
+
     /**
      * A new mission is created. The existing lines are removed.
      */
@@ -101,7 +187,7 @@ app.controller("MapController", function($scope, $http, $sce){
 
 			$scope.einsatz.taktZeichen.push({
 				kranzposition: kranzPos,
-				kartenposition: line ? line[0] : '',
+				kartenposition: line ? [line[0],line[2],line[3]] : '',
 				zeichen:    $('#image' + kranzPos).attr('src') || '',
 				comment:    $('#fieldComment' + kranzPos).text() || '',
 				textTop:    $('#fieldTextTop' + kranzPos).text() || '',
@@ -255,7 +341,6 @@ app.controller("MapController", function($scope, $http, $sce){
 
 				// register click events
 				layer.on('click', function(e){
-					console.log(e.target);
 					$scope.map.objectClicked(e.target.feature.geometry.type, e.target, e.target._leaflet_id);
 				});
 			}
@@ -267,11 +352,10 @@ app.controller("MapController", function($scope, $http, $sce){
 
 			// upate mapstate
 			map.setView($scope.einsatz.map.center, $scope.einsatz.map.zoom);
-			// TODO: basemap
-
 			// setze taktische zeichen in karte
 			for (var i = 0; i < $scope.einsatz.taktZeichen.length; i++) {
 				var field = $scope.einsatz.taktZeichen[i];
+				var mapPosition = field.kartenposition;
 
 				var fieldHtml = getFieldHtmlString(field.kranzposition, field.zeichen,
 					field.comment, field.textTop, field.textBottom);
@@ -279,12 +363,14 @@ app.controller("MapController", function($scope, $http, $sce){
 				$('#' + field.kranzposition).html(fieldHtml);
 
 				// field line / kartenposition
-				if (field.kartenposition == '') continue; // field has no kartenposition
+				if (field.kartenposition == '') {
+					continue; // field has no kartenposition
+				} else if (field.kartenposition[1] != null ) {
+					mapPosition = map.containerPointToLatLng(field.kartenposition[0]);
+				}
 				var anchorPoint = getAnchorOfElement('image' + field.kranzposition);
-				var anchor = map.containerPointToLatLng(anchorPoint);
-				var latlngs = [field.kartenposition, anchor];
-				linesArray[field.kranzposition] = [field.kartenposition, anchorPoint];
-				lines.addLayer(L.polyline(latlngs));
+				linesArray[field.kranzposition] = [field.kartenposition[0], anchorPoint, field.kartenposition[1], field.kartenposition[2]];
+				fitAllLines(linesArray);
 			}
 		}
 	};
@@ -334,9 +420,6 @@ app.controller("MapController", function($scope, $http, $sce){
 		});
 
 		if(thisImage.length == 0){
-			if ($scope.map.lastClick !=null){
-				$scope.fields.addLine();
-			}
 			$scope.fields.currentField.image = "images/symbols/_universal.svg";
 			$scope.fields.currentField.topText = "";
 			$scope.fields.currentField.bottomText = "";
@@ -387,15 +470,15 @@ app.controller("MapController", function($scope, $http, $sce){
 	};
 
 	$scope.fields['delete'] = function(){
-		$scope.fields.deleteLine();
+		if ($scope.fields.currentField.id) {
+			var fieldHtml = getFieldHtmlString($scope.fields.currentField.id, '', '', '', '');
+			document.getElementById($scope.fields.currentField.id).innerHTML = fieldHtml;
 
-		var fieldHtml = getFieldHtmlString($scope.fields.currentField.id, '', '', '', '');
-		document.getElementById($scope.fields.currentField.id).innerHTML = fieldHtml;
-
-		$scope.sideContent.close();
-		$scope.fields.currentField.active = false;
-		$('#' + $scope.fields.currentField.id).removeClass("activated");
-		$scope.fields.currentField.id = null;
+			$scope.sideContent.close();
+			$scope.fields.currentField.active = false;
+			$('#' + $scope.fields.currentField.id).removeClass("activated");
+			$scope.fields.currentField.id = null;
+		}
 	};
 
 	//filter the list of fields
@@ -418,31 +501,129 @@ app.controller("MapController", function($scope, $http, $sce){
 	/********** Lines ********/
 
 	$scope.fields.deleteLine = function() {
-		linesArray[$scope.fields.currentField.id] = null;
-		fitAllLines(linesArray);
+		console.log('deleteLine');
+	};
+
+	// The location of an element is deleted, in this case the assignments of other elements may need to be removed/changed.
+	$scope.fields.deleteLocationOnMap = function(fieldid) {
+		var currentFieldId = fieldid;
+		// It is checked whether a dataset is available.
+		if (linesArray[currentFieldId]) {
+			// Left and right neighbor
+			var leftItem = linesArray[currentFieldId - 1];
+			var rightItem = linesArray[currentFieldId + 1];
+			var elements = [];
+			// Test whether a left neighbor exists
+			if (leftItem) {
+				// Left neighbour is my son or my brother
+				if (leftItem[2] == currentFieldId || (leftItem[2] == linesArray[currentFieldId][2] && linesArray[currentFieldId][2] != null)) {
+					elements.push({'fieldid': currentFieldId - 1});
+				}
+			}
+			// Test whether a right neighbor exists
+			if (rightItem) {
+				// Right neighbour is my son or my brother
+				if (rightItem[2] == currentFieldId || (rightItem[2] == linesArray[currentFieldId][2] && linesArray[currentFieldId][2] != null)) {
+					elements.push({'fieldid': currentFieldId + 1});
+				}
+			}
+			// The currently selected element will be reset
+			linesArray[currentFieldId] = null;
+			fitAllLines(linesArray);
+			$scope.fields.addLine(elements);
+		}
 	};
 
 	$scope.fields.updateLine = function(){
-		if ($scope.fields.currentField.active) {
-			$scope.fields.deleteLine();
-			$scope.fields.addLine();
-		} else {
-			$scope.fields.addLine();
+		if ($scope.fields.currentField.id) $scope.fields.addLine([{'fieldid': $scope.fields.currentField.id}]);
+	};
+
+	$scope.fields.addLine = function(elements){
+		// aufbau des linesArray[]
+		// [Position in der Karte, Position am Bildschirmrand, Nummer des Vaters, Originale Kartenposition vom element]
+		if (elements.length > 0) {
+			// Wenn das Attribut mappos existiert, dann wurde das element per drag & drop verschoben. in diesem fall wird ein klick in die karte simuliert.
+			if (elements[0].mappos) $scope.map.lastClick = elements[0].mappos;
+			var currentFieldId = elements[0].fieldid;
+			var neighbourLeft = linesArray[currentFieldId - 1];
+			var neighbourRight = linesArray[currentFieldId + 1];
+			// Existiert bereits ein eintrag oder ist das feld leer und es wird zum erstenmal ein eintrag erstellt.
+			if (linesArray[currentFieldId]) {
+				// Das ausgewählte element ist ein sohn und ist einem element zugewiesen. in diesem fall müssen die nachbarn überprüft werden, ob diese ebenfalls söhne vom gleichen vater sind.
+				if (linesArray[currentFieldId][2]) {
+					// Es müssen nur Elemente betrachtet werden die den gleichen Vater haben
+					if (neighbourLeft) {
+						// der linke nachbar ist ebenfalls der sohn vom selben vater
+						if (neighbourLeft[2] == linesArray[currentFieldId][2]) {
+							elements.push({
+								"fieldid": currentFieldId - 1
+							})
+						}
+					}
+					if (neighbourRight) {
+						// der rechte nachbar ist ebenfalls der sohn vom selben vater
+						if (neighbourRight[2] == linesArray[currentFieldId][2]) {
+							elements.push({
+								"fieldid": currentFieldId + 1
+							})
+						}
+					}
+				}
+			}
+			// Bildschirmkoordinate
+			var anchorPoint = getAnchorOfElement(currentFieldId);
+			var lineToMapPos = null;
+			// eine linie wird erstellt. diese linie verbindet das element und die position in der karte
+			// else-fall: wurde keine position in der karte ausgwählt, dann besitzt jedes element seine ursprünglliche positin in der karte.
+			if ($scope.map.lastClick) lineToMapPos = L.latLng($scope.map.lastClick.lat, $scope.map.lastClick.lng);
+			else lineToMapPos = L.latLng(linesArray[currentFieldId][3].lat, linesArray[currentFieldId][3].lng);
+			// es wird überprüft ob eine summenklammer erstellt werden kann. die position des elementes mit dem die verbindung erstellt werden soll wird zurückgeliefert
+			var neighbourPos = $scope.checkCreateSummarize([currentFieldId - 1, currentFieldId + 1], currentFieldId, lineToMapPos);
+			// wenn es kein passendes element gibt, dann einfach eine linie vom element bis zur karte gezeichnet
+			if (!neighbourPos) {
+				if ($scope.map.lastClick) linesArray[currentFieldId] = [$scope.map.lastClick, anchorPoint, null, $scope.map.lastClick];
+				// wurde keine position in der karte ausgwählt, dann besitzt jedes element seine ursprünglliche positin in der karte.
+				else linesArray[currentFieldId] = [linesArray[currentFieldId][3], anchorPoint, null, linesArray[currentFieldId][3]];
+				// Eine Summenklammer mit dem gefundenen Element wird erstellt.
+			} else linesArray[currentFieldId] = [linesArray[neighbourPos][1], anchorPoint, neighbourPos, linesArray[neighbourPos][3]];
+
+			fitAllLines(linesArray);
+			$scope.fields.currentField.active = true;
+			$scope.map.lastClick = null;
+			elements.shift();
+			if (elements.length > 0) $scope.fields.addLine(elements);
 		}
 	};
 
-	$scope.fields.addLine = function(){
-		if ($scope.fields.currentField.id) {
-			var anchorPoint = getAnchorOfElement($scope.fields.currentField.id);
-			var anchor = map.containerPointToLatLng(anchorPoint);
-			var latlngs = [$scope.map.lastClick, anchor];
-			if(linesArray[$scope.fields.currentField.id] == null){
-				linesArray[$scope.fields.currentField.id] = [$scope.map.lastClick, anchorPoint];
-				lines.addLayer(L.polyline(latlngs));
-				$scope.fields.currentField.active = true;
-				$scope.map.lastClick = null;
+	// Eine Summenklammer darf nur mit dem direkten nachbarn erstellt werden.
+	// In der variablen fieldIdsArray sind die positionen der beiden nachbarn gespeichert
+	$scope.checkCreateSummarize = function(fieldIdsArray, currentFieldId, lineToMapPos) {
+		var casketSameRegion = false;
+		var fieldId = null;
+		var shortestDist = null;
+		var tmpDist = null;
+		var neighbourPos = null;
+		for(var i = 0; i < fieldIdsArray.length; i++) {
+			fieldId = fieldIdsArray[i];
+			// top / right / bottom / left - erklären
+			// Nur Elemente auf der gleiche Ebene dürfen miteinader verbunden werden
+			if (fieldId <= 24 && currentFieldId <= 24) casketSameRegion = true;
+			else if (fieldId >= 47 && currentFieldId >= 47) casketSameRegion = true;
+			else if (fieldId <= 39 && currentFieldId <= 39) casketSameRegion = true;
+			else if (fieldId >= 41 && currentFieldId >= 41) casketSameRegion = true;
+			if (casketSameRegion && linesArray[fieldId]) {
+				// jedes element besitzt seine ursprüngliche position in der karte. anhand dieser position wird eine distanz berechnet. zwischen dem bestehenden element und dem neuen element.
+				if (linesArray[fieldId][3]) tmpDist = lineToMapPos.distanceTo(L.latLng(linesArray[fieldId][3].lat, linesArray[fieldId][3].lng));
+				// ist die distanz kleiner als 50 meter dann kann eine summenklammer erstellt werden
+				if (tmpDist <= 50 && (shortestDist == null || tmpDist < shortestDist)) {
+					// wenn das element einen vater hat, dann wird dessen id benötigt
+					if (linesArray[fieldId][2]) neighbourPos = linesArray[fieldId][2];
+					else neighbourPos = fieldId;
+					shortestDist = tmpDist;
+				}
 			}
 		}
+		return neighbourPos;
 	};
 
 	$scope.fields.deleteLastLine = function(oldId){
@@ -778,27 +959,28 @@ app.controller("MapController", function($scope, $http, $sce){
  * @return calculated coordinates
  */
 function getAnchorOfElement(elementId){
-	var _this = $("#"+elementId);
-	var _map = $("#map");
-	var _titleRow = $("#titleRow");
-	var _mapTop = parseInt(_map.css('top'), 10) + parseInt(_titleRow.css('height'), 10);
-	var _mapLeft = parseInt(_map.css('left'), 10);
-	var _mapWidth = parseInt(_map.css('width'), 10);
-	var _mapHeight = parseInt(_map.css('height'), 10);
-	var offset = _this.offset();
-	var width = _this.width();
-	var height = _this.height();
-	var centerX = offset.left + width / 2;
-	var centerY = offset.top + height / 2;
+	if (elementId) {
+		var _this = $("#"+elementId);
+		var _map = $("#map");
+		var _mapTop = _map.offset().top;
+		var _mapLeft = _map.offset().left;
+		var _mapWidth = parseInt(_map.css('width'), 10);
+		var _mapHeight = parseInt(_map.css('height'), 10);
+		var offset = _this.offset();
+		var width = _this.width();
+		var height = _this.height();
+		var centerX = offset.left + width / 2;
+		var centerY = offset.top + height / 2;
 
-	//left column:
-	if(centerX < _mapLeft){return [2, centerY - _mapTop]}
-	//right column:
-	else if (centerX > _mapLeft + _mapWidth - 1) {return [offset.left - _mapLeft, centerY - _mapTop]}
-	//top row:
-	else if (centerY < _mapTop + 1 ) {return [centerX - _mapLeft, 2]}
-	// bottom row:
-	else if (centerY > _mapTop + _mapHeight - 1) {return [centerX - _mapLeft, offset.top - _mapTop]}
+		// left column:
+		if(centerX < _mapLeft) return [2, centerY - _mapTop];
+		//right column:
+		else if (centerX > _mapLeft + _mapWidth - 1) return [offset.left - _mapLeft, centerY - _mapTop];
+		//top row:
+		else if (centerY < _mapTop + 1 ) return [centerX - _mapLeft, 2];
+		// bottom row:
+		else if (centerY > _mapTop + _mapHeight - 1) return [centerX - _mapLeft, offset.top - _mapTop];
+	}
 
 }
 
@@ -884,7 +1066,10 @@ function fitAllLines(linesArray){
 	lines.clearLayers();
 	for (var i = linesArray.length - 1; i >= 0; i--) {
 		try {
-			var p1 = linesArray[i][0];
+			var p1 = null;
+			// Wenn das Element einem Vater zugeordnet ist, dann müssen die Koordinaten in LatLng umgewandelt werden
+			if (linesArray[i][2] != null) p1 =  map.containerPointToLatLng(linesArray[i][0]);
+			else p1 = linesArray[i][0];
 			var p2 = map.containerPointToLatLng(linesArray[i][1]);
 			var latlngs = [p1, p2];
 			lines.addLayer(L.polyline(latlngs));
@@ -905,54 +1090,6 @@ function drag(ev){
 
 function allowDrop(ev) {
 	ev.preventDefault();
-}
-
-function drop(ev){
-	if(ev.preventDefault)  ev.preventDefault();
-	if(ev.stopPropagation) ev.stopPropagation();
-
-	var startId = ev.dataTransfer.getData("text");
-	var movingElement = document.getElementById("image" + startId);
-	var startElement = document.getElementById(startId);
-
-	// we drop onto the fieldText or svg, so we need to access the parent field-div
-	var targetElement = ev.target.parentNode;
-	// if we drop onto the svg polygon element, we need to go one level higher
-	if (!$(targetElement).hasClass('fields'))
-		targetElement = targetElement.parentNode;
-	var targetId = targetElement.id;
-
-	//save the texts:
-	var _imageTarget      = $('#image' + targetId).attr('src');
-	var _textTopTarget    = $('#fieldTextTop' + targetId).html();
-	var _textBottomTarget = $('#fieldTextBottom' + targetId).html();
-	var _commentTarget    = $('#fieldComment' + targetId).html();
-	var _imageStart       = $('#image' + startId).attr('src');
-	var _textTopStart     = $('#fieldTextTop' + startId).html();
-	var _textBottomStart  = $('#fieldTextBottom' + startId).html();
-	var _commentStart     = $('#fieldComment' + startId).html();
-
-	//swap the images and texts
-	startElement.innerHTML = getFieldHtmlString(
-		startId, _imageTarget, _commentTarget,
-		_textTopTarget, _textBottomTarget
-	);
-
-	targetElement.innerHTML = getFieldHtmlString(
-		targetId, _imageStart, _commentStart,
-		_textTopStart, _textBottomStart
-	);
-
-	//swap the lines:
-	var newTargetLine = linesArray[startId];
-	if (newTargetLine != null) {newTargetLine[1] = getAnchorOfElement(targetId)}
-
-	var newStartLine = linesArray[targetId];
-	if (newStartLine != null) {newStartLine[1] = getAnchorOfElement(startId)}
-
-	linesArray[startId] = newStartLine;
-	linesArray[targetId] = newTargetLine;
-	fitAllLines(linesArray);
 }
 
 /**
