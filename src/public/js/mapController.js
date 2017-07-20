@@ -210,11 +210,8 @@ app.controller("mapCtrl", function($scope, $http) {
             var date = new Date();
             // Readable time string
             $scope.einsatz.time = date.toLocaleString();
-            // If an id already exists, a current entry is edited
-            if (!$scope.einsatz.id) {
-                // Current timestamp in ms
-                $scope.einsatz.id = date.getTime();
-            }
+            // Current timestamp in ms
+            $scope.einsatz.id = date.getTime();
             // copy field data into $scope.einsatz.fields
             $scope.einsatz.taktZeichen = [];
             for (var i = 0; i < $scope.fields.fieldOrder.properties.length; i++) {
@@ -259,26 +256,8 @@ app.controller("mapCtrl", function($scope, $http) {
                     });
             }
 
-            /**
-             * An existing entry is updated.
-             */
-            function updateEntry() {
-                if ($scope.einsatz.id) {
-                    $http.put($scope.localAddress + 'api/updateEntry/' + $scope.einsatz.id, $scope.einsatz)
-                        .then(function successCallback(response) {
-                            if (response.data.result) {
-                                // The table is updated
-                                windowManager.bridge.emit('reloadSecWin', true);
-                            }
-                        });
-                }
-            }
             if ($scope.einsatz.id) {
-                $http.get($scope.localAddress+ 'api/getEntry/' + $scope.einsatz.id)
-                    .then(function successCallback(response) {
-                        if (response.data.result) updateEntry();
-                        else postEntry();
-                    });
+                postEntry();
             }
         };
 
