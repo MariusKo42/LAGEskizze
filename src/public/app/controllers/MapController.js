@@ -754,7 +754,7 @@ app.controller("MapController", function($scope, $http, $sce){
 		// DEBUG
         $scope.map.basemaps = [
             { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dtk', layer: 'nw_dtk_col', name: 'NRW-Atlas: Topographische Karten (alle Zoomstufen)' },
-            { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dop40', layer: 'nw_dop40', name: 'NRW-Atlas: Luftbild (40 cm) (alle Zoomstufen)' },
+            { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dop20', layer: 'nw_dop20', name: 'NRW-Atlas: Luftbild (20 cm) (alle Zoomstufen)' },
             { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dtk50', layer: 'nw_dtk50_col', name: 'NRW-Atlas: Topo. Karte 1:50.000 (Zoom 1 km - 500 m)' },
             { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dtk25', layer: 'nw_dtk25_col', name: 'NRW-Atlas: Topo. Karte 1:25.000 (Zoom 500 m - 300 m)' },
             { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dtk10', layer: 'nw_dtk10_col', name: 'NRW-Atlas: Topo. Karte 1:10.000 (Zoom 300 m - 30 m)' },
