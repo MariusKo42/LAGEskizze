@@ -299,7 +299,6 @@ app.controller("mapCtrl", function($scope, $http) {
                 lines.clearLayers();
                 linesArray = [];
                 drawnItems.clearLayers();
-
                 // insert drawnObjects
                 for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
                     // convert geojson -> FeatureGroup -> ILayer
@@ -634,29 +633,31 @@ app.controller("mapCtrl", function($scope, $http) {
         $scope.hideColorPicker = false;
 
         $scope.map.objectClicked = function(type, layer, id){
-            var tmpObj = {
-                objectData: '',
-                hideColorPicker: false,
-                colour: '',
-                dashed: '',
-                comment: ''
-            };
-            $scope.map.objectId = id;
-            if (!$scope.map.editActive){
-                drawnItems.eachLayer(function(layer) {
-                    setClickable(layer, false);
-                });
+            if (layer.options.clickable) {
+                var tmpObj = {
+                    objectData: '',
+                    hideColorPicker: false,
+                    colour: '',
+                    dashed: '',
+                    comment: ''
+                };
+                $scope.map.objectId = id;
+                if (!$scope.map.editActive){
+                    drawnItems.eachLayer(function(layer) {
+                        setClickable(layer, false);
+                    });
 
-                // hide colorPicker if the selected object is a marker
-                if(type == "marker" || type.toLowerCase() == "point") {
-                    tmpObj.hideColorPicker = true;
+                    // hide colorPicker if the selected object is a marker
+                    if(type == "marker" || type.toLowerCase() == "point") {
+                        tmpObj.hideColorPicker = true;
+                    }
+                    tmpObj.colour = drawnItems.getLayer($scope.map.objectId).options.color;
+                    tmpObj.dashed = drawnItems.getLayer($scope.map.objectId).options.dashArray;
+                    tmpObj.comment = commentsMap.get($scope.map.objectId);
+                    tmpObj.objectData = $scope.map.objects.getMeasurement(type, layer);
+                    windowManager.sharedData.set('editObject', tmpObj);
+                    windowManager.bridge.emit('loadEditObject');
                 }
-                tmpObj.colour = drawnItems.getLayer($scope.map.objectId).options.color;
-                tmpObj.dashed = drawnItems.getLayer($scope.map.objectId).options.dashArray;
-                tmpObj.comment = commentsMap.get($scope.map.objectId);
-                tmpObj.objectData = $scope.map.objects.getMeasurement(type, layer);
-                windowManager.sharedData.set('editObject', tmpObj);
-                windowManager.bridge.emit('loadEditObject');
             }
         };
 
@@ -731,10 +732,7 @@ app.controller("mapCtrl", function($scope, $http) {
         };
 
         $scope.map.deleteObjects = function(){
-            var i = 0;
             drawnItems.eachLayer(function(layer) {
-                console.log(i++);
-                console.log(layer);
                 setClickable(layer, true);
             });
 
@@ -753,6 +751,7 @@ app.controller("mapCtrl", function($scope, $http) {
         };
 
         $scope.map.activateDrawInformation = function(){
+            $scope.fields.cancel();
             drawnItems.eachLayer(function(layer) {
                 setClickable(layer, true);
             });
@@ -807,60 +806,58 @@ app.controller("mapCtrl", function($scope, $http) {
         };
 
         $scope.map.objects.getMeasurement = function(type, layer){
-            var _htmlString = "";
-            var _area = null;
-            var _length = null;
-            var _latlng = null;
-            var _radius = null;
-            var _type = "";
+            var htmlString = "";
+            var area = null;
+            var length = null;
+            var typeOf = "";
+            var qm = null;
+            var qkm = null;
+            var ha = null;
 
             // type can be a leaflet type, or a GeoJSON type, so we have to catch both
             switch (type.toLowerCase()) {
                 case "rectangle":
-                    _latlng = layer.getLatLngs();
-                    _type = "<h4>Typ: Rechteck</h4>";
-                    _area = L.GeometryUtil.geodesicArea(_latlng);
+                    typeOf = "<h4>Typ: Rechteck</h4>";
+                    area = L.GeometryUtil.geodesicArea(layer.getLatLngs()[0]);
                     break;
                 case "polygon":
-                    _latlng = layer.getLatLngs();
-                    _type = "<h4>Typ: Polygon</h4>";
-                    _area = L.GeometryUtil.geodesicArea(_latlng);
+                    typeOf = "<h4>Typ: Polygon</h4>";
+                    area = L.GeometryUtil.geodesicArea(layer.getLatLngs()[0]);
                     break;
                 case "circle":
-                    _latlng = layer.getLatLng();
-                    _radius = layer.getRadius();
-                    _type = "<h4>Typ: Kreis</h4>";
-                    _area = Math.PI * _radius * _radius;
+                    typeOf = "<h4>Typ: Kreis</h4>";
+                    area = Math.PI * Math.pow(layer.getRadius(), 2);
                     break;
                 case "polyline":
                 case "linestring":
-                    _latlng = layer.getLatLngs();
-                    _type = "<h4>Typ: Polylinie</h4>";
-                    _length = L.GeometryUtil.accumulatedLengths(_latlng);
-                    _length = _length[_length.length-1];
+                    typeOf = "<h4>Typ: Polylinie</h4>";
+                    length = L.GeometryUtil.accumulatedLengths(layer.getLatLngs());
+                    length = length[length.length-1];
                     break;
                 case "marker":
                 case "point":
-                    _latlng = layer.getLatLng();
-                    _type = "<h4>Typ: Punkt</h4>";
+                    typeOf = "<h4>Typ: Punkt</h4>";
                     break;
             }
 
-            if (_area != null) {
-                if (_area < 1000000){
-                    _htmlString = "<h4>Fläche: " + Math.floor(_area) + "<sup>2</sup><br> / " + Math.floor(_area/100)/100 + "ha</h4>";
+            if (area != null) {
+                ha = Math.floor(area/10000);
+                if (area < 1000000){
+                    qm = Math.floor(area);
+                    htmlString = "<h4>Fläche: " + qm + " m<sup>2</sup> / " + ha + " ha</h4>";
                 } else {
-                    _htmlString = "<h4>Fläche: " + Math.floor(_area/100)/100 + " / " + Math.floor(_area/10000)/100 + "km<sup>2</sup><br></h4>";
+                    qkm = Math.floor(area/1000000);
+                    htmlString = "<h4>Fläche: " + ha + " ha / " + qkm + " km<sup>2</sup></h4>";
                 }
             }
-            if (_length != null) {
-                if (_length < 10000){
-                    _htmlString = "<h4>Länge: " + Math.floor(_length) + "m</h4>";
+            if (length != null) {
+                if (length < 10000){
+                    htmlString = "<h4>Länge: " + Math.floor(length) + "m</h4>";
                 } else {
-                    _htmlString = "<h4>Länge: " + Math.floor(_length/100)/10 + "km</h4>";
+                    htmlString = "<h4>Länge: " + Math.floor(length/100)/10 + "km</h4>";
                 }
             }
-            return _htmlString + _type;
+            return htmlString + typeOf;
         };
 
 
@@ -887,8 +884,7 @@ function initMap(){
 
     lines = L.layerGroup().addTo(map);
     basemap = L.layerGroup().addTo(map);
-    drawnItems = new L.FeatureGroup();
-    map.addLayer(drawnItems);
+    drawnItems = new L.FeatureGroup().addTo(map);
 
     var drawOptions = {
         position: 'topright',
@@ -954,28 +950,15 @@ function getAnchorOfElement(elementId){
 /**
  * @desc sets option 'clickable' for a leaflet layer to value
  */
-function setClickable(target, value) {
-    // ignore if marker, because of Leaflet.draw bug
-    if (target instanceof L.Marker) return;
-
-    if(value && !target.options.clickable) {
-        target.options.clickable = true;
-        L.Path.prototype._initEvents.call(target);
-        target._path.removeAttribute('pointer-events');
-    } else if(!value && target.options.clickable) {
-        target.options.clickable = false;
-        // undoing actions done in L.Path.prototype._initEvents
-        L.DomUtil.removeClass(target._path, 'leaflet-clickable');
-        L.DomEvent.off(target._container, 'click', target._onMouseClick);
-        ['dblclick', 'mousedown', 'mouseover', 'mouseout', 'mousemove', 'contextmenu'].forEach(function(evt) {
-            L.DomEvent.off(target._container, evt, target._fireMouseEvent);
-        });
-        target._path.setAttribute('pointer-events', target.options.pointerEvents || 'none');
+function setClickable(layer, value) {
+    var elemMap = $('#map');
+    if (value) {
+        elemMap.css('cursor', 'help');
+        layer.options.clickable = value;
+    } else {
+        elemMap.css('cursor', 'auto');
+        layer.options.clickable = value;
     }
-
-    //change cursor icon to 'help' if clickable is true
-    if (value) $("#map").css('cursor', 'help');
-    else       $("#map").css('cursor', 'auto');
 }
 
 //fuction to relocate all lines to their anchor-points
