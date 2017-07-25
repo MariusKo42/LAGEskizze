@@ -4,6 +4,8 @@ var lines,
     linesArray = [];
 var commentsMap = new Map();
 var windowManager = require('electron').remote.require('electron-window-manager');
+var dialog = require('electron').remote.dialog; // Load the dialogs component of the OS
+var fs = require('fs'); // Load the File System to execute our common tasks (CRUD)
 
 app.directive('droppable', function() {
     return {
@@ -159,6 +161,14 @@ app.controller("mapCtrl", function($scope, $http) {
             $scope.resetMap();
         });
 
+        windowManager.bridge.on('exportMission', function () {
+            $scope.exportMission();
+        });
+
+        windowManager.bridge.on('importMission', function () {
+            $scope.importMission();
+        });
+
         windowManager.bridge.on('deleteEntry', function (value) {
             $scope.deleteEntry(value.id);
             $scope.resetMap();
@@ -193,6 +203,64 @@ app.controller("mapCtrl", function($scope, $http) {
                     }
                 };
             });
+        };
+
+        /*
+         * Entries from a file are imported into the database
+         */
+        $scope.importMission = function () {
+            dialog.showOpenDialog({
+                title: 'Import Dataset',
+                // The filters specifies an array of file types that can be displayed or selected
+                filters: [
+                    {name: 'JSON', extensions: ['json']}
+                ]
+            }, function(fileName) {
+                // The selected file is read
+                fs.readFile(fileName[0], 'utf-8', function(err, data) {
+                    if (err == null) {
+                        // The entry is added to the database
+                        // The JSON.parse() method parses a JSON string, constructing the JavaScript value or object described by the string.
+                        $http.post($scope.localAddress + 'api/addEntry/', JSON.parse(data))
+                            .then(function successCallback(response) {
+                                if (response.data.result) {
+                                    // The table is updated
+                                    windowManager.bridge.emit('reloadSecWin', true);
+                                }
+                            });
+                    }
+                });
+            });
+        };
+
+        /*
+         * The last entry is exported to a .json file.
+         */
+        $scope.exportMission = function () {
+            // Get all database entries
+            $http.get($scope.localAddress + 'api/getAllEntries/')
+                .then(function successCallback(response) {
+                    var dbData = response.data;
+                    // If entries are present, a file-dialog opens
+                    if (dbData.length > 0) {
+                        // Get the last entry
+                        // The JSON.stringify() method converts a JavaScript value to a JSON string
+                        var lastEntry = JSON.stringify(dbData[dbData.length - 1]);
+                        // Opens the save-file-dialog
+                        dialog.showSaveDialog({
+                            title: 'Export Dataset',
+                            // The filters specifies an array of file types that can be displayed or selected
+                            filters: [
+                                {name: 'JSON', extensions: ['json']}
+                            ]
+                        }, function (fileName) {
+                            // If a path is selected, the entry is written to the file
+                            if (typeof (fileName) != 'undefined') {
+                                fs.writeFile(fileName, lastEntry, function(err) {});
+                            }
+                        });
+                    }
+                });
         };
 
         /**

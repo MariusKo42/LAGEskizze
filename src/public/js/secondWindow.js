@@ -210,6 +210,14 @@ app.controller('loadMenuCtrl', function ($scope, $http) {
         windowManager.bridge.emit('saveMission', 'saveEntry');
     };
 
+    $scope.exportMission = function () {
+        windowManager.bridge.emit('exportMission', 'exportEntry');
+    };
+
+    $scope.importMission = function () {
+        windowManager.bridge.emit('importMission', 'importEntry');
+    };
+
     $scope.deleteEntry = function (value) {
         windowManager.bridge.emit('deleteEntry', value);
     };

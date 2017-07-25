@@ -1,9 +1,13 @@
 <div class="row">
-    <div class="col-xs-12">
-        <p></p>
+    <div class="col-xs-6">
         <button type="button" class="btn btn-default btn-lg" ng-click="newMission()">Neuer Einsatz</button>
         <button type="button" class="btn btn-default btn-lg" ng-click="saveMission()">Einsatz speichern</button>
-        <p></p>
+    </div>
+    <div class="col-xs-6">
+        <button type="button" class="btn btn-default btn-lg" ng-click="exportMission()">Einsatz exportieren</button>
+        <button type="button" class="btn btn-default btn-lg" ng-click="importMission()">Einsatz importieren</button>
+    </div>
+    <div class="col-xs-12">
         <table class="table table-hover">
             <tr>
             <th>#</th>
