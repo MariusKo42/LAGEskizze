@@ -127,7 +127,7 @@ app.controller("mapCtrl", function($scope, $http) {
             $scope.fields.submit(value.fieldTop, value.fieldBottom, value.imageSrc, value.fieldComment);
         });
 
-        windowManager.bridge.on('changeColour', function(value) {
+        windowManager.bridge.on('changeStyle', function(value) {
             $scope.map.changeGeomStyle(value);
         });
 
@@ -252,8 +252,11 @@ app.controller("mapCtrl", function($scope, $http) {
                 $scope.einsatz.drawnObjects = [];
                 drawnItems.eachLayer(function(layer) {
                     var geojson = layer.toGeoJSON();
+                    // All properties of the feature are stored in the geojson
                     geojson.properties.comment = commentsMap.get(drawnItems.getLayerId(layer)) || '';
                     geojson.properties.color = layer.options.color || '';
+                    geojson.properties.showTooltip = layer.options.showTooltip;
+                    geojson.properties.dashArray = layer.options.dashArray;
                     // as leaflet draw serializes a circle as a point, we need to store the radius manually.
                     if (layer._mRadius) geojson.properties.circleRadius = layer._mRadius;
                     $scope.einsatz.drawnObjects.push(geojson);
@@ -315,9 +318,16 @@ app.controller("mapCtrl", function($scope, $http) {
                         }
                     });
                     var layer = featureGroup.getLayers()[0]; // extract the first (and only) layer from the fGroup
-                    layer.options.style = { color: geojson.properties.color };
                     layer.options.color = geojson.properties.color;
+                    layer.options.showTooltip = geojson.properties.showTooltip;
+                    layer.options.dashArray = geojson.properties.dashArray;
+
                     if (geojson.properties.circleRadius) layer.feature.geometry.type = 'circle';
+                    // If the tooltip is set and a comment is present, then the feature is labeled
+                    if (geojson.properties.showTooltip && geojson.properties.comment.trim() != '') layer.bindTooltip(geojson.properties.comment, {
+                        permanent: true,
+                        className: 'customTooltip'
+                    }).openTooltip();
                     drawnItems.addLayer(layer);
 
                     // register comment
@@ -632,30 +642,39 @@ app.controller("mapCtrl", function($scope, $http) {
         $scope.map.objectId = null;
         $scope.hideColorPicker = false;
 
+        /*
+        An object is selected. The properties of the object are extracted and sent to the second window.
+        In the second window, the personal properties are displayed and can be changed by the user.
+         */
         $scope.map.objectClicked = function(type, layer, id){
             if (layer.options.clickable) {
+                var actualLayer = null;
                 var tmpObj = {
                     objectData: '',
                     hideColorPicker: false,
                     colour: '',
                     dashed: '',
-                    comment: ''
+                    comment: '',
+                    showTooltip: false
                 };
                 $scope.map.objectId = id;
                 if (!$scope.map.editActive){
                     drawnItems.eachLayer(function(layer) {
                         setClickable(layer, false);
                     });
-
                     // hide colorPicker if the selected object is a marker
                     if(type == "marker" || type.toLowerCase() == "point") {
                         tmpObj.hideColorPicker = true;
                     }
-                    tmpObj.colour = drawnItems.getLayer($scope.map.objectId).options.color;
-                    tmpObj.dashed = drawnItems.getLayer($scope.map.objectId).options.dashArray;
+                    actualLayer = drawnItems.getLayer($scope.map.objectId);
+                    tmpObj.colour = actualLayer.options.color;
+                    tmpObj.dashed = actualLayer.options.dashArray;
+                    tmpObj.showTooltip = actualLayer.options.showTooltip;
                     tmpObj.comment = commentsMap.get($scope.map.objectId);
                     tmpObj.objectData = $scope.map.objects.getMeasurement(type, layer);
+                    // The properties are stored in a global object. This object can be read from both windows.
                     windowManager.sharedData.set('editObject', tmpObj);
+                    // A function is called, in this function the second window is filled with the data.
                     windowManager.bridge.emit('loadEditObject');
                 }
             }
@@ -799,10 +818,26 @@ app.controller("mapCtrl", function($scope, $http) {
             commentsMap.delete($scope.map.objectId);
         };
 
-        // change the color of the choosen object
+        /**
+         * change the color of the choosen object         *
+         */
         $scope.map.changeGeomStyle = function(geomOptions) {
+            // The geomOptions is filled in the second window and passed to the map-window.
+            // In the second window, for example, the color or a comment can be set
+            var layer = drawnItems.getLayer($scope.map.objectId);
             commentsMap.set($scope.map.objectId, geomOptions.comment);
-            drawnItems.getLayer($scope.map.objectId).setStyle({color: geomOptions.colour, dashArray: geomOptions.dash});
+            // the style information are adjusted
+            layer.setStyle({color: geomOptions.colour, dashArray: geomOptions.dash, showTooltip: geomOptions.showTooltip});
+            // Removes the tooltip previously bound with bindTooltip. The previous tooltip must be removed first before a new one is added.
+            // Otherwise several tooltips will be displayed on the map.
+            layer.unbindTooltip();
+            if (geomOptions.showTooltip && geomOptions.comment.trim() != '') {
+                // Binds a tooltip to the layer with the passed content
+                layer.bindTooltip(geomOptions.comment, {
+                    permanent: true,
+                    className: 'customTooltip'
+                }).openTooltip();
+            }
         };
 
         $scope.map.objects.getMeasurement = function(type, layer){

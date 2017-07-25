@@ -45,18 +45,25 @@ windowManager.bridge.on('reloadSecWin', function () {
 });
 
 app.controller('editObjectCtrl', function ($scope, $sce) {
+    // The elements (colopicker, textarea etc.) are filled with the data of the selected feature.
     $scope.metadata = "";
     $scope.comment = "";
     $scope.hideColorPicker = true;
     var modalClosedByBtn = false;
     var btnDeleteObj = $('#btnDeleteObject');
     var geomAttrDiv = $('#geomAttr');
+    // comment - textarea
     var commentTextarea = $('#commentGeom');
+    // colorpicker
     var colourElem = $('#cp2');
+    // dashed - checkbox
     var dashCheckbox = $('#dashed');
+    // tooltip - checkbox
+    var tooltipCheckbox = $('#tooltipCheckbox');
     colourElem.colorpicker();
     geomAttrDiv.hide();
     btnDeleteObj.tooltip();
+    // The global object can be read from both windows.
     var geomData = windowManager.sharedData.fetch('editObject');
     if (geomData) {
         $scope.metadata = $sce.trustAsHtml(geomData.objectData);
@@ -65,15 +72,26 @@ app.controller('editObjectCtrl', function ($scope, $sce) {
             geomAttrDiv.show();
             colourElem.colorpicker('setValue', geomData.colour);
         }
-        if (geomData.dashed === null) dashCheckbox.prop('checked', false);
+        // If the geometry is displayed in dashed lines, the checkbox must be set
+        if (typeof (geomData.dashed) == 'undefined' || geomData.dashed == null) dashCheckbox.prop('checked', false);
         else dashCheckbox.prop('checked', true);
+        // If the geometry has a label, then the checkbox must be set
+        if (typeof (geomData.showTooltip) == 'undefined' || geomData.showTooltip == null) tooltipCheckbox.prop('checked', false);
+        else tooltipCheckbox.prop('checked', true);
+
         windowManager.sharedData.set('editObject', null);
     }
 
+    /**
+     * The properties of the geometry are changed.
+     */
     $scope.changeGeomStyle = function () {
         var dashStyle = null;
+        var tooltip = false;
+        // The geometry is shown by dashed lines
         if (dashCheckbox.prop('checked')) dashStyle = [20, 15];
-        windowManager.bridge.emit('changeColour', {colour: colourElem.colorpicker('getValue'), dash: dashStyle, comment: commentTextarea[0].value});
+        if (tooltipCheckbox.prop('checked')) tooltip = true;
+        windowManager.bridge.emit('changeStyle', {colour: colourElem.colorpicker('getValue'), dash: dashStyle, comment: commentTextarea[0].value, showTooltip: tooltip});
     };
 
     $scope.editObjects = function () {
