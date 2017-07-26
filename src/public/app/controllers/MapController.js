@@ -173,12 +173,8 @@ app.controller("MapController", function($scope, $http, $sce){
 		if (!$scope.einsatz.meta.einsatzstichwort || !$scope.einsatz.meta.einsatzort || !$scope.einsatz.meta.meldender || !$scope.einsatz.meta.objektNr || !$scope.einsatz.meta.datumUhrzeitGruppe) {
 			return alert('Die Felder Einsatzstichwort, Einsatzort, Meldender, Objektnr und Uhrzeitgruppe sind erforderlich.');
 		}
-
-        // If an id already exists, a current entry is edited
-        if (!$scope.einsatz.id) {
-            // Date.now() - current timestamp in ms
-            $scope.einsatz.id = Date.now();
-        }
+		// Current timestamp in ms
+		$scope.einsatz.id = new Date().getTime();
 		// copy field data into $scope.einsatz.fields
 		$scope.einsatz.taktZeichen = [];
 		for (var i = 0; i < $scope.fields.fieldOrder.properties.length; i++) {
@@ -223,30 +219,8 @@ app.controller("MapController", function($scope, $http, $sce){
                     }
                 });
 		}
-
-        /**
-         * An existing entry is updated.
-         */
-        function updateEntry() {
-        	if ($scope.einsatz.id) {
-				$http.put($scope.localAddress + 'api/updateEntry/' + $scope.einsatz.id, $scope.einsatz)
-					.then(function successCallback(response) {
-						if (response.data.result) {
-							// The table is updated
-							$scope.showLoadMenu();
-						}
-					});
-			}
-        }
 		if ($scope.einsatz.id) {
-			$http.get($scope.localAddress+ 'api/getEntry/' + $scope.einsatz.id)
-				.then(function successCallback(response) {
-					if (response.data.result) {
-						updateEntry();
-					} else {
-						postEntry();
-					}
-				});
+			postEntry();
 		}
 	};
     /**
@@ -745,13 +719,6 @@ app.controller("MapController", function($scope, $http, $sce){
 	};
 
 	$scope.map.initBasemaps = function(){
-		// this route does not exist yet in the backend..
-		/**$http.get($scope.dbServerAddress + 'basemaps')
-			.success(function(response){
-                $scope.map.basemaps = response.data;
-			});*/
-
-		// DEBUG
         $scope.map.basemaps = [
             { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dtk', layer: 'nw_dtk_col', name: 'NRW-Atlas: Topographische Karten (alle Zoomstufen)' },
             { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dop20', layer: 'nw_dop20', name: 'NRW-Atlas: Luftbild (20 cm) (alle Zoomstufen)' },
@@ -760,7 +727,6 @@ app.controller("MapController", function($scope, $http, $sce){
             { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dtk10', layer: 'nw_dtk10_col', name: 'NRW-Atlas: Topo. Karte 1:10.000 (Zoom 300 m - 30 m)' },
             { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dgk5', layer: 'nw_dgk5_grundriss', name: 'NRW-Atlas: Deutsche Grundkarte 1:5.000 (Zoom 100 m - 30 m)' }
         ];
-
 		// show default basemap
 		$scope.map.showBasemap($scope.map.basemaps[0].wms, $scope.map.basemaps[0].layer);
 	};

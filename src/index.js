@@ -94,16 +94,6 @@ ex.post('/api/addEntry', function (req, res) {
     if (resAdd) res.send({result: true, metadata: resAdd});
     else res.send({result: false, metadata: resAdd});
 });
-// A record is updated.
-ex.put('/api/updateEntry/:entryId', function (req, res) {
-    var entryId = parseInt(req.params.entryId);
-    var resUpdate = db.get('fireDoc')
-        .find({ id: entryId})
-        .assign(req.body)
-        .value();
-    if (resUpdate) res.send({result: true, metadata: resUpdate});
-    else res.send({result: false, metadata: resUpdate});
-});
 // An entry is removed.
 ex.delete('/api/deleteEntry/:entryId', function (req, res) {
     var entryId = parseInt(req.params.entryId);
