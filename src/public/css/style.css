@@ -9,10 +9,9 @@ html, body {
 #map{
 	top: 11.7%;
 	left: 5.9%;
-	height: 76.2%;
-	width: 88%;
+	height: 76.5%;
+	width: 88.2%;
 	position: absolute;
-	cursor:auto;
 }
 
 .customTooltip {
@@ -22,18 +21,6 @@ html, body {
 	overflow: hidden;
 	max-width: 300px;
 	font-size: medium;
-}
-
-.mapArea {
-	width: 100%;
-	display: inline-block;
-	position: relative;
-	height: 100%;
-}
-.mapArea:after {
-	padding-top: 49.1%;
-	display: block;
-	content: '';
 }
 
 .fields {
@@ -60,22 +47,23 @@ html, body {
 .toprow{
 	position: absolute;
 	top: 0.5%;
-
+	z-index: 1000;
 }
-
 .bottomrow{
 	position: absolute;
 	top: 88%;
+	z-index: 1000;
 }
 .leftcol{
 	position: absolute;
 	left: 0.2%;
+	z-index: 1000;
 }
 .rightcol{
 	position: absolute;
 	left: 94%;
+	z-index: 1000;
 }
-
 .fieldText{
 	position: absolute;
 	height: 20%;

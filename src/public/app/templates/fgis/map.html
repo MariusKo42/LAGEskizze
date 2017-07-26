@@ -1,48 +1,45 @@
-<div class="mapArea">
-	<div id="map"></div>
-
-	<div class="customZoomControl-pane">
-	  <a href="" ng-click="map.zoomIn()" class="customZoomControl customZoomControl-in">+</a>
-	  <a href="" ng-click="map.zoomOut()" class="customZoomControl customZoomControl-out">-</a>
-	</div>
-	<a id="freezeMap" ng-click="map.freeze()" class="map-element" href="">Karte <img id="freezeMapLock" src="./images/lock.png"><br>einfrieren</a>
-	<table class="drawToolbarDiv">
-	  <tbody>
-		<tr>
-		  <td colspan="6">
-			<div id="drawTitle" class="drawToolbar">Zeichnen</div>
-		  </td>
-		</tr>
-		<tr>
-		  <td colspan="2">
-			<a id="drawRectangle" ng-click="map.draw('rectangle')" class="drawToolbar" href="" title="Rechteck zeichnen"></a>
-		  </td>
-		  <td colspan="2">
-			<a id="drawPolygon" ng-click="map.draw('polygon')" class="drawToolbar" href="" title="Polygon zeichnen"></a>
-		  </td>
-		  <td colspan="2">
-			<a id="drawLine" ng-click="map.draw('polyline')" class="drawToolbar" href="" title="Polylinie zeichnen"></a>
-		  </td>
-		</tr>
-		<tr>
-		  <td colspan="2">
-			<a id="drawCircle" ng-click="map.draw('circle')" class="drawToolbar" href="" title="Kreis zeichnen"></a>
-		  </td>
-		  <!--<td colspan="2">-->
-			<!--<a id="drawPoint" ng-click="map.draw('marker')" class="drawToolbar" href="" title="Marker zeichnen"></a>-->
-		  <!--</td>-->
-		  <td colspan="2">
-			<a id="questionMark" ng-click="map.activateDrawInformation()" class="drawToolbar" href="" style="margin-top:15%" title="Objektinformationen">?</a>
-		  </td>
-		</tr>
-	  </tbody>
-	</table>
-	<div ng-repeat="field in fields.fieldOrder.properties">
-  		<div droppable ng-attr-id="{{field.id}}" class="fields" ng-class="field.group" ng-style="{'top': field.top, 'left': field.left, 'width': fields.fieldOrder.width,'height': fields.fieldOrder.height}" ng-click="fields.register(field.id)" drop="handleDrop(element)" ondragover="allowDrop(event)">
-			<div ng-attr-id="fieldTextTop{{field.id}}" class="fieldText fieldTextTop"></div>
-		  	<div ng-attr-id="fieldTextBottom{{field.id}}" class="fieldText fieldTextBottom"></div>
-		  	<div ng-attr-id="fieldComment{{field.id}}" class="fieldComment"></div>
-		  	<svg ng-attr-id="image{{field.id}}" viewBox="0 0 89 89" preserveAspectRatio="none"  ng-style="{'width': fields.fieldOrder.size,'height': fields.fieldOrder.size} "><polygon points="2,2 88,2 88,88 2,88 2,2 2,22.5 88,22.5 88,67.5 2,67.5"/></svg>
-		</div>
+<div id="map"></div>
+<div class="customZoomControl-pane">
+  <a href="" ng-click="map.zoomIn()" class="customZoomControl customZoomControl-in">+</a>
+  <a href="" ng-click="map.zoomOut()" class="customZoomControl customZoomControl-out">-</a>
+</div>
+<a id="freezeMap" ng-click="map.freeze()" class="map-element" href="">Karte <img id="freezeMapLock" src="./images/lock.png"><br>einfrieren</a>
+<table class="drawToolbarDiv">
+  <tbody>
+	<tr>
+	  <td colspan="6">
+		<div id="drawTitle" class="drawToolbar">Zeichnen</div>
+	  </td>
+	</tr>
+	<tr>
+	  <td colspan="2">
+		<a id="drawRectangle" ng-click="map.draw('rectangle')" class="drawToolbar" href="" title="Rechteck zeichnen"></a>
+	  </td>
+	  <td colspan="2">
+		<a id="drawPolygon" ng-click="map.draw('polygon')" class="drawToolbar" href="" title="Polygon zeichnen"></a>
+	  </td>
+	  <td colspan="2">
+		<a id="drawLine" ng-click="map.draw('polyline')" class="drawToolbar" href="" title="Polylinie zeichnen"></a>
+	  </td>
+	</tr>
+	<tr>
+	  <td colspan="2">
+		<a id="drawCircle" ng-click="map.draw('circle')" class="drawToolbar" href="" title="Kreis zeichnen"></a>
+	  </td>
+	  <!--<td colspan="2">-->
+		<!--<a id="drawPoint" ng-click="map.draw('marker')" class="drawToolbar" href="" title="Marker zeichnen"></a>-->
+	  <!--</td>-->
+	  <td colspan="2">
+		<a id="questionMark" ng-click="map.activateDrawInformation()" class="drawToolbar" href="" style="margin-top:15%" title="Objektinformationen">?</a>
+	  </td>
+	</tr>
+  </tbody>
+</table>
+<div ng-repeat="field in fields.fieldOrder.properties">
+	<div droppable ng-attr-id="{{field.id}}" class="fields" ng-class="field.group" ng-style="{'top': field.top, 'left': field.left, 'width': fields.fieldOrder.width,'height': fields.fieldOrder.height}" ng-click="fields.register(field.id)" drop="handleDrop(element)" ondragover="allowDrop(event)">
+		<div ng-attr-id="fieldTextTop{{field.id}}" class="fieldText fieldTextTop"></div>
+		<div ng-attr-id="fieldTextBottom{{field.id}}" class="fieldText fieldTextBottom"></div>
+		<div ng-attr-id="fieldComment{{field.id}}" class="fieldComment"></div>
+		<svg ng-attr-id="image{{field.id}}" viewBox="0 0 89 89" preserveAspectRatio="none"  ng-style="{'width': fields.fieldOrder.size,'height': fields.fieldOrder.size} "><polygon points="2,2 88,2 88,88 2,88 2,2 2,22.5 88,22.5 88,67.5 2,67.5"/></svg>
 	</div>
 </div>
