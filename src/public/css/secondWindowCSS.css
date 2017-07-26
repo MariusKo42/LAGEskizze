@@ -17,3 +17,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.nav {
+    margin-bottom: 10px;
+}

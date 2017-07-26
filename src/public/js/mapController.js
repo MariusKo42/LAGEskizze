@@ -117,6 +117,14 @@ app.controller("mapCtrl", function($scope, $http) {
                 zoom: 0,
                 center: {},
                 tileServer: ''
+            },
+            metadata: {
+                acronym: '',
+                keyword: '',
+                location: '',
+                notify: '',
+                number: '',
+                date: ''
             }
         };
 
@@ -200,9 +208,18 @@ app.controller("mapCtrl", function($scope, $http) {
                         zoom: 0,
                         center: {},
                         tileServer: ''
+                    },
+                    metadata: {
+                        acronym: '',
+                        keyword: '',
+                        location: '',
+                        notify: '',
+                        number: '',
+                        date: ''
                     }
                 };
             });
+            windowManager.sharedData.set('metadataObject', $scope.einsatz.metadata);
         };
 
         /*
@@ -216,20 +233,22 @@ app.controller("mapCtrl", function($scope, $http) {
                     {name: 'JSON', extensions: ['json']}
                 ]
             }, function(fileName) {
-                // The selected file is read
-                fs.readFile(fileName[0], 'utf-8', function(err, data) {
-                    if (err == null) {
-                        // The entry is added to the database
-                        // The JSON.parse() method parses a JSON string, constructing the JavaScript value or object described by the string.
-                        $http.post($scope.localAddress + 'api/addEntry/', JSON.parse(data))
-                            .then(function successCallback(response) {
-                                if (response.data.result) {
-                                    // The table is updated
-                                    windowManager.bridge.emit('reloadSecWin', true);
-                                }
-                            });
-                    }
-                });
+                if (fileName.length > 0) {
+                    // The selected file is read
+                    fs.readFile(fileName[0], 'utf-8', function(err, data) {
+                        if (err == null) {
+                            // The entry is added to the database
+                            // The JSON.parse() method parses a JSON string, constructing the JavaScript value or object described by the string.
+                            $http.post($scope.localAddress + 'api/addEntry/', JSON.parse(data))
+                                .then(function successCallback(response) {
+                                    if (response.data.result) {
+                                        // The table is updated
+                                        windowManager.bridge.emit('reloadSecWin', true);
+                                    }
+                                });
+                        }
+                    });
+                }
             });
         };
 
@@ -293,7 +312,18 @@ app.controller("mapCtrl", function($scope, $http) {
                 }
             }
             if (startSaveing) {
+                var metadata = windowManager.sharedData.fetch('metadataObject');
                 var date = new Date();
+                // If metadata are present, then these are read out and added to the object to be stored
+                if (typeof (metadata) != 'undefined') {
+                    $scope.einsatz.metadata.acronym = metadata['acronym'];
+                    $scope.einsatz.metadata.keyword = metadata['keyword'];
+                    $scope.einsatz.metadata.location = metadata['location'];
+                    $scope.einsatz.metadata.notify = metadata['notify'];
+                    $scope.einsatz.metadata.number = metadata['number'];
+                    $scope.einsatz.metadata.date = metadata['date'];
+                } else $scope.einsatz.metadata = null;
+
                 // Readable time string
                 $scope.einsatz.time = date.toLocaleString();
                 // Current timestamp in ms
@@ -370,6 +400,8 @@ app.controller("mapCtrl", function($scope, $http) {
                 lines.clearLayers();
                 linesArray = [];
                 drawnItems.clearLayers();
+                // After loading a dataset, the metadata is updated
+                windowManager.sharedData.set('metadataObject', $scope.einsatz.metadata);
                 // insert drawnObjects
                 for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
                     // convert geojson -> FeatureGroup -> ILayer

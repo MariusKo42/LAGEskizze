@@ -32,15 +32,9 @@ html, body {
 }
 .mapArea:after {
 	padding-top: 49.1%;
-	/* padding-top: 53.4375%;*/
-	/* 16:9 ratio (56.25%) minus titleRow height*/
 	display: block;
 	content: '';
 }
-
-/*.titleRowInput {*/
-	/*font-size: 1.6vh;*/
-/*}*/
 
 .fields {
 	cursor: pointer;

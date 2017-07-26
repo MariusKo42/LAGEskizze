@@ -7,11 +7,14 @@
         <button type="button" class="btn btn-default btn-lg" ng-click="exportMission()">Einsatz exportieren</button>
         <button type="button" class="btn btn-default btn-lg" ng-click="importMission()">Einsatz importieren</button>
     </div>
+</div>
+<div class="row">
     <div class="col-xs-12">
         <table class="table table-hover">
             <tr>
             <th>#</th>
             <th>Zeitpunkt</th>
+            <th>Kürzel</th>
             <th>Laden</th>
             <th>Löschen</th>
             </tr>
@@ -19,6 +22,7 @@
                 <td>{{$index + 1}}</td>
                 <!--<td>{{dbEntry.id | date:'dd/MM/yyyy - hh:mm':'+1200'}}</td>-->
                 <td>{{dbEntry.time}}</td>
+                <td>{{dbEntry.metadata.acronym}}</td>
                 <td>
                     <button ng-click="loadMission(dbEntry)" type="button" class="btn btn-default">
                         <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>

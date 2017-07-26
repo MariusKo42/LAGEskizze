@@ -1,8 +1,30 @@
 <div class="row">
     <div class="col-xs-12">
-        <div class="input-group">
-            <span class="input-group-addon" id="sizing-addon1">Kürzel</span>
-            <input ng-model="meta.acronym" ng-change="metaListener()" type="text" class="form-control" placeholder="Benutzerkürzel" aria-describedby="sizing-addon1">
-        </div>
+        <form>
+            <div class="form-group">
+                <label for="inputAcronym">Benutzerkürzel</label>
+                <input ng-model="metadata.acronym" ng-change="metaListener()" type="text" class="form-control" title="Benutzerkürzel" id="inputAcronym">
+            </div>
+            <div class="form-group">
+                <label for="inputNotify">Meldender</label>
+                <input ng-model="metadata.notify" ng-change="metaListener()" type="text" class="form-control" title="Meldender" id="inputNotify">
+            </div>
+            <div class="form-group">
+                <label for="inputKeyword">Einsatzstichwort</label>
+                <input ng-model="metadata.keyword" ng-change="metaListener()" type="text" class="form-control" title="Einsatzstichwort" id="inputKeyword">
+            </div>
+            <div class="form-group">
+                <label for="inputLocation">Einsatzort</label>
+                <input ng-model="metadata.location" ng-change="metaListener()" type="text" class="form-control" title="Einsatzort" id="inputLocation">
+            </div>
+            <div class="form-group">
+                <label for="inputNumber">Objektnummer</label>
+                <input ng-model="metadata.number" ng-change="metaListener()" type="text" class="form-control" title="Objektnummer" id="inputNumber">
+            </div>
+            <div class="form-group">
+                <label for="inputNumber">Datum / Uhrzeitgruppe</label>
+                <input ng-model="metadata.date" ng-change="metaListener()" type="text" class="form-control" title="Datum / Uhrzeitgruppe" id="inputDate">
+            </div>
+        </form>
     </div>
 </div>
