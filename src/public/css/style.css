@@ -22,10 +22,9 @@
 	#map{
 		top: 11.7%;
 		left: 5.9%;
-		height: 76.2%; 
-		width: 48.4%; 
+		height: 76.5%;
+		width: 48.5%;
 		position: absolute;
-		cursor:auto; 
 	}
 
 	#titleRow{
@@ -33,8 +32,7 @@
 		top: 0;
 		left: 0;
 		height: 2.5%;
-		/*width: calc(100% - 14px);*/
-		width: 100%; 
+		width: 100%;
 		border-bottom: 0.3vh solid #7F7F7F;
 		font-size: 0.80vw;
 	}
@@ -51,8 +49,7 @@
 	.mapArea {
 		top: 2.5%;
 		width: 100%;
-		display: inline-block;
-		position: relative;		
+		position: relative;
 	}
 	.mapArea:after {
 		padding-top: 49.1%;
