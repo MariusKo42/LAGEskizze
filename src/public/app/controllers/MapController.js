@@ -4,6 +4,8 @@ var lines,
 	linesArray = [];
 var commentsMap = new Map();
 var objectColor = "#f00";
+var dialog = require('electron').remote.dialog; // Load the dialogs component of the OS
+var fs = require('fs'); // Load the File System to execute our common tasks (CRUD)
 
 app.directive('droppable', function() {
 	return {
@@ -140,6 +142,66 @@ app.controller("MapController", function($scope, $http, $sce){
 	// setInterval(function () {
 	//     $scope.saveEinsatz();
 	// }, 1800000);
+
+	/*
+	 * Entries from a file are imported into the database
+	 */
+	$scope.importEntry = function () {
+		dialog.showOpenDialog({
+			title: 'Import Dataset',
+			// The filters specifies an array of file types that can be displayed or selected
+			filters: [
+				{name: 'JSON', extensions: ['json']}
+			]
+		}, function(fileName) {
+			if (fileName.length > 0) {
+				// The selected file is read
+				fs.readFile(fileName[0], 'utf-8', function(err, data) {
+					if (err == null) {
+						// The entry is added to the database
+						// The JSON.parse() method parses a JSON string, constructing the JavaScript value or object described by the string.
+						$http.post($scope.localAddress + 'api/addEntry/', JSON.parse(data))
+							.then(function successCallback(response) {
+								if (response.data.result) {
+									// The table is updated
+									$scope.showLoadMenu();
+								}
+							});
+					}
+				});
+			}
+		});
+	};
+
+	/*
+	 * The last entry is exported to a .json file.
+	 */
+	$scope.exportEntry = function () {
+		// Get all database entries
+		$http.get($scope.localAddress + 'api/getAllEntries/')
+			.then(function successCallback(response) {
+				var dbData = response.data;
+				// If entries are present, a file-dialog opens
+				if (dbData.length > 0) {
+					// Get the last entry
+					// The JSON.stringify() method converts a JavaScript value to a JSON string
+					var lastEntry = JSON.stringify(dbData[dbData.length - 1]);
+					// Opens the save-file-dialog
+					dialog.showSaveDialog({
+						title: 'Export Dataset',
+						// The filters specifies an array of file types that can be displayed or selected
+						filters: [
+							{name: 'JSON', extensions: ['json']}
+						]
+					}, function (fileName) {
+						// If a path is selected, the entry is written to the file
+						if (typeof (fileName) != 'undefined') {
+							fs.writeFile(fileName, lastEntry, function(err) {});
+						}
+					});
+				}
+			});
+	};
 
     /**
      * A new mission is created. The existing lines are removed.
