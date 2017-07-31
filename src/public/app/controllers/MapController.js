@@ -194,14 +194,16 @@ app.controller("MapController", function($scope, $http, $sce){
 				var kranzPos = $scope.fields.fieldOrder.properties[i].id;
 				var line = linesArray[kranzPos];
 
-				$scope.einsatz.taktZeichen.push({
-					kranzposition: kranzPos,
-					kartenposition: line ? [line[0],line[2],line[3]] : '',
-					zeichen:    $('#image' + kranzPos).attr('src') || '',
-					comment:    $('#fieldComment' + kranzPos).text() || '',
-					textTop:    $('#fieldTextTop' + kranzPos).text() || '',
-					textBottom: $('#fieldTextBottom' + kranzPos).text() || ''
-				});
+				if (line || $('#image' + kranzPos).attr('src')) {
+					$scope.einsatz.taktZeichen.push({
+						kranzposition: kranzPos,
+						kartenposition: line ? [line[0],line[2],line[3]] : '',
+						zeichen:    $('#image' + kranzPos).attr('src') || '',
+						comment:    $('#fieldComment' + kranzPos).text() || '',
+						textTop:    $('#fieldTextTop' + kranzPos).text() || '',
+						textBottom: $('#fieldTextBottom' + kranzPos).text() || ''
+					});
+				}
 			}
 
 			// push drawn object data into $scope.einsatz.drawnObjects
