@@ -1,7 +1,7 @@
-var jQuery = require('jquery'),
-	leaflet = require('leaflet'),
-	leafletDraw = require('leaflet-draw'),
-	leafletGeometry = require('leaflet-geometryutil');
+var jQuery = require('jquery');
+var leaflet = require('leaflet');
+var	leafletDraw = require('leaflet-draw');
+var	leafletGeometry = require('leaflet-geometryutil');
 
 var $ = jQuery;
 
