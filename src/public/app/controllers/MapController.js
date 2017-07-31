@@ -859,6 +859,20 @@ app.controller("MapController", function($scope, $http, $sce){
         }
 	};
 
+	$scope.map.changeLabeling = function (checkboxState) {
+		var layer = drawnItems.getLayer($scope.map.objectId);
+		// Removes the tooltip previously bound with bindTooltip. The previous tooltip must be removed first before a new one is added.
+		// Otherwise several tooltips will be displayed on the map.
+		layer.unbindTooltip();
+		if (checkboxState && $scope.map.objects.comment.trim() != '') {
+			// Binds a tooltip to the layer with the passed content
+			layer.bindTooltip($scope.map.objects.comment, {
+				permanent: true,
+				className: 'customTooltip'
+			}).openTooltip();
+		}
+	};
+
 	$scope.map.objects.getMeasurement = function(type, layer){
 		var _htmlString = "";
 		var _area = null;
@@ -1015,28 +1029,15 @@ function initMap(){
 /**
 * @desc sets option 'clickable' for a leaflet layer to value
 */
-function setClickable(target, value) {
-	// ignore if marker, because of Leaflet.draw bug
-	if (target instanceof L.Marker) return;
-
-	if(value && !target.options.clickable) {
-		target.options.clickable = true;
-		L.Path.prototype._initEvents.call(target);
-		target._path.removeAttribute('pointer-events');
-	} else if(!value && target.options.clickable) {
-		target.options.clickable = false;
-		// undoing actions done in L.Path.prototype._initEvents
-		L.DomUtil.removeClass(target._path, 'leaflet-clickable');
-		L.DomEvent.off(target._container, 'click', target._onMouseClick);
-		['dblclick', 'mousedown', 'mouseover', 'mouseout', 'mousemove', 'contextmenu'].forEach(function(evt) {
-		L.DomEvent.off(target._container, evt, target._fireMouseEvent);
-		});
-			target._path.setAttribute('pointer-events', target.options.pointerEvents || 'none');
+function setClickable(layer, value) {
+	var elemMap = $('#map');
+	if (value) {
+		elemMap.css('cursor', 'help');
+		layer.options.clickable = value;
+	} else {
+		elemMap.css('cursor', 'auto');
+		layer.options.clickable = value;
 	}
-
-	//change cursor icon to 'help' if clickable is true
-	if (value) $("#map").css('cursor', 'help');
-	else       $("#map").css('cursor', 'auto');
 }
 
 //fuction to relocate all lines to their anchor-points

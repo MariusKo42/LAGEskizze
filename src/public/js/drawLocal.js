@@ -15,6 +15,10 @@ L.drawLocal = {
 				rectangle: 'Rechteck zeichnen',
 				circle: 'Kreis zeichnen',
 				marker: 'Marker zeichnen'
+			},
+			finish: {
+				title: 'Zeichnung abgeschlossen',
+				text: 'Zeichnung abgeschlossen'
 			}
 		},
 		handlers: {

@@ -37,7 +37,17 @@
 		width: 100%; 
 		border-bottom: 0.3vh solid #7F7F7F;
 		font-size: 0.80vw;
-	}	
+	}
+
+	.customTooltip {
+		display: inline-block;
+		text-overflow: ellipsis;
+		white-space: pre;
+		overflow: hidden;
+		max-width: 300px;
+		font-size: medium;
+	}
+
 	.mapArea {
 		top: 2.5%;
 		width: 100%;

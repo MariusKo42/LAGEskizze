@@ -26,7 +26,7 @@
     "bootstrap": "^3.3.7",
     "json-formatter": "^0.6.0",
     "spectrum": "^1.8.0",
-    "leaflet": "^0.7.7",
+    "leaflet": "1.0.3",
     "leaflet-draw": "^0.4.0",
     "leaflet-geometry": "^0.4.0"
   }

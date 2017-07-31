@@ -13,32 +13,25 @@
 	<div ng-bind="map.objects.type"></div>
 	<div ng-bind-html="map.objects.measureString"></div>
 	<br>
-	<li>
-		<button ng-click="map.editObjects()">Objekte bearbeiten</button>
-		<button ng-click="map.deleteObjects()">Objekte löschen</button>
-		<button ng-click="sideContent.close()">Schließen</button>
-	</li>
+	<button ng-click="map.editObjects()">Objekte bearbeiten</button>
+	<button ng-click="map.deleteObjects()">Objekte löschen</button>
+	<button ng-click="sideContent.close()">Schließen</button>
 
 	<div ng-hide="hideColorPicker" class="ng-hide">
 		<br>
-		<p>
-			Ändern Sie die Darstellung der Geometrie.
-		</p>
-        <input type="checkbox" name="dashed" id="dashed" ng-click="map.changeDashed()"> Gestrichelte Linie
-		<p>
-			Ändern Sie die Farbe der Geomerie.
-		</p>
+		<h3>Ändern Sie die Darstellung der Geometrie</h3>
+        <input type="checkbox" name="dashed" id="dashed" ng-click="map.changeDashed()" title="Gestrichelte Linie">Gestrichelte Linie
+		<h3>Ändern Sie die Farbe der Geomerie.</h3>
 		<!-- colorPicker-->
-		<input type='text' id='colorPicker' />
+		<input type='text' id='colorPicker' title="Farbauswahl"/>
 		<button ng-click="map.changeObjectsColor()">Farbe speichern</button>
 	</div>
-
-	<br>
-	<br>
-	Kommentar zu diesem Objekt:
+	<h3>Kommentar zu diesem Objekt</h3>
 	<div>
-		<textarea rows="10" cols="50" ng-model="map.objects.comment" type="text" placeholder="Kommentar hinzufügen" ></textarea>
+		<textarea rows="10" cols="50" ng-model="map.objects.comment" type="text" placeholder="Kommentar hinzufügen"></textarea>
 	</div>
-	<button ng-click="map.saveComment()">Kommentar speichern</button>
+	<input type="checkbox" name="labelGeometry" id="labelGeometry" ng-model="checkboxLabeling" ng-change="map.changeLabeling(checkboxLabeling)" title="Beschriftung">Geometrie beschriften
+	<br/>
+	<button style="margin-top: 10px" ng-click="map.saveComment()">Kommentar speichern</button>
 
 </div>
