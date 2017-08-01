@@ -117,7 +117,9 @@ app.controller("MapController", function($scope, $http, $sce){
 	/********************************
 	********  loading/saving ********
 	********************************/
-
+	// Current version and one or two window variant. This is important for importing external records.
+	$scope.version = '';
+	$scope.screen = '';
 	// object that will contain the current state on save
 	$scope.einsatz = {
 		id: 0,
@@ -136,8 +138,20 @@ app.controller("MapController", function($scope, $http, $sce){
 			zoom: 0,
 			center: {},
 			tileServer: '' // basemap layer
-		}
+		},
+		version: '',
+		screen: ''
 	};
+	/*
+	 * The version number and the program type are read from the metadata.json.
+	 */
+	$http.get('metadata/metadata.json')
+		.then(function successCallback(response) {
+			$scope.version = response.data.version;
+			$scope.screen = response.data.screen;
+		}, function errorCallback () {
+			alert('Die Datei metadata.json wurde nicht gefunden.');
+		});
 
 	// A data record should be stored at a fixed time interval. 1800000 ms is equivalent to 30 minutes.
 	// setInterval(function () {
@@ -159,15 +173,27 @@ app.controller("MapController", function($scope, $http, $sce){
 				// The selected file is read
 				fs.readFile(fileName[0], 'utf-8', function(err, data) {
 					if (err == null) {
-						// The entry is added to the database
-						// The JSON.parse() method parses a JSON string, constructing the JavaScript value or object described by the string.
-						$http.post($scope.localAddress + 'api/addEntry/', JSON.parse(data))
-							.then(function successCallback(response) {
-								if (response.data.result) {
-									// The table is updated
-									$scope.showLoadMenu();
-								}
-							});
+						if (data.trim() != '') {
+							var parsedData = JSON.parse(data);
+							// A file can only be imported if the type of the program is identical. Mono or multiple screen.
+							if (parsedData.screen == $scope.screen) {
+								// The entry is added to the database
+								// The JSON.parse() method parses a JSON string, constructing the JavaScript value or object described by the string.
+								$http.post($scope.localAddress + 'api/addEntry/', JSON.parse(data))
+									.then(function successCallback(response) {
+										if (response.data.result) {
+											// The table is updated
+											$scope.showLoadMenu();
+											// If the versioning is different, then a warning is issued.
+											if (parsedData.version != $scope.version) {
+												alert('Warnung: Version des importierten Einsatzes: ' + parsedData.version + '. Version der LAGEskizze: ' + $scope.version + '. Hierbei können Probleme auftreten.');
+											}
+										}
+									});
+							} else {
+								alert('Fehler: Der Einsatz kann nur mit der ' + parsedData.screen + ' Variante importiert werden.');
+							}
+						}
 					}
 				});
 			}
@@ -249,6 +275,9 @@ app.controller("MapController", function($scope, $http, $sce){
 			}
 		}
 		if (startSaveing) {
+			// Set version number and screen mode
+			$scope.einsatz.version = $scope.version;
+			$scope.einsatz.screen = $scope.screen;
 			// Current timestamp in ms
 			$scope.einsatz.id = new Date().getTime();
 			// copy field data into $scope.einsatz.fields
