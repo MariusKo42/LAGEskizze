@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>LAGEtool</title>
+    <title>LAGEskizze</title>
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
     <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
     <script src="lib/jquery/dist/jquery.min.js"></script>
@@ -17,15 +17,15 @@
         <div class="col-xs-12">
             <div class="media">
                 <div class="media-body">
-                    <h2 class="media-heading"><b>IdF NRW - LAGEtool</b></h2>
+                    <h2 class="media-heading"><b>IdF NRW - LAGEskizze</b></h2>
                 </div>
                 <div class="media-right">
                     <img class="media-object" src="images/logoNRW.png">
                 </div>
             </div>
             <div style="font-size: 20px; margin-top: 20px">
-                <p>Das IdF NRW - LAGEtool ist ein Werkzeug zur Lagedarstellung auf Kartenbasis. Es basiert auf dem Lagedarstellungssystem NRW, dort der zentralen Lageskizze, und bietet die Daten des NRW-Atlas als Grundlage.</p>
-                <p>Das IdF NRW-LAGEtool ist als OpenSource von den Feuerwehren in NRW kostenfrei nutzbar (siehe Lizenz) und wird in der vorliegenden Version in einer Kooperation zwischen dem IdF NRW und der EFTAS Fernerkundung Technologietransfer GmbH bereit gestellt.</p>
+                <p>Das IdF NRW - LAGEskizze ist ein Werkzeug zur Lagedarstellung auf Kartenbasis. Es basiert auf dem Lagedarstellungssystem NRW, dort der zentralen Lageskizze, und bietet die Daten des NRW-Atlas als Grundlage.</p>
+                <p>Das IdF NRW-LAGEskizze ist als OpenSource von den Feuerwehren in NRW kostenfrei nutzbar (siehe Lizenz) und wird in der vorliegenden Version in einer Kooperation zwischen dem IdF NRW und der EFTAS Fernerkundung Technologietransfer GmbH bereit gestellt.</p>
 
                 <div class="media">
                     <div class="media-body">
@@ -62,11 +62,11 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Software: IdF NRW LAGEtool (Stab)</h4>
+                            <h4 class="modal-title" id="myModalLabel">Software: IdF NRW LAGEskizze (Stab)</h4>
                         </div>
                         <div class="modal-body">
                             <h2>Digitale Lagedarstellung für operativ-taktische Stabsarbeit.</h2>
-                            <p>LAGEtool ist die Adaption der zentralen Lagedarstellung eines Unfalls, eines Feuers oder einer Katastrophe, wie sie im Lagedarstellungssystem Nordrhein-Westfalen (NRW) vom Institut der Feuerwehr NRW vorgeschlagen wird. Sie fügt sich thematisch in die analogen Schadenskonten, Bereitstellungsräume, Einsatzabschnitte etc. der Taktischen Arbeitswand ein und lässt sich über eine Splitscreen-Variante unabhängig von der eigentlichen Lagedarstellung bedienen.</p>
+                            <p>LAGEskizze ist die Adaption der zentralen Lagedarstellung eines Unfalls, eines Feuers oder einer Katastrophe, wie sie im Lagedarstellungssystem Nordrhein-Westfalen (NRW) vom Institut der Feuerwehr NRW vorgeschlagen wird. Sie fügt sich thematisch in die analogen Schadenskonten, Bereitstellungsräume, Einsatzabschnitte etc. der Taktischen Arbeitswand ein und lässt sich über eine Splitscreen-Variante unabhängig von der eigentlichen Lagedarstellung bedienen.</p>
                             <p>Es handelt sich um ein Javascript-basiertes System zur raumbezogenen Visualisierung, das eine Unterstützung bei der konsistenten und strukturierten Einsatzstellen-Organisation in Einsätzen der Feuerwehr zum Ziel hat.  Es implementiert die Vorgaben der Feuerwehr-Dienstvorschrift 100.</p>
                             <p>Die Open Source Anwendung ist unter Nutzung von node.js und AngularJS geschrieben. Der Quellcode ist eingestellt auf GitHub unter <b>https://github.com/eftas/LAGEskizze</b></p>
                             <p>Für die Nutzung auf dem Desktop etwa in Einsatzleitwagen oder dem Stabsraum ist die Anwendung in einen einfach zu nutzenden „Electron-Container“ gekapselt worden. Die jeweils aktuellste Version kann über die EFTAS-Homepage herunter geladen werden.</p>
@@ -83,7 +83,7 @@
                             <p>Das Produkt ist vielfach getestet worden und wird insbesondere bei der Freiwilligen Feuerwehr Werne auch in Ausbildung und Einsatz genutzt. Die Funktionen sind nach bestem Wissen und Gewissen ausgeführt und geprüft. Trotzdem handelt es sich um Software, die aus unterschiedlichsten Gründen versagen kann. Daher übernimmt weder das IdF NRW noch die EFTAS eine Gewährleistung für Funktionen der Software oder irgendwelche Schäden, die im Zusammenhang mit der Nutzung dieser Software – bewusst oder unbewusst - entstehen können. Es obliegt insbesondere im Einsatzfall immer dem Einsatzleiter oder der Einsatzleiterin zu entscheiden, ob die Software eingesetzt wird, oder eine analoge Version der Lagedarstellung verwendet werden soll. Er oder Sie übernehmen für die Entscheidung die jeweilige Verantwortung. Es ist darauf zu achten, Redundanzen zu schaffen, etwa das Kartenbild auf einem Whiteboard „abzupausen“.</p>
                             <p>Die Software basiert in der aktuellen Version in wesentlichen Teilen auf Online-Diensten für die Kartenbereitstellung (Web Map Services, WMS). Ist diese nicht verfügbar, kann der Kartenhintergrund nicht geladen werden und die Software verliert ihre grundlegende Funktion. Zudem ist sie abhängig von einer guten Hardware-Infrastruktur, die dem heutigen Stand der Technik entsprechen muss. Die genannten Parteien übernehmen keine Garantie dafür, dass die Software in jeder denkbaren Konstellation lauffähig ist.</p>
                             <h2>Geodaten</h2>
-                            <p>Die Geodaten in der aktuell angebotenen  Version IdF NRW LAGEtool (Stab) entstammen dem NRW-Atlas der Bezirksregierung Köln, Geobasis.nrw. Mit Genehmigung der Bezirksregierung Köln vom 22.07.2016 dürfen die Daten unter der angegebenen MIT-Lizenz für die oben genannte Zwecke (siehe Lizenz) genutzt werden. Weitere Verwendung der Geodienste regelt die Bezirksregierung Köln in ihren Nutzungsbedingungen für den NRW-Atlas: http://www.bezreg-koeln.nrw.de/brk_internet/geobasis/dienste/nrwatlas/nutzungsbedingungen.pdf</p>
+                            <p>Die Geodaten in der aktuell angebotenen  Version IdF NRW LAGEskizze (Stab) entstammen dem NRW-Atlas der Bezirksregierung Köln, Geobasis.nrw. Mit Genehmigung der Bezirksregierung Köln vom 22.07.2016 dürfen die Daten unter der angegebenen MIT-Lizenz für die oben genannte Zwecke (siehe Lizenz) genutzt werden. Weitere Verwendung der Geodienste regelt die Bezirksregierung Köln in ihren Nutzungsbedingungen für den NRW-Atlas: http://www.bezreg-koeln.nrw.de/brk_internet/geobasis/dienste/nrwatlas/nutzungsbedingungen.pdf</p>
                             <h2>Taktische Zeichen</h2>
                             <p>Die Taktischen Zeichen basieren auf folgenden Vorgaben:</p>
                             <ul>
@@ -93,8 +93,8 @@
                             </ul>
                             <h2>Installationsanleitung</h2>
                             <p>Wichtiger Hinweis: Mit der Installation der Software stimmt der Nutzer oder die Nutzerin den Lizenzbedingungen und den im Disclaimer gegebenen Hinweisen zu. Er oder sie erkennt die Urheberschaft der Software ebenso an, wie diejenigen der Geodaten und der taktischen Zeichen.</p>
-                            <p>Das Archiv LAGEtool-win32-x64.zip enthält alle zum Betrieb der Software notwendigen Komponenten inkl. der unter Lizenz genannten Komponenten, der Taktischen Zeichen und der Links zu den Geodaten des NRW-Atlas.</p>
-                            <p>Das Archiv ist lediglich in ein Verzeichnis zu entpacken. Ein Doppelklick auf die ausführbare Datei LAGEtool.exe startet die Software. Es wird empfohlen, sich auf dem Desktop eine Verknüpfung zur Datei LAGEtool.exe anzulegen. Die Datei darf nicht aus dem Verzeichnis – etwa auf den Desktop - verschoben werden!</p>
+                            <p>Das Archiv LAGEskizze-win32-x64.zip enthält alle zum Betrieb der Software notwendigen Komponenten inkl. der unter Lizenz genannten Komponenten, der Taktischen Zeichen und der Links zu den Geodaten des NRW-Atlas.</p>
+                            <p>Das Archiv ist lediglich in ein Verzeichnis zu entpacken. Ein Doppelklick auf die ausführbare Datei LAGEskizze.exe startet die Software. Es wird empfohlen, sich auf dem Desktop eine Verknüpfung zur Datei LAGEskizze.exe anzulegen. Die Datei darf nicht aus dem Verzeichnis – etwa auf den Desktop - verschoben werden!</p>
                             <h2>Danksagung</h2>
                             <p>Mit ihren Bachelor-Arbeiten am Institut für Geoinformatik der Westfälischen Wilhelmsuniversität Münster haben Saphir El-Kaiy und Sebastian Niklasch erheblich zum Gelingen des Projektes beigetragen. Auch mehrere Studienarbeiten haben Verbesserungen am ersten Prototypen erbracht. Diese Arbeiten wurden fachlich von Holger Fritze MSc. (WWU Münster) und BOI Dr. Bodo Bernsdorf (Freiwillige Feuerwehr Werne und EFTAS Fernerkundung Technologietransfer GmbH) betreut.  Umgesetzt wurde die vorliegende Software durch die EFTAS, die auch das OpenSource-Projekt auf GitHub hostet.</p>
                             <p>Fachlich betreut und für die Stabsarbeit angepasst wird das Projekt von Guido Fortkamp (IdF NRW).</p>
