@@ -1,375 +1,371 @@
 
-	html, body {
-		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-		margin: 0;
-		height: 100%;
-		width: 100%;
-		background-color: #eaeaea;
-	}
+html, body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #eaeaea;
+}
 
-	#sideContent {
-		position: absolute;
-		height: 97.4%;
-		width: 40%;
-		bottom: 0;
-		right: 0;
-		top: 2.7%;
-		background-color: #333333;
-		color: white;
-		overflow: auto;
-	}	
+#sideContent {
+    position: absolute;
+    height: 97.4%;
+    width: 40%;
+    bottom: 0;
+    right: 0;
+    top: 2.7%;
+    background-color: #333333;
+    color: white;
+    overflow: auto;
+}
 
-	#map{
-		top: 11.7%;
-		left: 5.9%;
-		height: 76.5%;
-		width: 48.5%;
-		position: absolute;
-	}
+#map {
+    top: 11.7%;
+    left: 5.9%;
+    height: 76.5%;
+    width: 48.5%;
+    position: absolute;
+}
 
-	#titleRow{
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 2.5%;
-		width: 100%;
-		border-bottom: 0.3vh solid #7F7F7F;
-		font-size: 0.80vw;
-	}
+#titleRow {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    font-size: 0.80vw;
+}
 
-	.customTooltip {
-		display: inline-block;
-		text-overflow: ellipsis;
-		white-space: pre;
-		overflow: hidden;
-		max-width: 300px;
-		font-size: medium;
-	}
+.customTooltip {
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: pre;
+    overflow: hidden;
+    max-width: 300px;
+    font-size: medium;
+}
 
-	.mapArea {
-		top: 2.5%;
-		width: 100%;
-		position: relative;
-	}
-	.mapArea:after {
-		padding-top: 49.1%;
-		/* padding-top: 53.4375%;*/
-		/* 16:9 ratio (56.25%) minus titleRow height*/
-		display: block;
-		content: '';
-	}
-	
-	.titleRowInput {
-		width: 10%;
-		height: 65%;
-		font-size: 1.6vh;
-	}
+.mapArea {
+    top: 2.5%;
+    width: 100%;
+    position: relative;
+}
 
-	.fields {
-		cursor: pointer;
-	}
+.mapArea:after {
+    padding-top: 49.1%;
+    display: block;
+    content: '';
+}
 
-	.fields svg{
-		stroke: #6D6D6D;
-		stroke-width: 1;
-		fill: white;
-	}
-	
-	.activated{
+.titleRowInput {
+    width: 10%;
+    height: 65%;
+    font-size: 1.6vh;
+}
 
-		border: 1px solid rgb(238, 46, 49); /* some kind of red border */
-		-webkit-border-radius: 4px;
-		   -moz-border-radius: 4px;
-				border-radius: 4px;
-	 
-		-webkit-box-shadow: 0px 0px 4px #c20e1a;
-		   -moz-box-shadow: 0px 0px 4px #c20e1a;
-				box-shadow: 0px 0px 4px #c20e1a; /* some variation of red for the shadow */
-	}
-	.toprow{
-		position: absolute;
-		top: 0.5%;
-		
-	}
-	
-	.bottomrow{
-		position: absolute;
-		top: 88%;
-	}
-	.leftcol{
-		position: absolute;
-		left: 0.2%;
-	}
-	.rightcol{
-		position: absolute;
-		left: 54.37%;
-	}
+.fields {
+    cursor: pointer;
+}
 
-	.fieldText{
-		position: absolute;
-		height: 20%;
-		white-space: nowrap;
-		width: 100%;
-		font-size: 1.6vmin;
-		text-align: center; 
-		line-height: 100%;
-		-webkit-touch-callout: none;
-    	-webkit-user-select: none;
-    	-khtml-user-select: none;
-    	-moz-user-select: none;
-    	-ms-user-select: none;
-    	user-select: none;
-	}
+.fields svg {
+    stroke: #6D6D6D;
+    stroke-width: 1;
+    fill: white;
+}
 
-	.fieldTextBottom{
-		 top: 80%;
-	}
-	
-	.fieldComment{
-		display: none;
-	}
+.activated {
 
-	.tzComment{
-		position:relative;
-		width:100%;
-		height:80%;	
-		font-size: 1.6vh;
+    border: 1px solid rgb(238, 46, 49); /* some kind of red border */
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 
-	}
-	.tzCommentDiv{
-		position:absolute;
-		top: 70%;
-		left:2%; 
-		width:35%;
-		height:20%;
-		font-size: 1.8vh;;
-		
-	}
-	.tzAuswahl{
-		left:50%;
-		top: 70%;
-		width: 45%;
-		position:absolute;
-		display:inline-block;	
-	}
-	.tzAuswahl:after {
-		padding-top: 57%;
-		/* padding-top: 53.4375%;*/
-		/* 16:9 ratio (56.25%) minus titleRow height*/
-		display: block;
-		content: '';
-	}
+    -webkit-box-shadow: 0 0 4px #c20e1a;
+    -moz-box-shadow: 0 0 4px #c20e1a;
+    box-shadow: 0 0 4px #c20e1a; /* some variation of red for the shadow */
+}
 
-	/**Map stuff:
-	*/
-	.leaflet-control-zoom {
-		display: none;
-	}
+.toprow {
+    position: absolute;
+    top: 0.5%;
 
-	.map-element {
-		width: 60px;
-		padding: 5px;
-		position: absolute;
-		background-color: #fff;
-		border: 1px solid black;
-	}
+}
 
-	.customZoomControl-pane {
-		width: 1.8%;
-		height: 3.5%;
-		position: absolute;
-		top: 1%;
-		left: 1%;
-		line-height: 26px;
+.bottomrow {
+    position: absolute;
+    top: 88%;
+}
 
-	}
-	.customZoomControl {
-		top: 0;
-		position: absolute;
-		font: bold 0.8vw 'Lucida Console', Monaco, monospace;
-		font-size: 1.2vw;
-		background-color: #fff;
-		width: 100%;
-		height: 100%;
-		line-height: 100%;
-		display: block;
-		text-align: center;
-		text-decoration: none;
-		color: black;
-		border: 0;
-		border: 1px solid black;
-	}
+.leftcol {
+    position: absolute;
+    left: 0.2%;
+}
 
-	.customZoomControl-out{
-		left: 100%;
-	}
-	.customZoomControl-in{
-		left: 0px;
-	}
+.rightcol {
+    position: absolute;
+    left: 54.37%;
+}
 
-	#freezeMap{
-		top: 6%;
-		left: 0.5%;
-		text-decoration: none;
-		font-size: 0.8vw;
-		color: black;
-		line-height: 100%;
-		width: 4%;
-		height: 3%;
-		text-align: center;				
-	}
+.fieldText {
+    position: absolute;
+    height: 20%;
+    white-space: nowrap;
+    width: 100%;
+    font-size: 1.6vmin;
+    text-align: center;
+    line-height: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
-	#freezeMapLock{
-		top: 8%;
-		position: absolute;
-		right: 10px;
-		height: 14px;
-		display: none;
-	}
+.fieldTextBottom {
+    top: 80%;
+}
 
-	#datasets{
-		
-		top: 3.5%;
-		left: 54%;
-		text-decoration: none;
-		font-size: 0.8vw;
-		color: black;
-		width: 4.9%;
-		height: 3%;
-		text-align: center;
-		/*padding: 10px 5px 10px 5px;*/
-	}
+.fieldComment {
+    display: none;
+}
 
-	#loadMenu{
-		top: 91%;
-		left: 54%;
-		text-decoration: none;
-		font-size: 0.8vw;
-		color: black;
-		width: 4.9%;
-		height: 4%;
-		text-align: center;
-	}
+.tzComment {
+    position: relative;
+    width: 100%;
+    height: 80%;
+    font-size: 1.6vh;
 
-	#drawTest{
-		top: 40px;
-		right: 10px;
-		text-decoration: none;
-		font-size: 14px;
-		color: black;
-		z-index: 1;
-	}
+}
 
-	.drawToolbarDiv{
-		position: absolute;
-		z-index: 2;
-		top: 89%;
-		left: 0.5%;
-		height: 10%;
-		width: 5%;
-		border-spacing: 0;
-		border-collapse: collapse;
-	}
+.tzCommentDiv {
+    position: absolute;
+    top: 70%;
+    left: 2%;
+    width: 35%;
+    height: 20%;
+    font-size: 1.8vh;;
 
-	.drawToolbar {
-		background-repeat: no-repeat;
-		background-size: contain;
-		height: 100%;
-		width: 100%;
-		text-decoration: none;
-		z-index: 1;
-		text-align: center;
-		font-size: 1vw;
-		display: block;
-		margin: auto;		
-		
-	}
+}
 
-	.drawToolbar table, td, th {
-		height: 20%;
-		width: 20%;
-		border: 1px solid black;
-		padding: 0;
-		margin: 0;
-		background-color: #fff;
-	} 
+.tzAuswahl {
+    left: 50%;
+    top: 70%;
+    width: 45%;
+    position: absolute;
+    display: inline-block;
+}
 
-	#drawTitle{
-		height: 100%;
-		background-image: none;
-		width: 100%;
-	}
+.tzAuswahl:after {
+    padding-top: 57%;
+    /* padding-top: 53.4375%;*/
+    /* 16:9 ratio (56.25%) minus titleRow height*/
+    display: block;
+    content: '';
+}
 
-	#drawRectangle{
-		width: 100%;
-		height: 100%;	
-		background-image: url('../images/draw_symbols/rectangle.png');
-		
-	}
+/**Map stuff:
+*/
+.leaflet-control-zoom {
+    display: none;
+}
 
-	#drawPolygon{
-		width: 100%;
-		height: 100%;		
-		background-image: url('../images/draw_symbols/polygon.png');
-		
-	}
+.map-element {
+    width: 60px;
+    padding: 5px;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid black;
+}
 
-	#drawLine{
-		width: 100%;
-		height: 100%;		
-		background-image: url('../images/draw_symbols/line.png');
-		
-	}
+.customZoomControl-pane {
+    width: 1.8%;
+    height: 3.5%;
+    position: absolute;
+    top: 1%;
+    left: 1%;
+    line-height: 26px;
 
-	#drawCircle{
-		width: 100%;
-		height: 100%;
-		background-image: url('../images/draw_symbols/circle.png');		
-		
-	}
+}
 
-	#drawPoint{
-		width: 100%;
-		height: 100%;
-		background-image: url('../images/draw_symbols/point.png');		
-	}
-	
-	#questionMark{
-		width: 100%;
-		height: 100%;	
-		color: black;		
-	
-	}
+.customZoomControl {
+    top: 0;
+    position: absolute;
+    font: bold 0.8vw 'Lucida Console', Monaco, monospace;
+    font-size: 1.2vw;
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+    line-height: 100%;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    border: 1px solid black;
+}
 
-	.leaflet-draw.leaflet-control{
-		display: none;
-	}
-	
+.customZoomControl-out {
+    left: 100%;
+}
 
-	@media screen and (-webkit-min-device-pixel-ratio:0) {
-	   .drawToolbar {   
-				
-			display: inline-block;	
-	   }
-	   .drawToolbarDiv{
-	   
-			height: 5vw;
-			
-	   }
-	   
-	}
+.customZoomControl-in {
+    left: 0;
+}
 
-	#einsaetze-tbl {
-		position: absolute; 
-		width: 80%; 
-		height: auto; 
-		left: 1%; 
-		color: white;
-		background-color: grey;
-	}
+#freezeMap {
+    top: 6%;
+    left: 0.5%;
+    text-decoration: none;
+    font-size: 0.8vw;
+    color: black;
+    line-height: 100%;
+    width: 4%;
+    height: 3%;
+    text-align: center;
+}
 
-    #einsaetze-tbl * {
-        border: 0;
-		color: white; 
-		background-color: #333333;
+#freezeMapLock {
+    top: 8%;
+    position: absolute;
+    right: 10px;
+    height: 14px;
+    display: none;
+}
+
+.datasets {
+    top: 0.6%;
+    left: 54%;
+    text-decoration: none;
+    color: black;
+    width: 4.9%;
+    text-align: center;
+    font-size: 0.8vw;
+}
+
+#loadMenu {
+    top: 91%;
+    left: 54%;
+    text-decoration: none;
+    font-size: 0.8vw;
+    color: black;
+    width: 4.9%;
+    height: 4%;
+    text-align: center;
+}
+
+#drawTest {
+    top: 40px;
+    right: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    color: black;
+    z-index: 1;
+}
+
+.drawToolbarDiv {
+    position: absolute;
+    z-index: 2;
+    top: 89%;
+    left: 0.5%;
+    height: 10%;
+    width: 5%;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.drawToolbar {
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+    z-index: 1;
+    text-align: center;
+    font-size: 1vw;
+    display: block;
+    margin: auto;
+
+}
+
+.drawToolbar table, td, th {
+    height: 20%;
+    width: 20%;
+    border: 1px solid black;
+    padding: 0;
+    margin: 0;
+    background-color: #fff;
+}
+
+#drawTitle {
+    height: 100%;
+    background-image: none;
+    width: 100%;
+}
+
+#drawRectangle {
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/draw_symbols/rectangle.png');
+
+}
+
+#drawPolygon {
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/draw_symbols/polygon.png');
+
+}
+
+#drawLine {
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/draw_symbols/line.png');
+
+}
+
+#drawCircle {
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/draw_symbols/circle.png');
+
+}
+
+#drawPoint {
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/draw_symbols/point.png');
+}
+
+#questionMark {
+    width: 100%;
+    height: 100%;
+    color: black;
+}
+
+.leaflet-draw.leaflet-control {
+    display: none;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .drawToolbar {
+        display: inline-block;
     }
+
+    .drawToolbarDiv {
+        height: 5vw;
+    }
+}
+
+#einsaetze-tbl {
+    position: absolute;
+    width: 80%;
+    height: auto;
+    left: 1%;
+    color: white;
+    background-color: grey;
+    text-align: center;
+}
+
+#einsaetze-tbl * {
+    border: 0;
+    color: white;
+    background-color: #333333;
+}

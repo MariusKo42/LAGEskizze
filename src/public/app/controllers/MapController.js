@@ -234,8 +234,8 @@ app.controller("MapController", function($scope, $http, $sce){
 	*/
 	$scope.saveEinsatz = function() {
 		// Mandatory fields
-		if (!$scope.einsatz.meta.einsatzstichwort || !$scope.einsatz.meta.einsatzort || !$scope.einsatz.meta.meldender || !$scope.einsatz.meta.objektNr || !$scope.einsatz.meta.datumUhrzeitGruppe) {
-			return alert('Die Felder Einsatzstichwort, Einsatzort, Meldender, Objektnr und Uhrzeitgruppe sind erforderlich.');
+		if (!$scope.einsatz.meta.einsatzstichwort || !$scope.einsatz.meta.einsatzort || !$scope.einsatz.meta.meldender || !$scope.einsatz.meta.objektNr || !$scope.einsatz.meta.datumUhrzeitGruppe || !$scope.einsatz.meta.kuerzel) {
+			return alert('Die Felder Einsatzstichwort, Einsatzort, Meldender, Benutzerkürzel, Objektnr und Uhrzeitgruppe sind erforderlich.');
 		}
 		// An entry can only be saved if a symbol is set or a line has been drawn into the map.
 		var startSaveing = false;
@@ -321,7 +321,7 @@ app.controller("MapController", function($scope, $http, $sce){
 					var tableRow = $('<tr onclick="window.location.hash=\'/#/map/' + einsatz.id + '\'"><td>'
 						+ einsatz.meta.einsatzstichwort + '</td><td>'
 						+ einsatz.meta.einsatzort + '</td><td>'
-						+ einsatz.meta.meldender + '</td><td>'
+						+ einsatz.meta.kuerzel + '</td><td>'
 						+ einsatz.meta.objektNr + '</td><td>'
 						+ einsatz.meta.datumUhrzeitGruppe + '</td></tr>');
 					$('#einsatzTable').append(tableRow);
