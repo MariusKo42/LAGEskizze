@@ -121,12 +121,13 @@ app.controller("MapController", function($scope, $http, $sce){
 	// object that will contain the current state on save
 	$scope.einsatz = {
 		id: 0,
-		meta: { // filled via ng-model
-			einsatzstichwort: '',
-			einsatzort: '',
-			meldender: '',
-			objektNr: '',
-			datumUhrzeitGruppe: ''
+		metadata: { // filled via ng-model
+			acronym: '',
+			keyword: '',
+			location: '',
+			notify: '',
+			number: '',
+			date: ''
 		},
 		// rest will be filled on save()
 		drawnObjects: [],
@@ -234,7 +235,7 @@ app.controller("MapController", function($scope, $http, $sce){
 	*/
 	$scope.saveEinsatz = function() {
 		// Mandatory fields
-		if (!$scope.einsatz.meta.einsatzstichwort || !$scope.einsatz.meta.einsatzort || !$scope.einsatz.meta.meldender || !$scope.einsatz.meta.objektNr || !$scope.einsatz.meta.datumUhrzeitGruppe || !$scope.einsatz.meta.kuerzel) {
+		if (!$scope.einsatz.metadata.keyword || !$scope.einsatz.metadata['location'] || !$scope.einsatz.metadata['notify'] || !$scope.einsatz.metadata.number || !$scope.einsatz.metadata.date || !$scope.einsatz.metadata.acronym) {
 			return alert('Die Felder Einsatzstichwort, Einsatzort, Meldender, Benutzerkürzel, Objektnr und Uhrzeitgruppe sind erforderlich.');
 		}
 		// An entry can only be saved if a symbol is set or a line has been drawn into the map.
@@ -319,11 +320,11 @@ app.controller("MapController", function($scope, $http, $sce){
 				for (var i = 0; i < response.data.length; i++) {
 					var einsatz = response.data[i];
 					var tableRow = $('<tr onclick="window.location.hash=\'/#/map/' + einsatz.id + '\'"><td>'
-						+ einsatz.meta.einsatzstichwort + '</td><td>'
-						+ einsatz.meta.einsatzort + '</td><td>'
-						+ einsatz.meta.kuerzel + '</td><td>'
-						+ einsatz.meta.objektNr + '</td><td>'
-						+ einsatz.meta.datumUhrzeitGruppe + '</td></tr>');
+						+ einsatz.metadata.keyword + '</td><td>'
+						+ einsatz.metadata.location + '</td><td>'
+						+ einsatz.metadata.acronym + '</td><td>'
+						+ einsatz.metadata.number + '</td><td>'
+						+ einsatz.metadata.date + '</td></tr>');
 					$('#einsatzTable').append(tableRow);
 				}
 				$("#einsatzTable").trigger("update");
