@@ -100,7 +100,7 @@ var symbolProperties = {
 		{"name":"FW_MTF", "title":"MTF", "keywords": "feuerwehr", "category": 1},
 		{"name":"FW_GW-L1", "title":"GW-L 1", "keywords": "feuerwehr", "category": 1},
 		{"name":"FW_GW-L2", "title":"GW-L 2", "keywords": "feuerwehr", "category": 1},
-		{"name":"FW_Dekon-P","title":"P-Dekon", "title":"P-Dekon","keywords": "feuerwehr", "category": 1},
+		{"name":"FW_Dekon-P", "title":"P-Dekon","keywords": "feuerwehr", "category": 1},
 		{"name":"FW_GW-G", "title":"GW-G", "keywords": "feuerwehr", "category": 1},
 		{"name":"FW_LF_blanko", "title":"LF", "keywords": "feuerwehr", "category": 1},
 		{"name":"FW_Fzg_blanko", "title":"", "keywords": "feuerwehr", "category": 1},
@@ -170,4 +170,4 @@ var symbolProperties = {
 		{"name":"Rettungsdienst", "keyword": "rettungsdienst", "id": 3},
 		{"name":"THW", "keyword": "thw", "id": 4}
 	]
-}
+};

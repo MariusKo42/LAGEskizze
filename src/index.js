@@ -37,26 +37,6 @@ function createWindow() {
         'showDevTools': false,
         'resizable': true
     });
-    // Create the browser window.
-    /*
-    // Hide the menu bar, but allow it to be brought up by pressing `alt`.
-    //mainWindow.setMenuBarVisibility(false);
-    //mainWindow.setAutoHideMenuBar(true);
-
-    // and load the index.html of the app.
-    mainWindow.loadURL(`file://${__dirname}/public/index.html`);
-
-    // Open the DevTools.
-    mainWindow.webContents.openDevTools();
-
-    // Emitted when the window is closed.
-    mainWindow.on('closed', function () {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
-        mainWindow = null
-    });
-    */
 }
 
 // This method will be called when Electron has finished
@@ -72,15 +52,6 @@ app.on('window-all-closed', function () {
         app.quit()
     }
 });
-/*
-app.on('activate', function () {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (mainWindow === null) {
-        createWindow()
-    }
-});
-*/
 /* client code */
 // JSON database for Node and the browser powered by lodash API
 var low = require('lowdb');
@@ -100,7 +71,6 @@ ex.use(bodyParser.urlencoded({
 }));
 ex.use(bodyParser.json());
 
-ex.use('/zeichengenerator', express.static(__dirname + '/zeichengenerator/'));
 ex.use('/', express.static(__dirname + '/public'));
 
 server = ex.listen(1337, function(err) {
