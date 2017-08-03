@@ -833,19 +833,27 @@ app.controller("MapController", function($scope, $http, $sce){
             { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dtk50', layer: 'nw_dtk50_col', name: 'NRW-Atlas: Topo. Karte 1:50.000 (Zoom 1 km - 500 m)' },
             { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dtk25', layer: 'nw_dtk25_col', name: 'NRW-Atlas: Topo. Karte 1:25.000 (Zoom 500 m - 300 m)' },
             { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dtk10', layer: 'nw_dtk10_col', name: 'NRW-Atlas: Topo. Karte 1:10.000 (Zoom 300 m - 30 m)' },
-            { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dgk5', layer: 'nw_dgk5_grundriss', name: 'NRW-Atlas: Deutsche Grundkarte 1:5.000 (Zoom 100 m - 30 m)' }
+            { wms: 'http://www.wms.nrw.de/geobasis/wms_nw_dgk5', layer: 'nw_dgk5_grundriss', name: 'NRW-Atlas: Deutsche Grundkarte 1:5.000 (Zoom 100 m - 30 m)' },
+			{ wms: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png', layer: 'OpenStreetMap', name: 'OpenStreetMap' }
         ];
 		// show default basemap
 		$scope.map.showBasemap($scope.map.basemaps[0].wms, $scope.map.basemaps[0].layer);
 	};
 
 	$scope.map.showBasemap = function(wms, layer){
-		var wmsLayer = L.tileLayer.wms(wms, {
-			layers: layer,
-			format: 'image/png',
-			transparent: false,
-            attribution: '&copy; geobasis.nrw 2016'
-		});
+		var wmsLayer = null;
+		if (layer === 'OpenStreetMap') {
+			wmsLayer =  L.tileLayer(wms, {
+				attribution: '&copy; <a href="http://osm.org/copyright">' + layer + '</a> contributors'
+			});
+		} else {
+			wmsLayer = L.tileLayer.wms(wms, {
+				layers: layer,
+				format: 'image/png',
+				transparent: false,
+				attribution: '&copy; geobasis.nrw 2016'
+			});
+		}
 		basemap.clearLayers();
 		basemap.addLayer(wmsLayer);
 	};
