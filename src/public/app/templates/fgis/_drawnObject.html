@@ -12,13 +12,14 @@
         <div id="geomAttr">
             <h4>Darstellung der Geometrie ändern</h4>
             <div id="cp2" class="input-group colorpicker-component" style="width: 25%">
-                <input type="text" value="#00AABB" class="form-control" />
+                <input type="text" value="#00AABB" class="form-control" title="Farbauswahl" />
                 <span class="input-group-addon"><i></i></span>
             </div>
             <h4>Kommentar zu diesem Objekt</h4>
             <textarea id="commentGeom" rows="10" cols="50" ng-model="comment" placeholder="Kommentar hinzufügen" ></textarea><br>
-            <input type="checkbox" name="tooltipCheckbox" id="tooltipCheckbox"> Objekt beschriften<br>
-            <input type="checkbox" name="dashed" id="dashed"> Gestrichelte Linie
+            <input type="checkbox" name="tooltipCheckbox" id="tooltipCheckbox" title="Objekt beschriften"> Objekt beschriften<br>
+            <input type="checkbox" name="dashed" id="dashed" title="Gestrichelte Linie" > Gestrichelte Linie
+            <br/>
             <button id="saveSelectedColour" type="button" class="btn btn-default btn-lg" ng-click="changeGeomStyle()">Eigenschaften speichern</button>
         </div>
     </div>
