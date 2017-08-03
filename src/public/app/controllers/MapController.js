@@ -904,11 +904,6 @@ app.controller("MapController", function($scope, $http, $sce){
 	$scope.map.objects.type = "";
 	$scope.map.objects.comment = "";
 
-	// save a comment for a drawn object using a map (first value: ObjectId from leafletDraw, second value: commentText)
-	$scope.map.saveComment = function(){
-		commentsMap.set($scope.map.objectId, $scope.map.objects.comment);
-	};
-
 	$scope.map.showComment = function(){
 	    if ($scope.sideContent.template.includes('_drawnObject')) $scope.setColorPicker();
 
@@ -957,6 +952,14 @@ app.controller("MapController", function($scope, $http, $sce){
             dashStyle = null;
             drawnItems.getLayer($scope.map.objectId).setStyle({color: tmpColor, dashArray: null});
         }
+	};
+
+	// save a comment for a drawn object using a map (first value: ObjectId from leafletDraw, second value: commentText)
+	$scope.map.saveComment = function(){
+		commentsMap.set($scope.map.objectId, $scope.map.objects.comment);
+		// If the comment is saved, the label is also adapted.
+		var checkboxState = $('#labelGeometry').is(':checked');
+		if (checkboxState) $scope.map.changeLabeling(checkboxState);
 	};
 
 	$scope.map.changeLabeling = function (checkboxState) {
