@@ -37,3 +37,4 @@ webgis/public/images/symbols/*.svg
 !webgis/public/images/symbols/_universal.svg
 src/public/lib/
 src/fireDatabase.json
+src/tiles/
