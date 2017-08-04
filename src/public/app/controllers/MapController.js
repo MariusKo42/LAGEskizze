@@ -941,43 +941,29 @@ app.controller("MapController", function($scope, $http, $sce){
 		$scope.sideContent.close();
 	};
 
-	// change the color of the choosen object
-	$scope.map.changeObjectsColor = function() {
-		drawnItems.getLayer($scope.map.objectId).setStyle({color: newColor, dashArray: dashStyle});
-	};
-    /**
-     * Once the checkbox is selected the style of the geometry is changed
-     */
-	$scope.map.changeDashed = function() {
-	    var tmpColor = drawnItems.getLayer($scope.map.objectId).options.color;
-	    if (dashStyle === null) {
-	        dashStyle = [20, 15];
-	        drawnItems.getLayer($scope.map.objectId).setStyle({color: tmpColor, dashArray: dashStyle});
-        } else {
-            dashStyle = null;
-            drawnItems.getLayer($scope.map.objectId).setStyle({color: tmpColor, dashArray: null});
-        }
-	};
-
-	// save a comment for a drawn object using a map (first value: ObjectId from leafletDraw, second value: commentText)
-	$scope.map.saveComment = function(){
-		commentsMap.set($scope.map.objectId, $scope.map.objects.comment);
-		// If the comment is saved, the label is also adapted.
-		var checkboxState = $('#labelGeometry').is(':checked');
-		if (checkboxState) $scope.map.changeLabeling(checkboxState);
-	};
-
-	$scope.map.changeLabeling = function (checkboxState) {
+	$scope.map.saveGeomSettings = function () {
+		// layer
 		var layer = drawnItems.getLayer($scope.map.objectId);
+		// checkbox state
+		var checkboxstateLabel =  $('#labelGeometry').is(':checked');
+		var checkboxstateDashedLine = $('#dashed').is(':checked');
+		// set comment
+		commentsMap.set($scope.map.objectId, $scope.map.objects.comment);
 		// Removes the tooltip previously bound with bindTooltip. The previous tooltip must be removed first before a new one is added.
 		// Otherwise several tooltips will be displayed on the map.
 		layer.unbindTooltip();
-		if (checkboxState && $scope.map.objects.comment.trim() != '') {
+		if (checkboxstateLabel && $scope.map.objects.comment.trim() != '') {
 			// Binds a tooltip to the layer with the passed content
 			layer.bindTooltip($scope.map.objects.comment, {
 				permanent: true,
 				className: 'customTooltip'
 			}).openTooltip();
+		}
+		// change colour
+		if (checkboxstateDashedLine) {
+			layer.setStyle({color: newColor, dashArray: [20, 15]});
+		} else {
+			layer.setStyle({color: newColor, dashArray: null});
 		}
 	};
 

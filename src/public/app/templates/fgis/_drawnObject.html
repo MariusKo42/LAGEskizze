@@ -20,18 +20,16 @@
 	<div ng-hide="hideColorPicker" class="ng-hide">
 		<br>
 		<h3>Ändern Sie die Darstellung der Geometrie</h3>
-        <input type="checkbox" name="dashed" id="dashed" ng-click="map.changeDashed()" title="Gestrichelte Linie">Gestrichelte Linie
+        <input type="checkbox" name="dashed" id="dashed" title="Gestrichelte Linie">Gestrichelte Linie
 		<h3>Ändern Sie die Farbe der Geomerie.</h3>
 		<!-- colorPicker-->
 		<input type='text' id='colorPicker' title="Farbauswahl"/>
-		<button ng-click="map.changeObjectsColor()">Farbe speichern</button>
 	</div>
 	<h3>Kommentar zu diesem Objekt</h3>
 	<div>
 		<textarea rows="10" cols="50" ng-model="map.objects.comment" type="text" placeholder="Kommentar hinzufügen"></textarea>
 	</div>
-	<input type="checkbox" name="labelGeometry" id="labelGeometry" ng-model="checkboxLabeling" ng-change="map.changeLabeling(checkboxLabeling)" title="Beschriftung">Geometrie beschriften
+	<input type="checkbox" name="labelGeometry" id="labelGeometry" title="Beschriftung">Geometrie beschriften
 	<br/>
-	<button style="margin-top: 10px" ng-click="map.saveComment()">Kommentar speichern</button>
-
+	<button style="margin-top: 10px" ng-click="map.saveGeomSettings()">Eigenschaften speichern</button>
 </div>
