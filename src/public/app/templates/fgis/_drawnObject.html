@@ -9,16 +9,13 @@
 </style>
 <div style="margin: 10px;">
 	<h1>Objektinformationen</h1>
-
-	<div ng-bind="map.objects.type"></div>
 	<div ng-bind-html="map.objects.measureString"></div>
-	<br>
 	<button ng-click="map.editObjects()">Objekte bearbeiten</button>
 	<button ng-click="map.deleteObjects()">Objekte löschen</button>
 	<button ng-click="sideContent.close()">Schließen</button>
 
 	<div ng-hide="hideColorPicker" class="ng-hide">
-		<br>
+		<br/>
 		<h3>Ändern Sie die Darstellung der Geometrie</h3>
         <input type="checkbox" name="dashed" id="dashed" title="Gestrichelte Linie">Gestrichelte Linie
 		<h3>Ändern Sie die Farbe der Geomerie.</h3>

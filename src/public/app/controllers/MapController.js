@@ -374,6 +374,8 @@ app.controller("MapController", function($scope, $http, $sce){
         dashStyle = drawnItems.getLayer($scope.map.objectId).options.dashArray;
         $("#colorPicker").spectrum({
             color: objectColor,
+			chooseText: 'OK',
+			cancelText: 'Schließen',
             change: function(color) {
                 newColor = color.toHexString();
             }
@@ -947,6 +949,7 @@ app.controller("MapController", function($scope, $http, $sce){
 		// checkbox state
 		var checkboxstateLabel =  $('#labelGeometry').is(':checked');
 		var checkboxstateDashedLine = $('#dashed').is(':checked');
+		var selectedColor = $("#colorPicker").spectrum('get').toHexString();
 		// set comment
 		commentsMap.set($scope.map.objectId, $scope.map.objects.comment);
 		// Removes the tooltip previously bound with bindTooltip. The previous tooltip must be removed first before a new one is added.
@@ -961,69 +964,66 @@ app.controller("MapController", function($scope, $http, $sce){
 		}
 		// change colour
 		if (checkboxstateDashedLine) {
-			layer.setStyle({color: newColor, dashArray: [20, 15]});
+			layer.setStyle({color: selectedColor, dashArray: [20, 15]});
 		} else {
-			layer.setStyle({color: newColor, dashArray: null});
+			layer.setStyle({color: selectedColor, dashArray: null});
 		}
 	};
 
 	$scope.map.objects.getMeasurement = function(type, layer){
-		var _htmlString = "";
-		var _area = null;
-		var _latlng = null;
-		var _radius = null;
-		var _type = "";
+		var htmlString = "";
+		var area = null;
+		var length = null;
+		var typeOf = "";
+		var qm = null;
+		var qkm = null;
+		var ha = null;
 
 		// type can be a leaflet type, or a GeoJSON type, so we have to catch both
 		switch (type.toLowerCase()) {
 			case "rectangle":
-				_latlng = layer.getLatLngs();
-				_type = "Typ: Rechteck";
-				_area = L.GeometryUtil.geodesicArea(_latlng);
+				typeOf = "<h4>Typ: Rechteck</h4>";
+				area = L.GeometryUtil.geodesicArea(layer.getLatLngs()[0]);
 				break;
 			case "polygon":
-				_latlng = layer.getLatLngs();
-				_type = "Typ: Polygon";
-				_area = L.GeometryUtil.geodesicArea(_latlng);
+				typeOf = "<h4>Typ: Polygon</h4>";
+				area = L.GeometryUtil.geodesicArea(layer.getLatLngs()[0]);
 				break;
 			case "circle":
-				_latlng = layer.getLatLng();
-				_radius = layer.getRadius();
-				_type = "Typ: Kreis";
-				_area = Math.PI * _radius * _radius;
+				typeOf = "<h4>Typ: Kreis</h4>";
+				area = Math.PI * Math.pow(layer.getRadius(), 2);
 				break;
 			case "polyline":
 			case "linestring":
-				_latlng = layer.getLatLngs();
-				_type = "Typ: Polylinie";
-				_length = L.GeometryUtil.accumulatedLengths(_latlng);
-				var _length = _length[_length.length-1];
+				typeOf = "<h4>Typ: Polylinie</h4>";
+				length = L.GeometryUtil.accumulatedLengths(layer.getLatLngs());
+				length = length[length.length - 1];
 				break;
 			case "marker":
 			case "point":
-				_latlng = layer.getLatLng();
-				_type = "Typ: Punkt";
+				typeOf = "<h4>Typ: Punkt</h4>";
 				break;
 		}
 
-		if (_area != null) {
-			if (_area < 1000000){
-				_htmlString = "Fläche: " + Math.floor(_area) + "m<sup>2</sup><br> / "
-								+ Math.floor(_area/100)/100 + "ha";
+		if (area != null) {
+			ha = Math.floor(area / 10000);
+			if (area < 1000000) {
+				qm = Math.floor(area);
+				htmlString = "<h4>Fläche: " + qm + " m<sup>2</sup> / " + ha + " ha</h4>";
 			} else {
-				_htmlString = "Fläche: " + Math.floor(_area/100)/100 + "ha / "
-								+ Math.floor(_area/10000)/100 + "km<sup>2</sup><br>";
+				qkm = Math.floor(area / 1000000);
+				htmlString = "<h4>Fläche: " + ha + " ha / " + qkm + " km<sup>2</sup></h4>";
 			}
 		}
-		if (_length != null) {
-			if (_length < 10000){
-				_htmlString = "Länge: " + Math.floor(_length) + "m";
+		if (length != null) {
+			if (length < 10000) {
+				htmlString = "<h4>Länge: " + Math.floor(length) + "m</h4>";
 			} else {
-				_htmlString = "Länge: " + Math.floor(_length/100)/10 + "km";
+				htmlString = "<h4>Länge: " + Math.floor(length / 100) / 10 + "km</h4>";
 			}
 		}
-		$scope.map.objects.measureString = $sce.trustAsHtml(_htmlString);
-		$scope.map.objects.type = _type;
+		$scope.map.objects.measureString = $sce.trustAsHtml(htmlString + typeOf);
+		// $scope.map.objects.type = _type;
 	};
 
 
