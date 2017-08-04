@@ -1,4 +1,5 @@
 var app = angular.module("fgis");
+var intervalAlreadySet = false;
 var map, drawnItems, drawControl, basemap, dashStyle, newColor;
 var lines,
 	linesArray = [];
@@ -31,6 +32,15 @@ app.directive('droppable', function() {
 });
 
 app.controller("MapController", function($scope, $http, $sce){
+	// The interval is set only once.
+	if (!intervalAlreadySet) {
+		intervalAlreadySet = true;
+		// A data record should be stored at a fixed time interval. 1800000 ms is equivalent to 30 minutes.
+		setInterval(function () {
+		    $scope.saveEinsatz();
+		}, 1800000);
+	}
+
     // url of the local server
     $scope.localAddress = 'http://localhost:1337/';
     $scope.sideContent = {};
@@ -152,11 +162,6 @@ app.controller("MapController", function($scope, $http, $sce){
 		}, function errorCallback () {
 			alert('Die Datei metadata.json wurde nicht gefunden.');
 		});
-
-	// A data record should be stored at a fixed time interval. 1800000 ms is equivalent to 30 minutes.
-	// setInterval(function () {
-	//     $scope.saveEinsatz();
-	// }, 1800000);
 
 	/*
 	 * Entries from a file are imported into the database
