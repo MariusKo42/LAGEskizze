@@ -21,8 +21,8 @@
     "express": "^4.14.0",
     "jquery": "^3.1.1",
     "leaflet": "1.0.3",
-    "leaflet-draw": "^0.4.0",
-    "leaflet-geometryutil": "^0.7.2",
+    "leaflet-draw": "0.4.3",
+    "leaflet-geometryutil": "0.8.0",
     "lodash": "^4.16.6",
     "lowdb": "^0.14.0"
   }
