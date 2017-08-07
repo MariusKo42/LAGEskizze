@@ -690,12 +690,12 @@ app.controller("MapController", function($scope, $http, $sce){
 		var neighbourPos = null;
 		for(var i = 0; i < fieldIdsArray.length; i++) {
 			fieldId = fieldIdsArray[i];
-			// top / right / bottom / left - erklären
+			// top / left / right / bottom
 			// Nur Elemente auf der gleiche Ebene dürfen miteinader verbunden werden
 			if (fieldId <= 8 && currentFieldId <= 8) casketSameRegion = true;
 			else if (fieldId >= 23 && currentFieldId >= 23) casketSameRegion = true;
-			else if (fieldId <= 16 && currentFieldId <= 16) casketSameRegion = true;
-			else if (fieldId >= 17 && currentFieldId >= 17) casketSameRegion = true;
+			else if (fieldId <= 14 && currentFieldId <= 14) casketSameRegion = true;
+			else if (fieldId >= 15 && currentFieldId >= 15) casketSameRegion = true;
 			if (casketSameRegion && linesArray[fieldId]) {
 				// jedes element besitzt seine ursprüngliche position in der karte. anhand dieser position wird eine distanz berechnet. zwischen dem bestehenden element und dem neuen element.
 				if (linesArray[fieldId][3]) tmpDist = lineToMapPos.distanceTo(L.latLng(linesArray[fieldId][3].lat, linesArray[fieldId][3].lng));
