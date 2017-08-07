@@ -444,18 +444,13 @@ app.controller("MapController", function($scope, $http, $sce){
 			// setze taktische zeichen in karte
 			for (var i = 0; i < $scope.einsatz.taktZeichen.length; i++) {
 				var field = $scope.einsatz.taktZeichen[i];
-				var mapPosition = field.kartenposition;
-
 				var fieldHtml = getFieldHtmlString(field.kranzposition, field.zeichen,
 					field.comment, field.textTop, field.textBottom);
-
 				$('#' + field.kranzposition).html(fieldHtml);
 
 				// field line / kartenposition
 				if (field.kartenposition == '') {
 					continue; // field has no kartenposition
-				} else if (field.kartenposition[1] != null ) {
-					mapPosition = map.containerPointToLatLng(field.kartenposition[0]);
 				}
 				var anchorPoint = getAnchorOfElement('image' + field.kranzposition);
 				linesArray[field.kranzposition] = [field.kartenposition[0], anchorPoint, field.kartenposition[1], field.kartenposition[2]];
@@ -656,7 +651,8 @@ app.controller("MapController", function($scope, $http, $sce){
 				}
 			}
 			// Bildschirmkoordinate
-			var anchorPoint = getAnchorOfElement(currentFieldId);
+			// var anchorPoint = getAnchorOfElement(currentFieldId);
+			var anchorPoint = map.containerPointToLatLng(getAnchorOfElement(currentFieldId));
 			var lineToMapPos = null;
 			// eine linie wird erstellt. diese linie verbindet das element und die position in der karte
 			// else-fall: wurde keine position in der karte ausgwählt, dann besitzt jedes element seine ursprünglliche positin in der karte.
@@ -1141,9 +1137,9 @@ function fitAllLines(linesArray){
 		try {
 			var p1 = null;
 			// Wenn das Element einem Vater zugeordnet ist, dann müssen die Koordinaten in LatLng umgewandelt werden
-			if (linesArray[i][2] != null) p1 =  map.containerPointToLatLng(linesArray[i][0]);
+			if (linesArray[i][2] != null) p1 = map.containerPointToLatLng(getAnchorOfElement(linesArray[i][2]));
 			else p1 = linesArray[i][0];
-			var p2 = map.containerPointToLatLng(linesArray[i][1]);
+			var p2 = map.containerPointToLatLng(getAnchorOfElement(i));
 			var latlngs = [p1, p2];
 			lines.addLayer(L.polyline(latlngs));
 		} catch(e){
