@@ -685,13 +685,14 @@ app.controller("MapController", function($scope, $http, $sce){
 		var tmpDist = null;
 		var neighbourPos = null;
 		for(var i = 0; i < fieldIdsArray.length; i++) {
+			casketSameRegion = false;
 			fieldId = fieldIdsArray[i];
 			// top / left / right / bottom
 			// Nur Elemente auf der gleiche Ebene dürfen miteinader verbunden werden
-			if (fieldId <= 8 && currentFieldId <= 8) casketSameRegion = true;
-			else if (fieldId >= 23 && currentFieldId >= 23) casketSameRegion = true;
-			else if (fieldId <= 14 && currentFieldId <= 14) casketSameRegion = true;
-			else if (fieldId >= 15 && currentFieldId >= 15) casketSameRegion = true;
+			if (fieldId >= 1 && fieldId <= 8 && currentFieldId >= 1 && currentFieldId <= 8) casketSameRegion = true;
+			else if (fieldId >= 9 && fieldId <= 14 && currentFieldId >= 9 && currentFieldId <= 14) casketSameRegion = true;
+			else if (fieldId >= 15 && fieldId <= 22 && currentFieldId >= 15 && currentFieldId <= 22) casketSameRegion = true;
+			else if (fieldId >= 23 && fieldId <= 28 && currentFieldId >= 23 && currentFieldId <= 28) casketSameRegion = true;
 			if (casketSameRegion && linesArray[fieldId]) {
 				// jedes element besitzt seine ursprüngliche position in der karte. anhand dieser position wird eine distanz berechnet. zwischen dem bestehenden element und dem neuen element.
 				if (linesArray[fieldId][3]) tmpDist = lineToMapPos.distanceTo(L.latLng(linesArray[fieldId][3].lat, linesArray[fieldId][3].lng));
