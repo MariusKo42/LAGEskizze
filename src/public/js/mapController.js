@@ -263,7 +263,7 @@ app.controller("mapCtrl", function ($scope, $http) {
                         if (data.trim() != '') {
                             var parsedData = JSON.parse(data);
                             // A file can only be imported if the type of the program is identical. Mono or multiple screen.
-                            if (parsedData.screen == $scope.screen) {
+                            if (!($scope.screen == 'Ein-Fenster' && parsedData.screen == 'Zwei-Fenster')) {
                                 // The entry is added to the database
                                 // The JSON.parse() method parses a JSON string, constructing the JavaScript value or object described by the string.
                                 $http.post($scope.localAddress + 'api/addEntry/', JSON.parse(data))
@@ -709,13 +709,13 @@ app.controller("mapCtrl", function ($scope, $http) {
         var tmpDist = null;
         var neighbourPos = null;
         for (var i = 0; i < fieldIdsArray.length; i++) {
+            casketSameRegion = false;
             fieldId = fieldIdsArray[i];
-            // top / left /  /
             // Nur Elemente auf der gleiche Ebene dürfen miteinader verbunden werden
-            if (fieldId <= 14 && currentFieldId <= 14) casketSameRegion = true;
-            else if (fieldId >= 35 && currentFieldId >= 35) casketSameRegion = true;
-            else if (fieldId <= 20 && currentFieldId <= 20) casketSameRegion = true;
-            else if (fieldId >= 21 && currentFieldId >= 21) casketSameRegion = true;
+            if (fieldId >= 1 && fieldId <= 14 && currentFieldId >= 1 && currentFieldId <= 14) casketSameRegion = true;
+            else if (fieldId >= 15 && fieldId <= 20 && currentFieldId >= 15 && currentFieldId <= 20) casketSameRegion = true;
+            else if (fieldId >= 21 && fieldId <= 34 && currentFieldId >= 21 && currentFieldId <= 34) casketSameRegion = true;
+            else if (fieldId >= 35 && fieldId <= 40 && currentFieldId >= 35 && currentFieldId <= 40) casketSameRegion = true;
             if (casketSameRegion && linesArray[fieldId]) {
                 // jedes element besitzt seine ursprüngliche position in der karte. anhand dieser position wird eine distanz berechnet. zwischen dem bestehenden element und dem neuen element.
                 if (linesArray[fieldId][3]) tmpDist = lineToMapPos.distanceTo(L.latLng(linesArray[fieldId][3].lat, linesArray[fieldId][3].lng));
