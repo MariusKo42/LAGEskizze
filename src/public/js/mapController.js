@@ -717,10 +717,10 @@ app.controller("mapCtrl", function ($scope, $http) {
             fieldId = fieldIdsArray[i];
             // top / right / bottom / left - erklären
             // Nur Elemente auf der gleiche Ebene dürfen miteinader verbunden werden
-            if (fieldId <= 24 && currentFieldId <= 24) casketSameRegion = true;
-            else if (fieldId >= 47 && currentFieldId >= 47) casketSameRegion = true;
-            else if (fieldId <= 39 && currentFieldId <= 39) casketSameRegion = true;
-            else if (fieldId >= 41 && currentFieldId >= 41) casketSameRegion = true;
+            if (fieldId <= 14 && currentFieldId <= 14) casketSameRegion = true;
+            else if (fieldId >= 35 && currentFieldId >= 35) casketSameRegion = true;
+            else if (fieldId <= 28 && currentFieldId <= 28) casketSameRegion = true;
+            else if (fieldId >= 29 && currentFieldId >= 29) casketSameRegion = true;
             if (casketSameRegion && linesArray[fieldId]) {
                 // jedes element besitzt seine ursprüngliche position in der karte. anhand dieser position wird eine distanz berechnet. zwischen dem bestehenden element und dem neuen element.
                 if (linesArray[fieldId][3]) tmpDist = lineToMapPos.distanceTo(L.latLng(linesArray[fieldId][3].lat, linesArray[fieldId][3].lng));
