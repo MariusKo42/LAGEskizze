@@ -8,6 +8,7 @@
 /* electron settings */
 const electron = require('electron');
 // Module to control application life.
+//noinspection JSUnresolvedVariable
 const app = electron.app;
 const windowManager = require('electron-window-manager');
 
@@ -49,6 +50,7 @@ app.on('window-all-closed', function () {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
+        //noinspection JSUnresolvedFunction
         app.quit()
     }
 });

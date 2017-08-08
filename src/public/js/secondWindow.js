@@ -1,4 +1,5 @@
 var app = angular.module("handleSecondWindow", ["ngRoute"]);
+//noinspection JSUnresolvedVariable
 var windowManager = require('electron').remote.require('electron-window-manager');
 
 app.config(function ($routeProvider) {
@@ -195,7 +196,8 @@ app.controller('fieldContentCtrl', function($scope) {
 
     /**
      * @desc changes symbol of currentField in tz
-     * @param string: string for new symbol location
+     * @param name: top label description
+     * @param title: string for new symbol location
      * Please note that this function is not used and should be deleted
      * if not used in further development
      **/

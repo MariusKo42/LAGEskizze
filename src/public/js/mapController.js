@@ -434,74 +434,83 @@ app.controller("mapCtrl", function ($scope, $http) {
         }
 
         function updateState(einsatz) {
-            // store new einsatz data in $scope.einsatz reset from previous state
-            $scope.einsatz = einsatz;
-            lines.clearLayers();
-            linesArray = [];
-            drawnItems.clearLayers();
-            // After loading a dataset, the metadata is updated
-            windowManager.sharedData.set('metadataObject', $scope.einsatz.metadata);
-            // insert drawnObjects
-            for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
-                // convert geojson -> FeatureGroup -> ILayer
-                var geojson = $scope.einsatz.drawnObjects[i];
-                var featureGroup = L.geoJson(geojson, {
-                    pointToLayer: function (json, latlng) {
-                        if (json.properties.circleRadius) {
-                            return new L.circle(latlng, json.properties.circleRadius, {
-                                fillColor: json.properties.color,
-                                color: json.properties.color,
-                                weight: 5
-                            });
-                        } else {
-                            return new L.marker(latlng);
+            // A file can only be imported if the type of the program is identical. Mono or multiple screen.
+            if (!($scope.screen == 'Ein-Fenster' && einsatz.screen == 'Zwei-Fenster')) {
+                // store new einsatz data in $scope.einsatz reset from previous state
+                $scope.einsatz = einsatz;
+                lines.clearLayers();
+                linesArray = [];
+                drawnItems.clearLayers();
+                // After loading a dataset, the metadata is updated
+                windowManager.sharedData.set('metadataObject', $scope.einsatz.metadata);
+                // insert drawnObjects
+                for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
+                    // convert geojson -> FeatureGroup -> ILayer
+                    var geojson = $scope.einsatz.drawnObjects[i];
+                    var featureGroup = L.geoJson(geojson, {
+                        pointToLayer: function (json, latlng) {
+                            if (json.properties.circleRadius) {
+                                return new L.circle(latlng, json.properties.circleRadius, {
+                                    fillColor: json.properties.color,
+                                    color: json.properties.color,
+                                    weight: 5
+                                });
+                            } else {
+                                return new L.marker(latlng);
+                            }
                         }
-                    }
-                });
-                var layer = featureGroup.getLayers()[0]; // extract the first (and only) layer from the fGroup
-                layer.options.color = geojson.properties.color;
-                layer.options.showTooltip = geojson.properties.showTooltip;
-                layer.options.dashArray = geojson.properties.dashArray;
+                    });
+                    var layer = featureGroup.getLayers()[0]; // extract the first (and only) layer from the fGroup
+                    layer.options.color = geojson.properties.color;
+                    layer.options.showTooltip = geojson.properties.showTooltip;
+                    layer.options.dashArray = geojson.properties.dashArray;
 
-                if (geojson.properties.circleRadius) layer.feature.geometry.type = 'circle';
-                // If the tooltip is set and a comment is present, then the feature is labeled
-                if (geojson.properties.showTooltip && geojson.properties.comment.trim() != '') layer.bindTooltip(geojson.properties.comment, {
-                    permanent: true,
-                    className: 'customTooltip'
-                }).openTooltip();
-                drawnItems.addLayer(layer);
+                    if (geojson.properties.circleRadius) layer.feature.geometry.type = 'circle';
+                    // If the tooltip is set and a comment is present, then the feature is labeled
+                    if (geojson.properties.showTooltip && geojson.properties.comment.trim() != '') layer.bindTooltip(geojson.properties.comment, {
+                        permanent: true,
+                        className: 'customTooltip'
+                    }).openTooltip();
+                    drawnItems.addLayer(layer);
 
-                // register comment
-                var layerID = drawnItems.getLayerId(layer);
-                commentsMap.set(layerID, geojson.properties.comment);
+                    // register comment
+                    var layerID = drawnItems.getLayerId(layer);
+                    commentsMap.set(layerID, geojson.properties.comment);
 
-                // register click events
-                layer.on('click', function (e) {
-                    $scope.map.objectClicked(e.target.feature.geometry.type, e.target, e.target._leaflet_id);
-                });
-            }
-
-            // make layers unclickable by default
-            drawnItems.eachLayer(function (layer) {
-                setClickable(layer, false);
-            });
-
-            // upate mapstate
-            map.setView($scope.einsatz.map.center, $scope.einsatz.map.zoom);
-            // setze taktische zeichen in karte
-            for (var i = 0; i < $scope.einsatz.taktZeichen.length; i++) {
-                var field = $scope.einsatz.taktZeichen[i];
-                var fieldHtml = getFieldHtmlString(field.kranzposition, field.zeichen,
-                    field.comment, field.textTop, field.textBottom);
-                $('#' + field.kranzposition).html(fieldHtml);
-
-                // field line / kartenposition
-                if (field.kartenposition == '') {
-                    continue; // field has no kartenposition
+                    // register click events
+                    layer.on('click', function (e) {
+                        $scope.map.objectClicked(e.target.feature.geometry.type, e.target, e.target._leaflet_id);
+                    });
                 }
-                var anchorPoint = getAnchorOfElement('image' + field.kranzposition);
-                linesArray[field.kranzposition] = [field.kartenposition[0], anchorPoint, field.kartenposition[1], field.kartenposition[2]];
-                fitAllLines(linesArray);
+
+                // make layers unclickable by default
+                drawnItems.eachLayer(function (layer) {
+                    setClickable(layer, false);
+                });
+
+                // upate mapstate
+                map.setView($scope.einsatz.map.center, $scope.einsatz.map.zoom);
+                // setze taktische zeichen in karte
+                for (var i = 0; i < $scope.einsatz.taktZeichen.length; i++) {
+                    var field = $scope.einsatz.taktZeichen[i];
+                    var fieldHtml = getFieldHtmlString(field.kranzposition, field.zeichen,
+                        field.comment, field.textTop, field.textBottom);
+                    $('#' + field.kranzposition).html(fieldHtml);
+
+                    // field line / kartenposition
+                    if (field.kartenposition == '') {
+                        continue; // field has no kartenposition
+                    }
+                    var anchorPoint = getAnchorOfElement('image' + field.kranzposition);
+                    linesArray[field.kranzposition] = [field.kartenposition[0], anchorPoint, field.kartenposition[1], field.kartenposition[2]];
+                    fitAllLines(linesArray);
+                    // If the versioning is different, then a warning is issued.
+                    if (einsatz.version != $scope.version) {
+                        alert('Warnung: Version des importierten Einsatzes: ' + einsatz.version + '. Version der LAGEskizze: ' + $scope.version + '. Hierbei können Probleme auftreten.');
+                    }
+                }
+            } else {
+                alert('Fehler: Der Einsatz kann nur mit der ' + einsatz.screen + ' Variante importiert werden.');
             }
         }
     };
