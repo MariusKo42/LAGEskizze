@@ -181,7 +181,7 @@ app.controller("MapController", function($scope, $http, $sce){
 						if (data.trim() != '') {
 							var parsedData = JSON.parse(data);
 							// A file can only be imported if the type of the program is identical. Mono or multiple screen.
-							if (parsedData.screen == $scope.screen) {
+							if (!($scope.screen == 'Ein-Fenster' && parsedData.fireDoc[0].screen == 'Zwei-Fenster')) {
 								// The entry is added to the database
 								// The JSON.parse() method parses a JSON string, constructing the JavaScript value or object described by the string.
 								$http.post($scope.localAddress + 'api/addEntry/', JSON.parse(data))
@@ -190,13 +190,13 @@ app.controller("MapController", function($scope, $http, $sce){
 											// The table is updated
 											$scope.showLoadMenu();
 											// If the versioning is different, then a warning is issued.
-											if (parsedData.version != $scope.version) {
-												alert('Warnung: Version des importierten Einsatzes: ' + parsedData.version + '. Version der LAGEskizze: ' + $scope.version + '. Hierbei können Probleme auftreten.');
+											if (parsedData.fireDoc[0].version != $scope.version) {
+												alert('Warnung: Version des importierten Einsatzes: ' + parsedData.fireDoc[0].version + '. Version der LAGEskizze: ' + $scope.version + '. Hierbei können Probleme auftreten.');
 											}
 										}
 									});
 							} else {
-								alert('Fehler: Der Einsatz kann nur mit der ' + parsedData.screen + ' Variante importiert werden.');
+								alert('Fehler: Der Einsatz kann nur mit der ' + parsedData.fireDoc[0].screen + ' Variante importiert werden.');
 							}
 						}
 					}
@@ -350,7 +350,8 @@ app.controller("MapController", function($scope, $http, $sce){
 	$scope.showLoadMenu = function(){
 		$http.get($scope.localAddress + 'api/getAllEntries/')
 			.then(function successCallback(response) {
-				$('#einsatzTable').empty();
+			    var table = $('#einsatzTable');
+				table.empty();
 				for (var i = 0; i < response.data.length; i++) {
 					var einsatz = response.data[i];
 					var tableRow = $('<tr onclick="window.location.hash=\'/#/map/' + einsatz.id + '\'"><td>'
@@ -361,7 +362,7 @@ app.controller("MapController", function($scope, $http, $sce){
 						+ einsatz.metadata.date + '</td></tr>');
 					$('#einsatzTable').append(tableRow);
 				}
-				$("#einsatzTable").trigger("update");
+                table.trigger("update");
 			});
 	};
 
@@ -397,64 +398,73 @@ app.controller("MapController", function($scope, $http, $sce){
         }
 
 		function updateState(einsatz) {
-			// store new einsatz data in $scope.einsatz reset from previous state
-			$scope.einsatz = einsatz;
-			lines.clearLayers();
-			linesArray = [];
-			drawnItems.clearLayers();
+			// A file can only be imported if the type of the program is identical. Mono or multiple screen.
+			if (!($scope.screen == 'Ein-Fenster' && einsatz.screen == 'Zwei-Fenster')) {
+				// store new einsatz data in $scope.einsatz reset from previous state
+				$scope.einsatz = einsatz;
+				lines.clearLayers();
+				linesArray = [];
+				drawnItems.clearLayers();
 
-			// insert drawnObjects
-			for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
-				// convert geojson -> FeatureGroup -> ILayer
-				var geojson = $scope.einsatz.drawnObjects[i];
-				var featureGroup = L.geoJson(geojson, {
-					pointToLayer: function(json, latlng) {
-						if(json.properties.circleRadius) {
-							return new L.circle(latlng, json.properties.circleRadius, {
-								fillColor: json.properties.color,
-								color: json.properties.color,
-								weight: 5
-							});
-						} else { return new L.marker(latlng); }
-					}
-				});
-				var layer = featureGroup.getLayers()[0]; // extract the first (and only) layer from the fGroup
-				layer.options.style = { color: geojson.properties.color };
-				layer.options.color = geojson.properties.color;
-				if (geojson.properties.circleRadius) layer.feature.geometry.type = 'circle';
-				drawnItems.addLayer(layer);
+				// insert drawnObjects
+				for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
+					// convert geojson -> FeatureGroup -> ILayer
+					var geojson = $scope.einsatz.drawnObjects[i];
+					var featureGroup = L.geoJson(geojson, {
+						pointToLayer: function(json, latlng) {
+							if(json.properties.circleRadius) {
+								return new L.circle(latlng, json.properties.circleRadius, {
+									fillColor: json.properties.color,
+									color: json.properties.color,
+									weight: 5
+								});
+							} else { return new L.marker(latlng); }
+						}
+					});
+					var layer = featureGroup.getLayers()[0]; // extract the first (and only) layer from the fGroup
+					layer.options.style = { color: geojson.properties.color };
+					layer.options.color = geojson.properties.color;
+					if (geojson.properties.circleRadius) layer.feature.geometry.type = 'circle';
+					drawnItems.addLayer(layer);
 
-				// register comment
-				var layerID = drawnItems.getLayerId(layer);
-				commentsMap.set(layerID, geojson.properties.comment);
+					// register comment
+					var layerID = drawnItems.getLayerId(layer);
+					commentsMap.set(layerID, geojson.properties.comment);
 
-				// register click events
-				layer.on('click', function(e){
-					$scope.map.objectClicked(e.target.feature.geometry.type, e.target, e.target._leaflet_id);
-				});
-			}
-
-			// make layers unclickable by default
-			drawnItems.eachLayer(function(layer) {
-				setClickable(layer, false);
-			});
-
-			// upate mapstate
-			map.setView($scope.einsatz.map.center, $scope.einsatz.map.zoom);
-			// setze taktische zeichen in karte
-			for (var i = 0; i < $scope.einsatz.taktZeichen.length; i++) {
-				var field = $scope.einsatz.taktZeichen[i];
-				var fieldHtml = getFieldHtmlString(field.kranzposition, field.zeichen,
-					field.comment, field.textTop, field.textBottom);
-				$('#' + field.kranzposition).html(fieldHtml);
-
-				// field line / kartenposition
-				if (field.kartenposition == '') {
-					continue; // field has no kartenposition
+					// register click events
+					layer.on('click', function(e){
+						$scope.map.objectClicked(e.target.feature.geometry.type, e.target, e.target._leaflet_id);
+					});
 				}
-				var anchorPoint = getAnchorOfElement('image' + field.kranzposition);
-				linesArray[field.kranzposition] = [field.kartenposition[0], anchorPoint, field.kartenposition[1], field.kartenposition[2]];
-				fitAllLines(linesArray);
+
+				// make layers unclickable by default
+				drawnItems.eachLayer(function(layer) {
+					setClickable(layer, false);
+				});
+
+				// upate mapstate
+				map.setView($scope.einsatz.map.center, $scope.einsatz.map.zoom);
+				// setze taktische zeichen in karte
+				for (var i = 0; i < $scope.einsatz.taktZeichen.length; i++) {
+					var field = $scope.einsatz.taktZeichen[i];
+					var fieldHtml = getFieldHtmlString(field.kranzposition, field.zeichen,
+						field.comment, field.textTop, field.textBottom);
+					$('#' + field.kranzposition).html(fieldHtml);
+
+					// field line / kartenposition
+					if (field.kartenposition == '') {
+						continue; // field has no kartenposition
+					}
+					var anchorPoint = getAnchorOfElement('image' + field.kranzposition);
+					linesArray[field.kranzposition] = [field.kartenposition[0], anchorPoint, field.kartenposition[1], field.kartenposition[2]];
+					fitAllLines(linesArray);
+				}
+				// If the versioning is different, then a warning is issued.
+				if (einsatz.version != $scope.version) {
+					alert('Warnung: Version des importierten Einsatzes: ' + einsatz.version + '. Version der LAGEskizze: ' + $scope.version + '. Hierbei können Probleme auftreten.');
+				}
+			} else {
+				alert('Fehler: Der Einsatz kann nur mit der ' + einsatz.screen + ' Variante importiert werden.');
 			}
 		}
 	};
@@ -567,7 +577,6 @@ app.controller("MapController", function($scope, $http, $sce){
 
 	//filter the list of fields
 	$scope.fields.fiterSymbols = function(string){
-		console.log("filter: " + string);
 		$scope.fields.symbolsFilter = string;
 	};
 
@@ -651,7 +660,6 @@ app.controller("MapController", function($scope, $http, $sce){
 				}
 			}
 			// Bildschirmkoordinate
-			// var anchorPoint = getAnchorOfElement(currentFieldId);
 			var anchorPoint = map.containerPointToLatLng(getAnchorOfElement(currentFieldId));
 			var lineToMapPos = null;
 			// eine linie wird erstellt. diese linie verbindet das element und die position in der karte
@@ -814,8 +822,6 @@ app.controller("MapController", function($scope, $http, $sce){
 	};
 
 	/************** Map Layers ************/
-	/*** TODO: adapt to new backend */
-
 	$scope.map.basemaps = [];
 
 	/** click handler for datensätze button */
