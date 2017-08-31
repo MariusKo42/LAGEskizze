@@ -208,7 +208,7 @@ app.controller('fieldContentCtrl', function($scope) {
 
     $scope.fields.submit = function() {
         var tmpObj = {
-            imageSrc: document.getElementById('ImageSrc').src,
+            imageSrc: $scope.fields.currentField.image,
             fieldTop: document.getElementById('fieldTextTop').value,
             fieldBottom: document.getElementById('fieldTextBottom').value,
             fieldComment: document.getElementById('fieldComment').value
