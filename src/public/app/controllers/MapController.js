@@ -5,6 +5,7 @@ var lines,
 	linesArray = [];
 var commentsMap = new Map();
 var objectColor = "#f00";
+var showTooltip = false;
 var dialog = require('electron').remote.dialog; // Load the dialogs component of the OS
 var fs = require('fs'); // Load the File System to execute our common tasks (CRUD)
 
@@ -309,6 +310,8 @@ app.controller("MapController", function($scope, $http, $sce){
 				var geojson = layer.toGeoJSON();
 				geojson.properties.comment = commentsMap.get(drawnItems.getLayerId(layer)) || '';
 				geojson.properties.color = layer.options.color || '';
+				geojson.properties.showTooltip = layer.options.showTooltip;
+				geojson.properties.dashArray = layer.options.dashArray;
 				// as leaflet draw serializes a circle as a point, we need to store the radius manually.
 				if (layer._mRadius) geojson.properties.circleRadius = layer._mRadius;
 				$scope.einsatz.drawnObjects.push(geojson);
@@ -373,6 +376,7 @@ app.controller("MapController", function($scope, $http, $sce){
 	$scope.setColorPicker = function() {
         objectColor = drawnItems.getLayer($scope.map.objectId).options.color;
         dashStyle = drawnItems.getLayer($scope.map.objectId).options.dashArray;
+		showTooltip = drawnItems.getLayer($scope.map.objectId).options.showTooltip;
         $("#colorPicker").spectrum({
             color: objectColor,
 			chooseText: 'OK',
@@ -384,6 +388,8 @@ app.controller("MapController", function($scope, $http, $sce){
         // Checkbox will be checked if the dashStyle is set
         if (dashStyle === null) $('#dashed').prop('checked', false);
         else $('#dashed').prop('checked', true);
+		if (showTooltip) $('#labelGeometry').prop('checked', true);
+		else $('#labelGeometry').prop('checked', false);
     };
 
 	/**
@@ -424,7 +430,18 @@ app.controller("MapController", function($scope, $http, $sce){
 					var layer = featureGroup.getLayers()[0]; // extract the first (and only) layer from the fGroup
 					layer.options.style = { color: geojson.properties.color };
 					layer.options.color = geojson.properties.color;
+					layer.options.showTooltip = geojson.properties.showTooltip;
+					layer.options.dashArray = geojson.properties.dashArray;
+					// If the tooltip is set and a comment is present, then the feature is labeled
+					if (geojson.properties.showTooltip && geojson.properties.comment.trim() != '') {
+						layer.bindTooltip(geojson.properties.comment, {
+							permanent: true,
+							className: 'customTooltip'
+						}).openTooltip();
+					}
+
 					if (geojson.properties.circleRadius) layer.feature.geometry.type = 'circle';
+
 					drawnItems.addLayer(layer);
 
 					// register comment
@@ -765,6 +782,7 @@ app.controller("MapController", function($scope, $http, $sce){
 	$scope.map.lastClick = null;
 	$scope.map.objectId = null;
 	$scope.hideColorPicker = false;
+	$scope.geomType = '';
 
 	$scope.map.objectClicked = function(type, layer, id){
 		if (!$scope.map.editActive){
@@ -775,8 +793,10 @@ app.controller("MapController", function($scope, $http, $sce){
 			// hide colorPicker if the selected object is a marker
 			if(type == "marker" || type.toLowerCase() == "point") {
 				$scope.hideColorPicker = true;
+				$scope.geomType = 'point';
 			} else {
 				$scope.hideColorPicker = false;
+				$scope.geomType = type;
 			}
 
 			$scope.map.objects.getMeasurement(type, layer);
@@ -904,6 +924,7 @@ app.controller("MapController", function($scope, $http, $sce){
 	};
 
 	$scope.map.activateDrawInformation = function(){
+		$scope.fields.cancel();
 		drawnItems.eachLayer(function(layer) {
 			setClickable(layer, true);
 		});
@@ -958,18 +979,22 @@ app.controller("MapController", function($scope, $http, $sce){
 		// Removes the tooltip previously bound with bindTooltip. The previous tooltip must be removed first before a new one is added.
 		// Otherwise several tooltips will be displayed on the map.
 		layer.unbindTooltip();
+		layer.options['showTooltip'] = false;
 		if (checkboxstateLabel && $scope.map.objects.comment.trim() != '') {
 			// Binds a tooltip to the layer with the passed content
 			layer.bindTooltip($scope.map.objects.comment, {
 				permanent: true,
 				className: 'customTooltip'
 			}).openTooltip();
+			layer.options['showTooltip'] = true;
 		}
-		// change colour
-		if (checkboxstateDashedLine) {
-			layer.setStyle({color: selectedColor, dashArray: [20, 15]});
-		} else {
-			layer.setStyle({color: selectedColor, dashArray: null});
+		if ($scope.geomType != 'point') {
+			// change colour
+			if (checkboxstateDashedLine) {
+				layer.setStyle({color: selectedColor, dashArray: [20, 15]});
+			} else {
+				layer.setStyle({color: selectedColor, dashArray: null});
+			}
 		}
 	};
 
