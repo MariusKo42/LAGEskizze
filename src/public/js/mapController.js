@@ -793,6 +793,7 @@ app.controller("mapCtrl", function ($scope, $http) {
     $scope.map.lastClick = null;
     $scope.map.objectId = null;
     $scope.hideColorPicker = false;
+    $scope.hideChangeStyle = false;
 
     /*
      An object is selected. The properties of the object are extracted and sent to the second window.
@@ -804,10 +805,12 @@ app.controller("mapCtrl", function ($scope, $http) {
             var tmpObj = {
                 objectData: '',
                 hideColorPicker: false,
+                hideChangeStyle: false,
                 colour: '',
                 dashed: '',
                 comment: '',
-                showTooltip: false
+                showTooltip: false,
+                type: type
             };
             $scope.map.objectId = id;
             if (!$scope.map.editActive) {
@@ -817,11 +820,15 @@ app.controller("mapCtrl", function ($scope, $http) {
                 // hide colorPicker if the selected object is a marker
                 if (type == "marker" || type.toLowerCase() == "point") {
                     tmpObj.hideColorPicker = true;
+                    tmpObj.hideChangeStyle = true;
+                    tmpObj.type = 'point';
                 }
+
                 actualLayer = drawnItems.getLayer($scope.map.objectId);
+                if (actualLayer.getTooltip() != null) tmpObj.showTooltip = true;
+                else tmpObj.showTooltip = false;
                 tmpObj.colour = actualLayer.options.color;
                 tmpObj.dashed = actualLayer.options.dashArray;
-                tmpObj.showTooltip = actualLayer.options.showTooltip;
                 tmpObj.comment = commentsMap.get($scope.map.objectId);
                 tmpObj.objectData = $scope.map.objects.getMeasurement(type, layer);
                 // The properties are stored in a global object. This object can be read from both windows.
@@ -975,15 +982,19 @@ app.controller("mapCtrl", function ($scope, $http) {
     };
 
     /**
-     * change the color of the choosen object         *
+     * change the color of the choosen object
      */
     $scope.map.changeGeomStyle = function (geomOptions) {
         // The geomOptions is filled in the second window and passed to the map-window.
         // In the second window, for example, the color or a comment can be set
         var layer = drawnItems.getLayer($scope.map.objectId);
         commentsMap.set($scope.map.objectId, geomOptions.comment);
-        // the style information are adjusted
-        layer.setStyle({color: geomOptions.colour, dashArray: geomOptions.dash, showTooltip: geomOptions.showTooltip});
+        if (geomOptions.type !== 'point') {
+            // the style information are adjusted
+            layer.setStyle({color: geomOptions.colour, dashArray: geomOptions.dash, showTooltip: geomOptions.showTooltip});
+        } else {
+            layer.options["showTooltip"] = geomOptions.showTooltip;
+        }
         // Removes the tooltip previously bound with bindTooltip. The previous tooltip must be removed first before a new one is added.
         // Otherwise several tooltips will be displayed on the map.
         layer.unbindTooltip();
