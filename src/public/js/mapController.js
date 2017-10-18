@@ -401,7 +401,7 @@ app.controller("mapCtrl", function ($scope, $http) {
             // save map state
             $scope.einsatz.map.zoom = map.getZoom();
             $scope.einsatz.map.center = map.getCenter();
-            $scope.einsatz.map.tileServer = '';
+            $scope.einsatz.map.tileServer = $scope.map.tileServer;
 
             /**
              * A new entry is added to the database.
@@ -434,83 +434,91 @@ app.controller("mapCtrl", function ($scope, $http) {
         }
 
         function updateState(einsatz) {
-            // A file can only be imported if the type of the program is identical. Mono or multiple screen.
-            if (!($scope.screen == 'Ein-Fenster' && einsatz.screen == 'Zwei-Fenster')) {
-                // store new einsatz data in $scope.einsatz reset from previous state
-                $scope.einsatz = einsatz;
-                lines.clearLayers();
-                linesArray = [];
-                drawnItems.clearLayers();
-                // After loading a dataset, the metadata is updated
-                windowManager.sharedData.set('metadataObject', $scope.einsatz.metadata);
-                // insert drawnObjects
-                for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
-                    // convert geojson -> FeatureGroup -> ILayer
-                    var geojson = $scope.einsatz.drawnObjects[i];
-                    var featureGroup = L.geoJson(geojson, {
-                        pointToLayer: function (json, latlng) {
-                            if (json.properties.circleRadius) {
-                                return new L.circle(latlng, json.properties.circleRadius, {
-                                    fillColor: json.properties.color,
-                                    color: json.properties.color,
-                                    weight: 5
-                                });
-                            } else {
-                                return new L.marker(latlng);
-                            }
-                        }
-                    });
-                    var layer = featureGroup.getLayers()[0]; // extract the first (and only) layer from the fGroup
-                    layer.options.color = geojson.properties.color;
-                    layer.options.showTooltip = geojson.properties.showTooltip;
-                    layer.options.dashArray = geojson.properties.dashArray;
-
-                    if (geojson.properties.circleRadius) layer.feature.geometry.type = 'circle';
-                    // If the tooltip is set and a comment is present, then the feature is labeled
-                    if (geojson.properties.showTooltip && geojson.properties.comment.trim() != '') layer.bindTooltip(geojson.properties.comment, {
-                        permanent: true,
-                        className: 'customTooltip'
-                    }).openTooltip();
-                    drawnItems.addLayer(layer);
-
-                    // register comment
-                    var layerID = drawnItems.getLayerId(layer);
-                    commentsMap.set(layerID, geojson.properties.comment);
-
-                    // register click events
-                    layer.on('click', function (e) {
-                        $scope.map.objectClicked(e.target.feature.geometry.type, e.target, e.target._leaflet_id);
-                    });
-                }
-
-                // make layers unclickable by default
-                drawnItems.eachLayer(function (layer) {
-                    setClickable(layer, false);
-                });
-
-                // upate mapstate
-                map.setView($scope.einsatz.map.center, $scope.einsatz.map.zoom);
-                // setze taktische zeichen in karte
-                for (var i = 0; i < $scope.einsatz.taktZeichen.length; i++) {
-                    var field = $scope.einsatz.taktZeichen[i];
-                    var fieldHtml = getFieldHtmlString(field.kranzposition, field.zeichen,
-                        field.comment, field.textTop, field.textBottom);
-                    $('#' + field.kranzposition).html(fieldHtml);
-
-                    // field line / kartenposition
-                    if (field.kartenposition == '') {
-                        continue; // field has no kartenposition
-                    }
-                    var anchorPoint = getAnchorOfElement('image' + field.kranzposition);
-                    linesArray[field.kranzposition] = [field.kartenposition[0], anchorPoint, field.kartenposition[1], field.kartenposition[2]];
-                    fitAllLines(linesArray);
-                    // If the versioning is different, then a warning is issued.
-                    if (einsatz.version != $scope.version) {
-                        alert('Warnung: Version des importierten Einsatzes: ' + einsatz.version + '. Version der LAGEskizze: ' + $scope.version + '. Hierbei können Probleme auftreten.');
-                    }
-                }
+            // ein datensatz für einen lageplan kann nur geöffnet werden, wenn zuvor ein lageplan der karte hinzugefügt wurde
+            // ein datensatz der auf grundlage eines WMS entstanden ist kann nur geöffnet werden, wenn ein WMS ausgewählt wurde
+            if (einsatz.map.tileServer.trim() === 'Lageplan' && $scope.map.tileServer.trim() !== 'Lageplan') {
+                alert('Fehler: Für diesen Datensatz wird ein Lageplan (Kartenmaterial) benötigt.');
+            } else if (einsatz.map.tileServer.trim() !== 'Lageplan' && $scope.map.tileServer.trim() === 'Lageplan') {
+                alert('Fehler: Für diesen Datensatz wird kein Lageplan benögtigt. Bitte wählen Sie eine andere Hintergrundkarte aus.');
             } else {
-                alert('Fehler: Der Einsatz kann nur mit der ' + einsatz.screen + ' Variante importiert werden.');
+                // A file can only be imported if the type of the program is identical. Mono or multiple screen.
+                if (!($scope.screen == 'Ein-Fenster' && einsatz.screen == 'Zwei-Fenster')) {
+                    // store new einsatz data in $scope.einsatz reset from previous state
+                    $scope.einsatz = einsatz;
+                    lines.clearLayers();
+                    linesArray = [];
+                    drawnItems.clearLayers();
+                    // After loading a dataset, the metadata is updated
+                    windowManager.sharedData.set('metadataObject', $scope.einsatz.metadata);
+                    // insert drawnObjects
+                    for (var i = 0; i < $scope.einsatz.drawnObjects.length; i++) {
+                        // convert geojson -> FeatureGroup -> ILayer
+                        var geojson = $scope.einsatz.drawnObjects[i];
+                        var featureGroup = L.geoJson(geojson, {
+                            pointToLayer: function (json, latlng) {
+                                if (json.properties.circleRadius) {
+                                    return new L.circle(latlng, json.properties.circleRadius, {
+                                        fillColor: json.properties.color,
+                                        color: json.properties.color,
+                                        weight: 5
+                                    });
+                                } else {
+                                    return new L.marker(latlng);
+                                }
+                            }
+                        });
+                        var layer = featureGroup.getLayers()[0]; // extract the first (and only) layer from the fGroup
+                        layer.options.color = geojson.properties.color;
+                        layer.options.showTooltip = geojson.properties.showTooltip;
+                        layer.options.dashArray = geojson.properties.dashArray;
+
+                        if (geojson.properties.circleRadius) layer.feature.geometry.type = 'circle';
+                        // If the tooltip is set and a comment is present, then the feature is labeled
+                        if (geojson.properties.showTooltip && geojson.properties.comment.trim() != '') layer.bindTooltip(geojson.properties.comment, {
+                            permanent: true,
+                            className: 'customTooltip'
+                        }).openTooltip();
+                        drawnItems.addLayer(layer);
+
+                        // register comment
+                        var layerID = drawnItems.getLayerId(layer);
+                        commentsMap.set(layerID, geojson.properties.comment);
+
+                        // register click events
+                        layer.on('click', function (e) {
+                            $scope.map.objectClicked(e.target.feature.geometry.type, e.target, e.target._leaflet_id);
+                        });
+                    }
+
+                    // make layers unclickable by default
+                    drawnItems.eachLayer(function (layer) {
+                        setClickable(layer, false);
+                    });
+
+                    // upate mapstate
+                    map.setView($scope.einsatz.map.center, $scope.einsatz.map.zoom);
+                    // setze taktische zeichen in karte
+                    for (var i = 0; i < $scope.einsatz.taktZeichen.length; i++) {
+                        var field = $scope.einsatz.taktZeichen[i];
+                        var fieldHtml = getFieldHtmlString(field.kranzposition, field.zeichen,
+                            field.comment, field.textTop, field.textBottom);
+                        $('#' + field.kranzposition).html(fieldHtml);
+
+                        // field line / kartenposition
+                        if (field.kartenposition == '') {
+                            continue; // field has no kartenposition
+                        }
+                        var anchorPoint = getAnchorOfElement('image' + field.kranzposition);
+                        linesArray[field.kranzposition] = [field.kartenposition[0], anchorPoint, field.kartenposition[1], field.kartenposition[2]];
+                        fitAllLines(linesArray);
+                        // If the versioning is different, then a warning is issued.
+                        if (einsatz.version != $scope.version) {
+                            alert('Warnung: Version des importierten Einsatzes: ' + einsatz.version + '. Version der LAGEskizze: ' + $scope.version + '. Hierbei können Probleme auftreten.');
+                        }
+                    }
+                } else {
+                    alert('Fehler: Der Einsatz kann nur mit der ' + einsatz.screen + ' Variante importiert werden.');
+                }
             }
         }
     };
@@ -885,20 +893,48 @@ app.controller("mapCtrl", function ($scope, $http) {
 
     $scope.map.showBasemap = function (wms, layer) {
         var wmsLayer = null;
+        basemap.clearLayers();
         if (layer === 'OpenStreetMap') {
+            // Wurde vorab auf einem Lageplan gearbeitet, dann wird die Karte zurückgesetzt
+            if ($scope.map.tileServer === 'Lageplan') $scope.resetMap();
+            $scope.map.tileServer = '';
             wmsLayer = L.tileLayer(wms, {
                 attribution: '&copy; <a href="http://osm.org/copyright">' + layer + '</a> contributors'
             });
+            basemap.addLayer(wmsLayer);
+        } else if(layer === 'Lageplan') {
+            dialog.showOpenDialog({
+                title: 'Lageplan auswählen',
+                // The filters specifies an array of file types that can be displayed or selected
+                filters: [
+                    {name: 'JPG', extensions: ['jpg']}
+                ]
+            }, function (fileName) {
+                if (fileName) {
+                    // Wird ein Lageplan ausgewählt, dann wird die Karte zurückgesetzt
+                    $scope.resetMap();
+                    var bounds = [[51.4566245188, 7.3663709611], [51.5689107763,7.5681688339]];
+                    wmsLayer = L.imageOverlay(fileName[0], bounds, {
+                        className: 'Lageplan'
+                    });
+                    basemap.addLayer(wmsLayer);
+                    map.fitBounds(bounds);
+                    $scope.map.tileServer = 'Lageplan';
+                }
+            });
         } else {
+            // Wurde vorab auf einem Lageplan gearbeitet, dann wird die Karte zurückgesetzt
+            if ($scope.map.tileServer === 'Lageplan') $scope.resetMap();
+            $scope.map.tileServer = '';
             wmsLayer = L.tileLayer.wms(wms, {
                 layers: layer,
                 format: 'image/png',
                 transparent: false,
                 attribution: '&copy; geobasis.nrw 2016'
             });
+            basemap.addLayer(wmsLayer);
         }
-        basemap.clearLayers();
-        basemap.addLayer(wmsLayer);
+
     };
 
     /************** Map draw ************/

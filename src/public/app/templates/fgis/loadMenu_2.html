@@ -15,14 +15,15 @@
             <th>#</th>
             <th>Zeitpunkt</th>
             <th>Kürzel</th>
+            <th>Lageplan</th>
             <th>Laden</th>
             <th>Löschen</th>
             </tr>
             <tr ng-repeat="dbEntry in fireDB">
                 <td>{{$index + 1}}</td>
-                <!--<td>{{dbEntry.id | date:'dd/MM/yyyy - hh:mm':'+1200'}}</td>-->
                 <td>{{dbEntry.time}}</td>
                 <td>{{dbEntry.metadata.acronym}}</td>
+                <td>{{dbEntry.map.tileServer}}</td>
                 <td>
                     <button ng-click="loadMission(dbEntry)" type="button" class="btn btn-default">
                         <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
