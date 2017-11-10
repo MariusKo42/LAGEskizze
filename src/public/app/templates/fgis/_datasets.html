@@ -5,3 +5,10 @@
 	  <label><input type="radio" ng-click="map.showBasemap(basemap.wms, basemap.layer)" name="optradio"> {{basemap.name}}</label>
 	</div>
 </div>
+<dialog id="lageplanDialog">
+    <h3>Langeplan hinzufügen</h3>
+    <p>Wenn Sie einen Lageplan hinzufügen, dann wird die aktuelle Lage entfernt.</p>
+    <p>Möchten Sie fortfahren und die aktuelle Lage entfernen?</p>
+    <button ng-click="insertLage()" id="lageDialogYes">Ja</button>
+    <button ng-click="closeLageDialog()" id="lageDialogNo">Nein</button>
+</dialog>

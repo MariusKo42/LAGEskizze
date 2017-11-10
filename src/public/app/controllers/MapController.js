@@ -858,7 +858,7 @@ app.controller("MapController", function($scope, $http, $sce){
 	/** click handler for datensätze button */
 	$scope.map.showDatasets = function(){
 		$scope.fields.cancel();
-		if ($scope.sideContent.template == "app/templates/fgis/_datasets.html"){
+		if ($scope.sideContent.template === "app/templates/fgis/_datasets.html"){
 			$scope.sideContent.change("");
 		}
 		else {
@@ -884,7 +884,6 @@ app.controller("MapController", function($scope, $http, $sce){
 
 	$scope.map.showBasemap = function(wms, layer){
         var wmsLayer = null;
-        basemap.clearLayers();
         if (layer === 'OpenStreetMap') {
             // Wurde vorab auf einem Lageplan gearbeitet, dann wird die Karte zurückgesetzt
             if ($scope.map.tileServer === 'Lageplan') $scope.resetMap();
@@ -892,27 +891,10 @@ app.controller("MapController", function($scope, $http, $sce){
             wmsLayer = L.tileLayer(wms, {
                 attribution: '&copy; <a href="http://osm.org/copyright">' + layer + '</a> contributors'
             });
+            basemap.clearLayers();
             basemap.addLayer(wmsLayer);
         } else if(layer === 'Lageplan') {
-            dialog.showOpenDialog({
-                title: 'Lageplan auswählen',
-                // The filters specifies an array of file types that can be displayed or selected
-                filters: [
-                    {name: 'JPG', extensions: ['jpg']}
-                ]
-            }, function (fileName) {
-                if (fileName) {
-                    // Wird ein Lageplan ausgewählt, dann wird die Karte zurückgesetzt
-                    $scope.resetMap();
-                    var bounds = [[51.4566245188, 7.3663709611], [51.5689107763,7.5681688339]];
-                    wmsLayer = L.imageOverlay(fileName[0], bounds, {
-                        className: 'Lageplan'
-                    });
-                    basemap.addLayer(wmsLayer);
-                    map.fitBounds(bounds);
-                    $scope.map.tileServer = 'Lageplan';
-                }
-            });
+            $('#lageplanDialog').show();
         } else {
             // Wurde vorab auf einem Lageplan gearbeitet, dann wird die Karte zurückgesetzt
             if ($scope.map.tileServer === 'Lageplan') $scope.resetMap();
@@ -923,26 +905,80 @@ app.controller("MapController", function($scope, $http, $sce){
                 transparent: false,
                 attribution: '&copy; geobasis.nrw 2016'
             });
+            basemap.clearLayers();
             basemap.addLayer(wmsLayer);
         }
-	    /*
-		var wmsLayer = null;
-		if (layer === 'OpenStreetMap') {
-			wmsLayer =  L.tileLayer(wms, {
-				attribution: '&copy; <a href="http://osm.org/copyright">' + layer + '</a> contributors'
-			});
-		} else {
-			wmsLayer = L.tileLayer.wms(wms, {
-				layers: layer,
-				format: 'image/png',
-				transparent: false,
-				attribution: '&copy; geobasis.nrw 2016'
-			});
-		}
-		basemap.clearLayers();
-		basemap.addLayer(wmsLayer);
-		*/
 	};
+
+    /**
+     * Before an 'lageplan' is added, the user is asked if he wants to remove the current data.
+     * The user answered the question with 'yes'. In this case, the current data is deleted and the user can select a .jpg file.
+     */
+	$scope.insertLage = function () {
+        $scope.resetMap();
+        basemap.clearLayers();
+        $scope.map.tileServer = 'Lageplan';
+        // File Dialog
+        dialog.showOpenDialog({
+            title: 'Lageplan auswählen',
+            // The filters specifies an array of file types that can be displayed or selected
+            filters: [
+                {name: 'JPG', extensions: ['jpg']}
+            ]
+        }, function (fileName) {
+            if (fileName) {
+                var bounds = [[51.4566245188, 7.3663709611], [51.5689107763,7.5681688339]];
+                wmsLayer = L.imageOverlay(fileName[0], bounds, {
+                    className: 'Lageplan'
+                });
+                basemap.addLayer(wmsLayer);
+                map.fitBounds(bounds);
+            }
+        });
+        $('#lageplanDialog').hide();
+    };
+
+    /**
+     * Before an 'lageplan' is added, the user is asked if he wants to remove the current data.
+     * If the user answers with "No", then the dialog is closed.
+     */
+    $scope.closeLageDialog = function () {
+        $('#lageplanDialog').hide();
+    };
+
+    $scope.resetMap = function () {
+        drawnItems.clearLayers();
+        lines.clearLayers();
+        linesArray = [];
+        $scope.fields.delete();
+        // All fields are reset
+        for (var i = 0; i < $scope.fields.fieldOrder.properties.length; i++) {
+            document.getElementById($scope.fields.fieldOrder.properties[i].id).innerHTML = getFieldHtmlString($scope.fields.fieldOrder.properties[i].id, '', '', '', '');
+            $('#' + $scope.fields.fieldOrder.properties[i].id).removeClass("activated");
+        }
+
+        $scope.einsatz = {
+            time: '',
+            id: 0,
+            drawnObjects: [],
+            taktZeichen: [],
+            map: {
+                zoom: 0,
+                center: {},
+                tileServer: ''
+            },
+            metadata: {
+                acronym: '',
+                keyword: '',
+                location: '',
+                notify: '',
+                number: '',
+                date: ''
+            },
+            version: '',
+            screen: ''
+        };
+    };
 
 	/************** Map draw ************/
 
