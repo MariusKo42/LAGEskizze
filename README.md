@@ -1,4 +1,5 @@
-#Quelle: https://github.com/eftas/LAGEskizze
+# Quelle
+https://github.com/eftas/LAGEskizze
 
 # LAGEskizze
 
